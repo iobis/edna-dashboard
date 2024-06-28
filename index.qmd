@@ -1,0 +1,81 @@
+---
+title: "eDNA"
+format: 
+  dashboard:
+    css: styles.css
+include-in-header:
+  - text: |
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+theme:
+  - cosmo
+  - custom.scss
+---
+
+<!-- This goes on top of the page after navbar - map-->
+```{r}
+#| padding: 0px
+library(leaflet)
+leaflet(width = "100%") %>%
+  addTiles() %>%
+  setView(0, 0, zoom = 2)
+```
+
+<!-- Each level 1 header becomes a page on the dashboard -->    
+# Home
+
+Test page 1
+
+<!-- Orientation can be either columns or rows; each level 2 header becomes a card-->
+# Taxonomy {orientation="columns" scrolling="true"}
+
+## Column
+
+<!-- Content can be either markdown...-->
+Test page 2
+
+## Column 
+
+<!-- Code/output...-->
+```{r}
+plot(x = 1, y = 1)
+```
+
+# Diversity metrics {orientation="columns" scrolling="true"}
+
+## Column
+
+Test page 2
+
+## Column 
+
+<!-- Or a mix of both-->
+Some text
+
+```{r}
+plot(x = 1, y = 1)
+```
+
+# Species {orientation="columns" scrolling="true"}
+
+## Column
+
+Test page 2
+
+## Column 
+
+```{r}
+plot(x = 1, y = 1)
+```
+
+# Sample {orientation="columns" scrolling="true"}
+
+## Column
+
+Test page 2
+
+## Column 
+
+```{r}
+plot(x = 1, y = 1)
+```
+

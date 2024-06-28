@@ -1,0 +1,14 @@
+/* css styles */
+
+/* Google fonts */
+.material-symbols-outlined {
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 400,
+  'GRAD' 0,
+  'opsz' 24
+}
+
+.card.cell.bslib-card.html-fill-container {
+    height: 300px;
+}
