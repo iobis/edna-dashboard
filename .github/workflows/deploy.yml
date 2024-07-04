@@ -40,9 +40,7 @@ jobs:
       - name: Setup R dependencies
         uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          cache-version: 1
-          extra-packages: |
-            any::rmarkdown
+          extra-packages: rmarkdown
 
       # From https://github.com/julia-actions/setup-julia
       # - name: Setup Julia
