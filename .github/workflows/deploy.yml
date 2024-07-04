@@ -44,7 +44,7 @@ jobs:
 
       - name: Install package dependencies
         run: |
-          Rscript -e 'install.packages(c("rmarkdown"))'
+          Rscript -e 'install.packages(c("rmarkdown", "leaflet"))'
 
       # From https://github.com/julia-actions/setup-julia
       # - name: Setup Julia
