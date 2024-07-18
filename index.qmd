@@ -132,22 +132,35 @@ value_box(
 
 ## Row 2 {.flow}
 
-````{r, results='asis', echo=FALSE, warning=FALSE, message=FALSE}
-#| expandable: true
-library(glue)
-library(fs)
-photos = c("https://images.ecycle.com.br/wp-content/uploads/2021/05/20195924/o-que-e-paisagem.jpg",
-           "https://static.todamateria.com.br/upload/pa/is/paisagem-natural-og.jpg")
+```{r}
+image_list <- c("https://i.pinimg.com/originals/40/a4/92/40a492b0a148eeafeded44e958edc958.jpg",
+                "https://images.ecycle.com.br/wp-content/uploads/2021/05/20195924/o-que-e-paisagem.jpg", "https://www.aguasdoalgarve.pt/sites/aguasdoalgarve.pt/files/paginas_base/ed_ambiental/oceano.jpg", "https://img.interempresas.net/fotos/2542435.jpeg")
 
-cat("<div style='display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));grid-gap: 1em;'>")
-# for (i in seq_along(photos)){
-#   cat(glue('<img src="{{photos[i]}}" style="display:block; width:100%;">', .open = "{{", .close = "}}"))
-#   
-# }
-cat("![](https://images.ecycle.com.br/wp-content/uploads/2021/05/20195924/o-que-e-paisagem.jpg)") 
-cat("![](https://static.todamateria.com.br/upload/pa/is/paisagem-natural-og.jpg)")
-cat("</div>")
-````
+image_name_list <- paste("Image", 1:length(image_list))
+
+cards <- list()
+
+max_image_height <- "500px"
+max_image_width <- "400px"
+image_gap <- "0.1em"
+
+for (i in 1:length(image_list)) {
+  cards[[i]] <- card(height = "100%", full_screen = T,
+                      card_header(image_name_list[i]),
+                      card_body(tags$img(src = image_list[i],
+                     class = "gallery-img"), class= "p-0"), max_height = max_image_height
+  )
+}
+
+layout_column_wrap(
+  width = max_image_width, gap = image_gap,
+  heights_equal = "row",
+  !!!cards
+)
+```
+
+
+
 
 <!-- Orientation can be either columns or rows; each level 2 header becomes a card-->
 # Taxonomy {orientation="columns" scrolling="true"}

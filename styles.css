@@ -54,15 +54,12 @@ li.nav-item {
   height: min-content;
 }
 
-
-.gallery .card-body .html-fill-item .html-fill-container > div {
-  columns:16em;
-  gap:0.5rem;
-}
-
-.gallery img {
-  display:block;
-  width:100%;
+.gallery-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  top: 0;
+  left: 0;
 }
 
 /*
