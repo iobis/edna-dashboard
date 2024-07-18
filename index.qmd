@@ -1,29 +1,153 @@
 ---
-title: "eDNA"
+title: "eDNA expeditions"
 format: 
   dashboard:
-    css: styles.css
+    expandable: false
 include-in-header:
   - text: |
       <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
 theme:
   - cosmo
   - custom.scss
+mainfont: Mulish
+server: shiny
 ---
+
+<!-- This just load/prepare -->
+```{r include=FALSE}
+library(shiny)
+library(leaflet)
+
+# Load json
+sites <- jsonlite::read_json("https://raw.githubusercontent.com/iobis/edna-tracker-data/data/generated.json")
+sites_list <- sites$sites
+sites_samples <- sites$samples
+
+sites_names <- sapply(sites_list, function(x) x$name)
+```
 
 <!-- This goes on top of the page after navbar - map-->
 ```{r}
 #| padding: 0px
-library(leaflet)
+#| expandable: false
+htmltools::includeCSS("styles.css")
+
 leaflet(width = "100%") %>%
-  addTiles() %>%
-  setView(0, 0, zoom = 2)
+   addTiles() %>%
+   setView(0, 0, zoom = 2)
 ```
 
-<!-- Each level 1 header becomes a page on the dashboard -->    
-# Home
 
-Test page 1
+<!-- Each level 1 header becomes a page on the dashboard -->    
+# Home {orientation="rows" scrolling="true"}
+
+## {.toolbar}
+
+```{r}
+selectInput("higherGeography", "Site:", sites_names)
+```
+
+## Row 1 {.flow}
+
+### Column 1 {width=60%}
+
+<!-- Temporary workaround, please don't remove-->
+
+```{=html}
+<script>
+// Select the parent div with the specified classes
+const parentDiv = document.querySelector('.toolbar-content.html-fill-item.html-fill-container');
+
+// Check if the parent div exists
+if (parentDiv) {
+  // Select the immediate child of the parent div
+  const childDiv = parentDiv.firstElementChild;
+
+  // Check if the child div exists
+  if (childDiv) {
+    // Remove the style attribute from the child div
+    childDiv.removeAttribute('style');
+  }
+}
+</script>
+```
+
+`r tags$div(class="site-title", textOutput("higherGeography"))`
+
+`r tags$div(class="site-text", textOutput("siteDescription"))`
+
+#### Row {.context-info}
+
+`r tags$div(HTML(paste0('<span><i class="fa fa-calendar" style = "color:#3D3D3D;"></i> Event date: ', textOutput("eventDate", inline = T), '</span>')))`
+
+`r tags$div(HTML(paste0('<span><i class="fa fa-dna" style = "color:#3D3D3D;"></i> Number of samples: ', textOutput("eventSamples", inline = T), '</span>')))`
+
+
+### Column 2 {width=40% .flow}
+
+```{r}
+library(bslib)
+value_box(
+  title = "Number of species",
+  value = "10",
+  showcase = icon("shrimp", class = 'fa-3x'),#bsicons::bs_icon("bank2"),
+  theme = "bg-gradient-blue-indigo"
+)
+```
+
+#### Row
+
+```{r}
+value_box(
+  title = "Number of fishes",
+  value = "100",
+  showcase = icon("fish", class = 'fa-3x'),#bsicons::bs_icon("bank2"),
+  theme = "bg-gradient-indigo-blue"
+)
+```
+
+```{r}
+value_box(
+  title = "Number of mammals",
+  value = "100",
+  showcase = icon("otter", class = 'fa-3x'),#bsicons::bs_icon("bank2"),
+  theme = "bg-gradient-indigo-blue"
+)
+```
+
+#### Row
+
+```{r}
+value_box(
+  title = "IUCN threatened",
+  value = "100",
+  showcase = icon("circle-exclamation", class = 'fa-3x'),#bsicons::bs_icon("bank2"),
+  theme = "bg-gradient-blue-teal",
+  full_screen = FALSE
+)
+```
+
+## Row 2 {.flow}
+
+````{r, results='asis', echo=FALSE, warning=FALSE, message=FALSE}
+#| expandable: true
+library(glue)
+library(fs)
+photos = c("https://images.ecycle.com.br/wp-content/uploads/2021/05/20195924/o-que-e-paisagem.jpg",
+           "https://static.todamateria.com.br/upload/pa/is/paisagem-natural-og.jpg")
+
+cat("<div style='display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));grid-gap: 1em;'>")
+# for (i in seq_along(photos)){
+#   cat(glue('<img src="{{photos[i]}}" style="display:block; width:100%;">', .open = "{{", .close = "}}"))
+#   
+# }
+cat("![](https://images.ecycle.com.br/wp-content/uploads/2021/05/20195924/o-que-e-paisagem.jpg)") 
+cat("![](https://static.todamateria.com.br/upload/pa/is/paisagem-natural-og.jpg)")
+cat("</div>")
+````
 
 <!-- Orientation can be either columns or rows; each level 2 header becomes a card-->
 # Taxonomy {orientation="columns" scrolling="true"}
@@ -77,5 +201,45 @@ Test page 2
 
 ```{r}
 plot(x = 1, y = 1)
+```
+
+
+```{r}
+#| context: server
+
+# TODO: change this to be done once, when the document is assembled
+sites <- jsonlite::read_json("https://raw.githubusercontent.com/iobis/edna-tracker-data/data/generated.json")
+sites_list <- sites$sites
+sites_samples <- sites$samples
+
+sites_info <- xml2::read_xml("https://whc.unesco.org/en/list/xml")
+sites_info <- xml2::as_list(sites_info)
+sites_info <- sites_info[[1]]
+sites_info <- lapply(sites_info, function(x){
+  data.frame(url = unlist(x$http_url), description = unlist(x$short_description))
+})
+sites_info <- do.call("rbind", sites_info)
+
+sites_details <- do.call("rbind", lapply(sites_list, function(x) data.frame(name = x$name, url = x$url)))
+sites_info <- dplyr::left_join(sites_info, sites_details)
+sites_info <- sites_info[!is.na(sites_info$name),]
+sites_info$description <- gsub("<p>|</p>", "", sites_info$description)
+
+output$higherGeography <- renderText({
+  sel_site <- sites_info[sites_info$name == input$higherGeography,]
+  sel_site$name
+})
+
+output$siteDescription <- renderText({
+  sel_site <- sites_info[sites_info$name == input$higherGeography,]
+  sel_site$description
+})
+
+output$eventDate <- renderText({"2024-05-01"})
+output$eventSamples <- renderText({"1000"})
+
+
+#https://raw.githubusercontent.com/iobis/edna-tracker-data/data/generated.json
+
 ```
 

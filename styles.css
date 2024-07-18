@@ -9,6 +9,134 @@
   'opsz' 24
 }
 
-.card.cell.bslib-card.html-fill-container {
+/*.card.cell.bslib-card.html-fill-container {
     height: 300px;
+}*/
+
+/* Navbar */
+.navbar-title {
+    font-weight: 900;
 }
+
+li.nav-item {
+    font-weight: 700;
+}
+
+/* Body */
+.site-title {
+  font-weight: 900;
+  color: #0277d4;
+  font-size: 32px;
+  padding-bottom: 0.5em;
+}
+
+.quarto-dashboard .toolbar {
+  margin-bottom: 0px;
+  padding: 1em;
+}
+
+.quarto-dashboard .dashboard-toolbar-container:not(.toolbar-toplevel) .toolbar {
+    margin-bottom: 0em !important;
+}
+
+.quarto-dashboard .toolbar .shiny-input-select {
+    min-width: 14em;
+}
+
+
+.context-info {
+  font-size: 14px;
+  color: #3D3D3D;
+}
+
+
+.flow.bslib-grid {
+  height: min-content;
+}
+
+
+.gallery .card-body .html-fill-item .html-fill-container > div {
+  columns:16em;
+  gap:0.5rem;
+}
+
+.gallery img {
+  display:block;
+  width:100%;
+}
+
+/*
+.gallery > div {
+  columns:16em;
+  gap:0.5rem;
+}
+
+.gallery img {
+  display:block;
+  width:100%;
+}
+*/
+
+
+.quarto-dashboard .bslib-value-box .value-box-area {
+    margin-top: auto;
+    margin-bottom: auto;
+}
+.bslib-value-box .value-box-area {
+    justify-content: center;
+    padding: 0.5rem 0.5rem;
+    font-size: .9rem;
+    font-weight: 500;
+}
+
+.bslib-value-box .value-box-title {
+    font-size: 1rem;
+    margin-top: 0;
+    margin-bottom: .05rem;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.bslib-value-box .value-box-value {
+    font-size: calc(1.325rem + .9vw);
+    margin-top: 0;
+    margin-bottom: .1rem;
+    font-weight: 900;
+    line-height: 1.2;
+}
+
+.bslib-value-box .value-box-showcase {
+    align-items: center;
+    justify-content: center;
+    margin-top: auto;
+    margin-bottom: auto;
+    padding: 0.1rem;
+}
+
+.bslib-mb-spacing {
+    margin-bottom: 0 !important;
+}
+
+
+/*
+.bslib-value-box .value-box-area {
+    justify-content: center;
+    padding: 0.2rem 0.2rem;
+    font-size: .9rem;
+    font-weight: 500;
+}
+.bslib-value-box .value-box-title {
+    font-size: 1.3rem;
+    margin-top: 0;
+    /* margin-bottom: .5rem; */
+   /* font-weight: 400;
+    line-height: 1.2;*/
+/*}
+.bslib-value-box .value-box-showcase {
+    align-items: center;
+    justify-content: center;
+    margin-top: auto;
+    margin-bottom: auto;
+    padding: 0.1rem;
+}
+*/
