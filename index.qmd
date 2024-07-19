@@ -27,6 +27,18 @@ sites_list <- sites$sites
 sites_samples <- sites$samples
 
 sites_names <- sapply(sites_list, function(x) x$name)
+
+# Check with Pieter to improve this part:
+localities <- lapply(sites_samples, function(x) {
+  df <- data.frame(area_name = NA)
+  df$area_name <- x$area_name
+  df$area_locality <- x$area_locality
+  df$station <- x$station
+  df$lon <- x$area_longitude
+  df$lat <- x$area_latitude
+  df
+})
+localities <- dplyr::bind_rows(localities)
 ```
 
 <!-- This goes on top of the page after navbar - map-->
@@ -36,7 +48,9 @@ sites_names <- sapply(sites_list, function(x) x$name)
 htmltools::includeCSS("styles.css")
 
 leaflet(width = "100%") %>%
-   addTiles() %>%
+   addTiles(urlTemplate = "https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png") %>%
+   addMarkers(~lon, ~lat, popup = ~as.character(area_name), label = ~as.character(area_name),
+              data = localities, clusterOptions = markerClusterOptions()) %>%
    setView(0, 0, zoom = 2)
 ```
 
@@ -159,7 +173,7 @@ layout_column_wrap(
 )
 ```
 
-
+<br>
 
 
 <!-- Orientation can be either columns or rows; each level 2 header becomes a card-->
@@ -237,6 +251,8 @@ sites_details <- do.call("rbind", lapply(sites_list, function(x) data.frame(name
 sites_info <- dplyr::left_join(sites_info, sites_details)
 sites_info <- sites_info[!is.na(sites_info$name),]
 sites_info$description <- gsub("<p>|</p>", "", sites_info$description)
+
+
 
 output$higherGeography <- renderText({
   sel_site <- sites_info[sites_info$name == input$higherGeography,]
