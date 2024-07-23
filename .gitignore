@@ -48,7 +48,6 @@ index.html
 # Quarto
 *.quarto/
 .quarto/
-data
 
 # dwc dataset
 output
