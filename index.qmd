@@ -28,17 +28,7 @@ sites_samples <- sites$samples
 
 sites_names <- sapply(sites_list, function(x) x$name)
 
-# Check with Pieter to improve this part:
-localities <- lapply(sites_samples, function(x) {
-  df <- data.frame(area_name = NA)
-  df$area_name <- x$area_name
-  df$area_locality <- x$area_locality
-  df$station <- x$station
-  df$lon <- x$area_longitude
-  df$lat <- x$area_latitude
-  df
-})
-localities <- dplyr::bind_rows(localities)
+localities <- sites_samples %>% bind_rows() %>% select(area_name, area_locality, station, lon = area_longitude, lat = area_latitude)
 ```
 
 <!-- This goes on top of the page after navbar - map-->
