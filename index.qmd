@@ -138,30 +138,7 @@ value_box(
 ## Row 2 {.flow}
 
 ```{r}
-image_list <- c("https://i.pinimg.com/originals/40/a4/92/40a492b0a148eeafeded44e958edc958.jpg",
-                "https://images.ecycle.com.br/wp-content/uploads/2021/05/20195924/o-que-e-paisagem.jpg", "https://www.aguasdoalgarve.pt/sites/aguasdoalgarve.pt/files/paginas_base/ed_ambiental/oceano.jpg", "https://img.interempresas.net/fotos/2542435.jpeg")
-
-image_name_list <- paste("Image", 1:length(image_list))
-
-cards <- list()
-
-max_image_height <- "500px"
-max_image_width <- "400px"
-image_gap <- "0.1em"
-
-for (i in 1:length(image_list)) {
-  cards[[i]] <- card(height = "100%", full_screen = T,
-                      card_header(image_name_list[i]),
-                      card_body(tags$img(src = image_list[i],
-                     class = "gallery-img"), class= "p-0"), max_height = max_image_height
-  )
-}
-
-layout_column_wrap(
-  width = max_image_width, gap = image_gap,
-  heights_equal = "row",
-  !!!cards
-)
+htmlOutput("imageGallery")
 ```
 
 <br>
@@ -232,6 +209,9 @@ sites_info <- read.table("data/sites_description.txt")
 ```{r}
 #| context: server
 
+library(bslib)
+source("R/image-gallery.R")
+
 output$higherGeography <- renderText({
   sel_site <- sites_info[sites_info$name == input$higherGeography,]
   sel_site$name
@@ -247,6 +227,12 @@ output$eventSamples <- renderText({"1000"})
 
 
 #https://raw.githubusercontent.com/iobis/edna-tracker-data/data/generated.json
+
+
+output$imageGallery <- renderUI({
+  species = c("Trachinotus baillonii", "Anguilla rostrata", "Liparis liparis")
+  generate_gallery(species, "data/images.txt")
+})
 
 ```
 
