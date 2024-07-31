@@ -95,29 +95,39 @@ if (parentDiv) {
 
 ```{r}
 library(bslib)
+source("R/value_boxes.R")
+source("R/occurrence.R")
+
+occurrence <- read_occurrence_data()
+#This to be changed to the input:
+site="Gulf of Porto: Calanche of Piana, Gulf of Girolata, Scandola Reserve"
+
 value_box(
   title = "Number of species",
-  value = "10",
+  value = n_species(site),
   showcase = icon("shrimp", class = 'fa-3x'),#bsicons::bs_icon("bank2"),
   theme = "bg-gradient-blue-indigo"
 )
+
 ```
 
 #### Row
 
 ```{r}
+
 value_box(
   title = "Number of fishes",
-  value = "100",
+  value = n_fish(site),#"100",
   showcase = icon("fish", class = 'fa-3x'),#bsicons::bs_icon("bank2"),
   theme = "bg-gradient-indigo-blue"
 )
 ```
 
 ```{r}
+
 value_box(
   title = "Number of mammals",
-  value = "100",
+  value = n_mammal(site),#"100",
   showcase = icon("otter", class = 'fa-3x'),#bsicons::bs_icon("bank2"),
   theme = "bg-gradient-indigo-blue"
 )
@@ -125,10 +135,11 @@ value_box(
 
 #### Row
 
-```{r}
+```{r, file="./R/value_boxes.R"}
+
 value_box(
   title = "IUCN threatened",
-  value = "100",
+  value = n_iucn(site),#"100",
   showcase = icon("circle-exclamation", class = 'fa-3x'),#bsicons::bs_icon("bank2"),
   theme = "bg-gradient-blue-teal",
   full_screen = FALSE
@@ -138,6 +149,7 @@ value_box(
 ## Row 2 {.flow}
 
 ```{r}
+library(bslib)
 image_list <- c("https://i.pinimg.com/originals/40/a4/92/40a492b0a148eeafeded44e958edc958.jpg",
                 "https://images.ecycle.com.br/wp-content/uploads/2021/05/20195924/o-que-e-paisagem.jpg", "https://www.aguasdoalgarve.pt/sites/aguasdoalgarve.pt/files/paginas_base/ed_ambiental/oceano.jpg", "https://img.interempresas.net/fotos/2542435.jpeg")
 
@@ -199,14 +211,42 @@ plot(x = 1, y = 1)
 
 # Species {orientation="columns" scrolling="true"}
 
-## Column
-
-Test page 2
-
-## Column 
+## {.toolbar}
 
 ```{r}
-plot(x = 1, y = 1)
+selectInput("higherGeography", "Site:", sites_names)
+```
+
+## Row
+
+```{r}
+library(bslib)
+source("R/images_by_site.R")
+
+image_list <- generate_image_list_bySite(site)
+
+image_name_list <- image_list$scientificName
+
+cards <- list()
+
+max_image_height <- "250px"
+max_image_width <- "200px"
+image_gap <- "0.1em"
+
+for (i in 1:length(image_list)) {
+  cards[[i]] <- card(height = "100%", full_screen = T,
+                      card_header(image_name_list[i]),
+                      card_body(tags$img(src = image_list$image_url[i],
+                     class = "gallery-img"), class= "p-0"), max_height = max_image_height
+  )
+}
+
+layout_column_wrap(
+  width = max_image_width, gap = image_gap,
+  heights_equal = "row",
+  !!!cards
+)
+
 ```
 
 # Sample {orientation="columns" scrolling="true"}
