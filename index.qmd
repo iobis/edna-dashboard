@@ -189,6 +189,7 @@ selectInput("group", "Group:", groups_names)
 
 ```
 
+
 ## Row
 
 ```{r}
@@ -196,6 +197,12 @@ htmlOutput("species_gallery")
 
 ```
 
+### {.sidebar}
+
+```{r}
+textOutput("species_name")
+textOutput("species_info")
+```
 
 # Sample {orientation="columns" scrolling="true"}
 
@@ -264,7 +271,7 @@ output$siteDescription <- renderText({
   sel_site$description
 })
 
-#input=list(higherGeography="Gulf of Porto: Calanche of Piana, Gulf of Girolata, Scandola Reserve")
+#input=list(higherGeography="Gulf of Porto: Calanche of Piana, Gulf of Girolata, Scandola Reserve", group="fish")
 #input=list(higherGeography="Lagoons of New Caledonia: Reef Diversity and Associated Ecosystems")
 
 output$eventDate <- renderText({"2024-05-01"})
@@ -299,9 +306,36 @@ output$imageGallery <- renderUI({
   generate_gallery(species, "data/images.txt")
 })
 
+
+species_list <- reactive({
+    generate_ordered_species_list_bySite(input$higherGeography, occurrence, input$group)
+  })
+
 output$species_gallery <- renderUI({
-species_list <- generate_ordered_species_list_bySite(input$higherGeography, occurrence, input$group)
-generate_gallery(species_list$scientificName, "data/images.txt", max_image_height = "250px",max_image_width = "200px", image_gap = "0.1em") })
+    generate_gallery(species_list()$scientificName, "data/images.txt", max_image_height = "250px",max_image_width = "200px", image_gap = "0.1em") 
+    })
+
+observe({
+    # Get the species list
+    list_of_species <- species_list()
+    
+    # Create observeEvent handlers for each species
+    lapply(seq_len(nrow(list_of_species)), function(i) {
+      species <- list_of_species$scientificName[i]
+      link_id <- paste0("link_", gsub(" ", "_", species))
+      
+      # Set up observeEvent for the link_id
+      observeEvent(input[[link_id]], {
+        updateSidebar(species, paste("Information about", species))
+      }, ignoreInit = TRUE)
+    })
+  }) %>% bindEvent(input$higherGeography, input$group, ignoreInit = T)
+
+
+  updateSidebar <- function(species_name, species_info) {
+    output$species_name <- renderText({species_name})
+    output$species_info <- renderText({species_info})
+  }
 
 # Map input changes ----
 map_info <- reactive({
