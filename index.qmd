@@ -29,7 +29,7 @@ sites_samples <- sites$samples
 
 sites_names <- sapply(sites_list, function(x) x$name)
 
-localities <- sites_samples %>% bind_rows() %>% select(area_name, area_locality, station, lon = area_longitude, lat = area_latitude)
+localities <- sites_samples %>% bind_rows() %>% select(area_name, area_locality, parent_area_name, station, lon = area_longitude, lat = area_latitude)
 ```
 
 <!-- This goes on top of the page after navbar - map-->
@@ -38,11 +38,7 @@ localities <- sites_samples %>% bind_rows() %>% select(area_name, area_locality,
 #| expandable: false
 htmltools::includeCSS("styles.css")
 
-leaflet(width = "100%") %>%
-   addTiles(urlTemplate = "https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png") %>%
-   addMarkers(~lon, ~lat, popup = ~as.character(area_name), label = ~as.character(area_name),
-              data = localities, clusterOptions = markerClusterOptions()) %>%
-   setView(0, 0, zoom = 2)
+leafletOutput("mainMap")
 ```
 
 
@@ -212,6 +208,9 @@ plot(x = 1, y = 1)
 #| context: server-start
 
 library(bslib)
+library(leaflet)
+library(shiny)
+library(dplyr)
 source("R/image-gallery.R")
 source("R/occurrence.R")
 source("R/value_boxes.R")
@@ -219,12 +218,35 @@ source("R/images_by_site.R")
 
 sites_info <- read.table("data/sites_description.txt", header=T)
 occurrence <- read_occurrence_data()
+
+
+# Leaflet map data
+# TODO: pre-do that
+sites <- jsonlite::read_json("https://raw.githubusercontent.com/iobis/edna-tracker-data/data/generated.json")
+sites_list <- sites$sites
+sites_samples <- sites$samples
+
+sites_names <- sapply(sites_list, function(x) x$name)
+
+localities <- sites_samples %>% 
+  bind_rows() %>% 
+  select(area_name, area_locality, parent_area_name, station, lon = area_longitude, lat = area_latitude) %>%
+  group_by(area_name, area_locality, parent_area_name, station, lon, lat) %>%
+  distinct(.keep_all = T)
 ```
 
 <!-- Shiny server component -->
 ```{r}
 #| context: server
 
+output$mainMap <- renderLeaflet({
+  leaflet(width = "100%") %>%
+   addTiles(urlTemplate = "https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png") %>%
+   addMarkers(~lon, ~lat, popup = ~as.character(area_name), label = ~as.character(area_name),
+              layerId = ~station,
+              data = localities, clusterOptions = markerClusterOptions()) %>%
+   setView(0, 0, zoom = 2)
+})
 
 output$higherGeography <- renderText({
   sel_site <- sites_info[sites_info$name == input$higherGeography,]
@@ -265,7 +287,11 @@ output$value_box_mammals <- renderText({
 })
 
 output$value_box_iucn <- renderText({
-  boxes_data$n_iucn
+  if (is.null(boxes_data$n_iucn)) {
+    0
+  } else {
+    boxes_data$n_iucn
+  }
 })
 
 output$imageGallery <- renderUI({
@@ -277,6 +303,28 @@ output$species_gallery <- renderUI({
 image_list <- generate_image_list_bySite(input$higherGeography)
 generate_gallery(image_list$scientificName, "data/images.txt", max_image_height = "250px",max_image_width = "200px", image_gap = "0.1em") })
 
+# Map input changes ----
+map_info <- reactive({
+  if (!is.null(input$mainMap_marker_click)) {
+    click <- input$mainMap_marker_click
+    print(click)
+    if (!is.null(click$id)) {
+      locs <- localities[!is.na(localities$station),]
+      loc_sel <- locs[locs$station == click$id, ]
+      loc_sel <- loc_sel[loc_sel$lon == click$lng & loc_sel$lat == click$lat,]
+      loc_sel
+    } else {
+      NULL
+    }
+  } else {
+    NULL
+  }
+})
+
+observe({
+  updateVarSelectInput(session, "higherGeography", selected = map_info()$parent_area_name[1])
+}) %>%
+  bindEvent(map_info())
 
 ```
 
