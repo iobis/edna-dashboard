@@ -1,6 +1,7 @@
 #Calculate base values based on site selection
+#Calculate all 4 values in a list
 
-n_species <- function(site){
+n_species <- function(site, occurrence){
 
     occurrence %>% 
     filter(higherGeography==site) %>% 
@@ -11,7 +12,7 @@ n_species <- function(site){
 }
 
 
-n_fish <- function(site){
+n_fish <- function(site, occurrence){
 
     groups=read.csv("data/supporting_data/groups.csv")
 
@@ -24,7 +25,7 @@ n_fish <- function(site){
 
 }
 
-n_mammal <- function(site){
+n_mammal <- function(site, occurrence){
 
     groups=read.csv("data/supporting_data/groups.csv")
 
@@ -37,7 +38,7 @@ n_mammal <- function(site){
 
 }
 
-n_iucn<- function(site){
+n_iucn<- function(site, occurrence){
 
     redlist <- read.csv("data/supporting_data/redlist.csv")
     redlist_cat <- redlist %>% 
