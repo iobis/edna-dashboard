@@ -307,7 +307,6 @@ generate_gallery(species_list$scientificName, "data/images.txt", max_image_heigh
 map_info <- reactive({
   if (!is.null(input$mainMap_marker_click)) {
     click <- input$mainMap_marker_click
-    print(click)
     if (!is.null(click$id)) {
       locs <- localities[!is.na(localities$station),]
       loc_sel <- locs[locs$station == click$id, ]
@@ -325,6 +324,19 @@ observe({
   updateVarSelectInput(session, "higherGeography", selected = map_info()$parent_area_name[1])
 }) %>%
   bindEvent(map_info())
+
+observe({
+  proxy <- leafletProxy("mainMap")
+  
+  sel_loc <- localities[localities$parent_area_name == input$higherGeography,]
+  sel_loc <- sel_loc[!is.na(sel_loc$lon) & !is.na(sel_loc$lat),]
+  
+  if (nrow(sel_loc) > 0) {
+    proxy %>% flyToBounds(lng1 = min(sel_loc$lon), lat1 = min(sel_loc$lat),
+                          lng2 = max(sel_loc$lon), lat2 = max(sel_loc$lat))
+  }
+}) %>%
+  bindEvent(input$higherGeography, ignoreInit = T)
 
 ```
 
