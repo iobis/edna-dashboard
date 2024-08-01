@@ -95,16 +95,10 @@ if (parentDiv) {
 
 ```{r}
 library(bslib)
-source("R/value_boxes.R")
-source("R/occurrence.R")
-
-occurrence <- read_occurrence_data()
-#This to be changed to the input:
-site="Gulf of Porto: Calanche of Piana, Gulf of Girolata, Scandola Reserve"
 
 value_box(
   title = "Number of species",
-  value = n_species(site),
+  value = textOutput("value_box_species"),
   showcase = icon("shrimp", class = 'fa-3x'),#bsicons::bs_icon("bank2"),
   theme = "bg-gradient-blue-indigo"
 )
@@ -117,7 +111,7 @@ value_box(
 
 value_box(
   title = "Number of fishes",
-  value = n_fish(site),#"100",
+  value = textOutput("value_box_fish"),
   showcase = icon("fish", class = 'fa-3x'),#bsicons::bs_icon("bank2"),
   theme = "bg-gradient-indigo-blue"
 )
@@ -127,7 +121,7 @@ value_box(
 
 value_box(
   title = "Number of mammals",
-  value = n_mammal(site),#"100",
+  value = textOutput("value_box_mammals"),
   showcase = icon("otter", class = 'fa-3x'),#bsicons::bs_icon("bank2"),
   theme = "bg-gradient-indigo-blue"
 )
@@ -139,7 +133,7 @@ value_box(
 
 value_box(
   title = "IUCN threatened",
-  value = n_iucn(site),#"100",
+  value = textOutput("value_box_iucn"),
   showcase = icon("circle-exclamation", class = 'fa-3x'),#bsicons::bs_icon("bank2"),
   theme = "bg-gradient-blue-teal",
   full_screen = FALSE
@@ -196,34 +190,10 @@ selectInput("higherGeography", "Site:", sites_names)
 ## Row
 
 ```{r}
-library(bslib)
-source("R/images_by_site.R")
-
-image_list <- generate_image_list_bySite(site)
-
-image_name_list <- image_list$scientificName
-
-cards <- list()
-
-max_image_height <- "250px"
-max_image_width <- "200px"
-image_gap <- "0.1em"
-
-for (i in 1:length(image_list)) {
-  cards[[i]] <- card(height = "100%", full_screen = T,
-                      card_header(image_name_list[i]),
-                      card_body(tags$img(src = image_list$image_url[i],
-                     class = "gallery-img"), class= "p-0"), max_height = max_image_height
-  )
-}
-
-layout_column_wrap(
-  width = max_image_width, gap = image_gap,
-  heights_equal = "row",
-  !!!cards
-)
+htmlOutput("species_gallery")
 
 ```
+
 
 # Sample {orientation="columns" scrolling="true"}
 
@@ -241,15 +211,20 @@ plot(x = 1, y = 1)
 ```{r}
 #| context: server-start
 
-sites_info <- read.table("data/sites_description.txt")
+library(bslib)
+source("R/image-gallery.R")
+source("R/occurrence.R")
+source("R/value_boxes.R")
+source("R/images_by_site.R")
+
+sites_info <- read.table("data/sites_description.txt", header=T)
+occurrence <- read_occurrence_data()
 ```
 
 <!-- Shiny server component -->
 ```{r}
 #| context: server
 
-library(bslib)
-source("R/image-gallery.R")
 
 output$higherGeography <- renderText({
   sel_site <- sites_info[sites_info$name == input$higherGeography,]
@@ -261,17 +236,47 @@ output$siteDescription <- renderText({
   sel_site$description
 })
 
+#input=list(higherGeography="Gulf of Porto: Calanche of Piana, Gulf of Girolata, Scandola Reserve")
+
 output$eventDate <- renderText({"2024-05-01"})
 output$eventSamples <- renderText({"1000"})
 
+boxes_data <- reactiveValues()
+observe({
+  sel_site <- sites_info[sites_info$name == input$higherGeography,]
+  boxes_data$n_species <- n_species(sel_site$name, occurrence)
+  boxes_data$n_fish <- n_fish(sel_site$name, occurrence)
+  boxes_data$n_mammals <- n_mammal(sel_site$name, occurrence)
+  boxes_data$n_iucn <- n_iucn(sel_site$name, occurrence)
+}) %>% bindEvent(input$higherGeography)
 
 #https://raw.githubusercontent.com/iobis/edna-tracker-data/data/generated.json
 
+output$value_box_species <- renderText({
+  boxes_data$n_species
+})
+
+output$value_box_fish <- renderText({
+  boxes_data$n_fish
+})
+
+output$value_box_mammals <- renderText({
+  boxes_data$n_mammals
+})
+
+output$value_box_iucn <- renderText({
+  boxes_data$n_iucn
+})
 
 output$imageGallery <- renderUI({
   species = c("Trachinotus baillonii", "Anguilla rostrata", "Liparis liparis")
   generate_gallery(species, "data/images.txt")
 })
+
+output$species_gallery <- renderUI({
+image_list <- generate_image_list_bySite(input$higherGeography)
+generate_gallery(image_list$scientificName, "data/images.txt", max_image_height = "250px",max_image_width = "200px", image_gap = "0.1em") })
+
 
 ```
 
