@@ -215,7 +215,7 @@ library(bslib)
 source("R/image-gallery.R")
 source("R/occurrence.R")
 source("R/value_boxes.R")
-source("R/images_by_site.R")
+source("R/Species_by_site_abundance.R")
 
 sites_info <- read.table("data/sites_description.txt", header=T)
 occurrence <- read_occurrence_data()
@@ -272,8 +272,8 @@ output$imageGallery <- renderUI({
 })
 
 output$species_gallery <- renderUI({
-image_list <- generate_image_list_bySite(input$higherGeography)
-generate_gallery(image_list$scientificName, "data/images.txt", max_image_height = "250px",max_image_width = "200px", image_gap = "0.1em") })
+species_list <- generate_ordered_species_list_bySite(input$higherGeography, occurrence)
+generate_gallery(species_list$scientificName, "data/images.txt", max_image_height = "250px",max_image_width = "200px", image_gap = "0.1em") })
 
 
 ```

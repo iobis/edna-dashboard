@@ -2,10 +2,8 @@ library(rgbif)
 library(purrr)
 library(glue)
 
-# Order species names based on abundance, and fetch images
-generate_image_list_bySite <- function(site) {
-
-  occurrence <- read_occurrence_data()
+# Order species names based on abundance
+generate_ordered_species_list_bySite <- function(site, occurrence) {
 
   # Add categories for further filtering
   groups=read.csv("data/supporting_data/groups.csv")
@@ -31,10 +29,10 @@ generate_image_list_bySite <- function(site) {
 
   species_names <- species_names %>% left_join(redlist)
 
-  image_list=read.csv("data/images.txt", sep="\t")
-  colnames(image_list)[1] <- "scientificName"
+  #image_list=read.csv("data/images.txt", sep="\t")
+  #colnames(image_list)[1] <- "scientificName"
 
-  species_names <- species_names %>% left_join(image_list)
+  #species_names <- species_names %>% left_join(image_list)
 
   return(species_names)
 }
