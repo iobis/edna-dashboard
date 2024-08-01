@@ -3,7 +3,7 @@ library(purrr)
 library(glue)
 
 # Order species names based on abundance
-generate_ordered_species_list_bySite <- function(site, occurrence) {
+generate_ordered_species_list_bySite <- function(site, occurrence, selected_group) {
 
   # Add categories for further filtering
   groups=read.csv("data/supporting_data/groups.csv")
@@ -34,5 +34,12 @@ generate_ordered_species_list_bySite <- function(site, occurrence) {
 
   #species_names <- species_names %>% left_join(image_list)
 
+if( selected_group != "all species"){
+  species_names <- species_names %>% filter(group == selected_group)
+}
+
   return(species_names)
 }
+
+
+#selected_group="molluscs"
