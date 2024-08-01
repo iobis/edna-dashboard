@@ -21,7 +21,7 @@ generate_gallery <- function(species,
   
   image_table <- as.data.frame(data.table::fread(image_table))
   
-  image_table_filt <- image_table[image_table$species %in% species,]
+  image_table_filt <- image_table[match(species, image_table$species),]
   
   if (nrow(image_table_filt) > 0) {
     cards <- list()
