@@ -21,6 +21,7 @@ server: shiny
 library(shiny)
 library(leaflet)
 library(dplyr)
+library(DT)
 
 # Load json
 sites <- jsonlite::read_json("https://raw.githubusercontent.com/iobis/edna-tracker-data/data/generated.json")
@@ -273,7 +274,7 @@ layout_column_wrap(
   heights_equal = "row",
   add_image_sidebar(
     textOutput("species_name"),
-    textOutput("species_info")
+    div(DT::dataTableOutput("species_info"), style = "font-size:50%")
   ),
   htmlOutput("species_gallery")
 )
@@ -303,6 +304,7 @@ source("R/image-gallery.R")
 source("R/occurrence.R")
 source("R/value_boxes.R")
 source("R/Species_by_site_abundance.R")
+source("R/get_species_information.R")
 
 sites_info <- read.table("data/sites_description.txt", header=T)
 occurrence <- read_occurrence_data()
@@ -400,13 +402,14 @@ observe({
     session$sendCustomMessage(type = "image_gallery_side", message = "toggleVisibility")
     species <- gsub("_", " ", gsub("link_", "", input$clicked_image_id))
     species_name <- species
-    species_info <- paste("Information about species", species)
+    #species_info <- paste("Information about species", species)
+    species_info <- get_species_information(species, occurrence, input$higherGeography)
   } else {
     species_name <- "Select a species to start."
     species_info <- ""
   }
     output$species_name <- renderText({species_name})
-    output$species_info <- renderText({species_info})
+    output$species_info <- DT::renderDataTable({species_info})
 })
 
 
