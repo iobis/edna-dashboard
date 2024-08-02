@@ -154,20 +154,94 @@ htmlOutput("imageGallery")
 ## Column
 
 <!-- Content can be either markdown...-->
-Test page 2
+
+Test content
 
 ## Column 
 
 <!-- Code/output...-->
+
 ```{r}
-plot(x = 1, y = 1)
+plot(1,1)
 ```
+
+
+
 
 # Diversity metrics {orientation="columns" scrolling="true"}
 
 ## Column
 
-Test page 2
+```{r}
+cards <- list(
+  card("Card 1", full_screen = T,
+       class = "button-div clickable-div", id = "clickable-div-1"),
+  card("Card 2", full_screen = T,
+       class = "button-div clickable-div", id = "clickable-div-2")
+)
+layout_column_wrap(
+      width = "200px", gap = "10px",
+      heights_equal = "row",
+      !!!cards
+    )
+```
+
+
+```{=html}
+ <style>
+    .button-div {
+      cursor: pointer;
+      padding: 10px;
+      background-color: lightgray;
+      text-align: center;
+      transition: all 0.3s ease;
+      margin: 5px;
+    }
+
+    .button-div:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    }
+    
+    .button-div[data-full-screen="true"] {
+      transform: none !important;
+      box-shadow: none !important;
+     cursor: default;
+    }
+
+    #sidebar-gallery {
+      display: none;
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 250px;
+      height: 100%;
+      background-color: white;
+      box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
+      padding: 10px;
+    }
+  </style>
+  
+  <div id="sidebar-gallery">Sidebar Content</div>
+  
+  <script>
+    document.querySelectorAll('.clickable-div').forEach(function(element) {
+      element.addEventListener('click', function() {
+        var id = this.id.split('-')[2];
+        var sidebar = document.getElementById('sidebar-gallery');
+        if (sidebar.style.display === 'none') {
+          sidebar.style.display = 'block';
+        } else {
+          sidebar.style.display = 'none';
+        }
+
+        // Send a message to Shiny with the ID of the clicked element
+        console.log(id)
+        Shiny.onInputChange('buttonClicked', id);
+      });
+    });
+  </script>
+```
 
 ## Column 
 
@@ -193,15 +267,16 @@ selectInput("group", "Group:", groups_names)
 ## Row
 
 ```{r}
-htmlOutput("species_gallery")
-
-```
-
-### {.sidebar}
-
-```{r}
-textOutput("species_name")
-textOutput("species_info")
+source("extensions/image-sidebar.R")
+layout_column_wrap(
+  width = 1,
+  heights_equal = "row",
+  add_image_sidebar(
+    textOutput("species_name"),
+    textOutput("species_info")
+  ),
+  htmlOutput("species_gallery")
+)
 ```
 
 # Sample {orientation="columns" scrolling="true"}
@@ -301,12 +376,16 @@ output$value_box_iucn <- renderText({
   boxes_data$data$n_iucn
 })
 
+
+# Image galleries --
+
+# Front page gallery ----
 output$imageGallery <- renderUI({
   species = c("Trachinotus baillonii", "Anguilla rostrata", "Liparis liparis")
   generate_gallery(species, "data/images.txt")
 })
 
-
+# Species list gallery ----
 species_list <- reactive({
     generate_ordered_species_list_bySite(input$higherGeography, occurrence, input$group)
   })
@@ -316,26 +395,21 @@ output$species_gallery <- renderUI({
     })
 
 observe({
-    # Get the species list
-    list_of_species <- species_list()
-    
-    # Create observeEvent handlers for each species
-    lapply(seq_len(nrow(list_of_species)), function(i) {
-      species <- list_of_species$scientificName[i]
-      link_id <- paste0("link_", gsub(" ", "_", species))
-      
-      # Set up observeEvent for the link_id
-      observeEvent(input[[link_id]], {
-        updateSidebar(species, paste("Information about", species))
-      }, ignoreInit = TRUE)
-    })
-  }) %>% bindEvent(input$higherGeography, input$group, ignoreInit = T)
-
-
-  updateSidebar <- function(species_name, species_info) {
+  if (!is.null(input$clicked_image_id)) {
+    print(input$clicked_image_id)
+    session$sendCustomMessage(type = "image_gallery_side", message = "toggleVisibility")
+    species <- gsub("_", " ", gsub("link_", "", input$clicked_image_id))
+    species_name <- species
+    species_info <- paste("Information about species", species)
+  } else {
+    species_name <- "Select a species to start."
+    species_info <- ""
+  }
     output$species_name <- renderText({species_name})
     output$species_info <- renderText({species_info})
-  }
+})
+
+
 
 # Map input changes ----
 map_info <- reactive({
@@ -371,6 +445,5 @@ observe({
   }
 }) %>%
   bindEvent(input$higherGeography, ignoreInit = T)
-
 ```
 

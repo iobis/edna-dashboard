@@ -1,0 +1,22 @@
+.image-butt-div {
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.image-butt-div:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+  position: relative; /* Ensure z-index works */
+  z-index: 9999; /* Ensure it's on top of other elements */
+  border: 3px solid white; /* Add a white border */
+}
+
+.image-butt-div[data-full-screen="true"] {
+  transform: none !important;
+  box-shadow: none !important;
+  cursor: default;
+}
+
+.image-header {
+  font-style: italic;
+}
