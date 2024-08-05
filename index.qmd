@@ -34,6 +34,13 @@ localities <- sites_samples %>% bind_rows() %>% select(area_name, area_locality,
 
 groups <- read.csv("data/supporting_data/groups.csv")
 groups_names <- c("all species", unique(groups$group))
+
+taxonLevels <- c("ASV","kingdom","phylum","order","class","family","genus", "species")
+
+alpha_measure <- c("Observed", "Chao1", "Shannon", "Simpson")
+
+beta_measure <- c("bray", "jaccard")
+
 ```
 
 <!-- This goes on top of the page after navbar - map-->
@@ -163,7 +170,8 @@ Test content
 <!-- Code/output...-->
 
 ```{r}
-plot(1,1)
+#plot(1,1)
+plotOutput("markers_plot")
 ```
 
 
@@ -171,6 +179,11 @@ plot(1,1)
 
 # Diversity metrics {orientation="columns" scrolling="true"}
 
+## {.toolbar}
+
+```{r}
+selectInput("higherGeography", "Site:", sites_names)
+```
 ## Column
 
 ```{r}
@@ -244,13 +257,52 @@ layout_column_wrap(
   </script>
 ```
 
-## Column 
+## Row 
 
 <!-- Or a mix of both-->
-Some text
+
 
 ```{r}
-plot(x = 1, y = 1)
+fluidPage(
+  tags$head(
+    tags$style(type="text/css", 
+      "label.control-label, .selectize-control.single { 
+         display: table-cell; 
+         text-align: center; 
+         vertical-align: middle; 
+      } 
+      label.control-label {
+        padding-right: 10px;
+      }
+      .form-group { 
+        display: table-row;
+      }
+      .selectize-control.single div.item {
+        padding-right: 15px;
+      }")
+  ),
+  fluidRow(
+    column(width=4,
+        selectInput("taxonLevel", "Taxonomic rank:", choices = taxonLevels)
+      ),
+    column(width=4,
+        selectInput("alpha_measure", "Alpha diversity:", choices = alpha_measure)
+      ),
+    column(width=4,
+        selectInput("beta_measure", "Beta diversity:", choices = beta_measure)
+      )
+    ),
+  fluidRow(
+    column(6,
+      plotOutput("alpha_plot")
+    ),
+    column(6,
+      plotOutput("beta_plot")
+    )
+  )
+)
+
+#To Change: get input selection as well as the labels of the input selection in one row (I tried everything...)
 ```
 
 # Species {orientation="columns" scrolling="true"}
@@ -305,6 +357,8 @@ source("R/occurrence.R")
 source("R/value_boxes.R")
 source("R/Species_by_site_abundance.R")
 source("R/get_species_information.R")
+source("R/taxonomy_figures.R")
+source("R/species_diversity.R")
 
 sites_info <- read.table("data/sites_description.txt", header=T)
 occurrence <- read_occurrence_data()
@@ -448,5 +502,40 @@ observe({
   }
 }) %>%
   bindEvent(input$higherGeography, ignoreInit = T)
+
+
+
+# Taxa images ----
+
+taxplot <- reactive({
+make_venn_diagram_species_primers(occurrence, input$higherGeography) })
+
+output$markers_plot <- renderPlot({
+ taxplot()
+})
+
+# Diversity metrics ----
+
+#divplot <- reactive({
+#get_alpha_diversity(occurrence, input$higherGeography, input$taxonLevel, input$alpha_measure, input$beta_measure) })
+
+
+divplots <- reactive({
+ get_alpha_diversity(occurrence, input$higherGeography, input$taxonLevel, input$alpha_measure, input$beta_measure)
+})
+
+output$alpha_plot <- renderPlot({
+ divplots()[[1]]
+})
+
+output$beta_plot <- renderPlot({
+ divplots()[[2]]
+})
+
+#input$taxonLevel="ASV"
+#input$alpha_measure="Observed"
+#input$beta_measure="bray"
+
+
 ```
 
