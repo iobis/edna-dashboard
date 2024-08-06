@@ -257,52 +257,35 @@ layout_column_wrap(
   </script>
 ```
 
-## Row 
+## Row   {.flow}
 
 <!-- Or a mix of both-->
 
+### {.toolbar}
+```{r}
+
+ selectInput("taxonLevel", "Taxonomic rank:", choices = taxonLevels)
+ selectInput("alpha_measure", "Alpha diversity:", choices = alpha_measure)
+ selectInput("beta_measure", "Beta diversity:", choices = beta_measure)
+
+```
+
+## Row
+
+### Column 
 
 ```{r}
-fluidPage(
-  tags$head(
-    tags$style(type="text/css", 
-      "label.control-label, .selectize-control.single { 
-         display: table-cell; 
-         text-align: center; 
-         vertical-align: middle; 
-      } 
-      label.control-label {
-        padding-right: 10px;
-      }
-      .form-group { 
-        display: table-row;
-      }
-      .selectize-control.single div.item {
-        padding-right: 15px;
-      }")
-  ),
-  fluidRow(
-    column(width=4,
-        selectInput("taxonLevel", "Taxonomic rank:", choices = taxonLevels)
-      ),
-    column(width=4,
-        selectInput("alpha_measure", "Alpha diversity:", choices = alpha_measure)
-      ),
-    column(width=4,
-        selectInput("beta_measure", "Beta diversity:", choices = beta_measure)
-      )
-    ),
-  fluidRow(
-    column(6,
-      plotOutput("alpha_plot")
-    ),
-    column(6,
-      plotOutput("beta_plot")
-    )
-  )
-)
 
-#To Change: get input selection as well as the labels of the input selection in one row (I tried everything...)
+plotOutput("alpha_plot")
+
+```
+
+### Column 
+
+```{r}
+
+plotOutput("beta_plot")
+
 ```
 
 # Species {orientation="columns" scrolling="true"}
@@ -515,10 +498,6 @@ output$markers_plot <- renderPlot({
 })
 
 # Diversity metrics ----
-
-#divplot <- reactive({
-#get_alpha_diversity(occurrence, input$higherGeography, input$taxonLevel, input$alpha_measure, input$beta_measure) })
-
 
 divplots <- reactive({
  get_alpha_diversity(occurrence, input$higherGeography, input$taxonLevel, input$alpha_measure, input$beta_measure)
