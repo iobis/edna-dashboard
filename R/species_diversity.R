@@ -4,12 +4,11 @@ library(ape)
 
 #This script calculates and plots different diversity measures.
 #In the future, calculate and plot separately, so the calculation is only done once? 
+#To add also calculation of statistical significance of differences between localities?
+
 
 get_alpha_diversity<-function(occurrence, site, taxonLevel, alpha_div_measure, beta_div_measure){
  
- #taxonLevel="kingdom"
- plots=list()
-
  occurrence_site <- occurrence %>%
         filter(higherGeography==site) %>%
         filter(!is.na(locality))
@@ -40,11 +39,7 @@ if(taxonLevel == "ASV"){
         ungroup() %>%
         pivot_wider(names_from = scientificName, values_from = reads, values_fill = 0)
 
-
 }
-
-#dim(stats_mds)
-
 
     stats_mds <- as.data.frame(stats_mds)
     rownames(stats_mds)<- stats_mds$materialSampleID
@@ -60,9 +55,6 @@ if(taxonLevel == "ASV"){
     estR <- estR %>% 
         left_join(occurrence %>% select(materialSampleID, locality, decimalLatitude, decimalLongitude) %>% distinct())
 
-
-    #alpha_div_measure="Simpson"
-
     p1 <- ggplot(estR, aes(x=locality, y=!!sym(alpha_div_measure), fill=locality)) + 
                     geom_boxplot()+ 
                     geom_point() + 
@@ -70,9 +62,7 @@ if(taxonLevel == "ASV"){
                     #scale_fill_viridis(discrete=T, option="mako")
                     scale_fill_brewer(palette = "Blues")
 
-    plots$alpha <- p1
-
-    #beta_div_measure="bray"
+    #plots$alpha <- p1
 
     divR <- vegdist(OTU, method=beta_div_measure)
 
@@ -94,8 +84,6 @@ if(taxonLevel == "ASV"){
                     scale_fill_brewer(palette = "Blues")
 
     list(p1, p2)
-
- 
 
 }
 
