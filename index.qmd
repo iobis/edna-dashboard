@@ -22,6 +22,7 @@ library(shiny)
 library(leaflet)
 library(dplyr)
 library(DT)
+library(reactable)
 
 # Load json
 sites <- jsonlite::read_json("https://raw.githubusercontent.com/iobis/edna-tracker-data/data/generated.json")
@@ -40,6 +41,10 @@ taxonLevels <- c("ASV","kingdom","phylum","order","class","family","genus", "spe
 alpha_measure <- c("Observed", "Chao1", "Shannon", "Simpson")
 
 beta_measure <- c("bray", "jaccard")
+
+plot_type<-c("reads", "relative abundance")
+
+show_primers<-c(FALSE, TRUE)
 
 ```
 
@@ -136,7 +141,7 @@ value_box(
 
 #### Row
 
-```{r, file="./R/value_boxes.R"}
+```{r}
 
 value_box(
   title = "IUCN threatened",
@@ -159,18 +164,46 @@ htmlOutput("imageGallery")
 <!-- Orientation can be either columns or rows; each level 2 header becomes a card-->
 # Taxonomy {orientation="columns" scrolling="true"}
 
-## Column
-
-<!-- Content can be either markdown...-->
-
-Test content
-
-## Column 
-
-<!-- Code/output...-->
+## {.toolbar}
 
 ```{r}
-#plot(1,1)
+selectInput("higherGeography", "Site:", sites_names)
+selectInput("taxonLevel", "Rank:", taxonLevels[-c(1,2)])
+selectInput("plotType", "Abundance:", plot_type)
+selectInput("showPrimers", "Show markers:", show_primers)
+```
+
+## Row
+
+```{r}
+#| title: Taxonomic composition of all samples across the site
+plotOutput("tax_bar_plot")
+```
+
+## Row
+
+```{r}
+#| title: All annotated names at the site
+#DT::dataTableOutput("taxon_table")
+reactable::reactableOutput("rtable")
+```
+
+
+## Row
+
+### Column
+```{r}
+#| title: Taxonomic tree of the most common phyla
+
+plotOutput("tree_plot")
+```
+
+
+
+### Column
+```{r}
+#| title: Number of species detected with different biomarkers
+
 plotOutput("markers_plot")
 ```
 
@@ -490,12 +523,40 @@ observe({
 
 # Taxa images ----
 
+taxbarplot <- reactive({
+  
+  make_image_taxonomy(occurrence, input$higherGeography, input$taxonLevel, input$plotType, input$showPrimers) 
+  
+  }) 
+
+
+output$tax_bar_plot <- renderPlot({
+ taxbarplot()
+})
+
+taxon_table<- reactive({ 
+  make_table_taxonomy(occurrence, input$higherGeography)})
+
+  output$rtable <- renderReactable({
+   taxon_table()
+ })
+
+
+treeplot <- reactive({
+make_taxonomic_tree(occurrence, input$higherGeography) })
+
+output$tree_plot <- renderPlot({
+ treeplot()
+})
+
 taxplot <- reactive({
 make_venn_diagram_species_primers(occurrence, input$higherGeography) })
 
 output$markers_plot <- renderPlot({
  taxplot()
 })
+
+
 
 # Diversity metrics ----
 
@@ -511,10 +572,12 @@ output$beta_plot <- renderPlot({
  divplots()[[2]]
 })
 
-#input$taxonLevel="ASV"
+#input$taxonLevel="phylum"
 #input$alpha_measure="Observed"
 #input$beta_measure="bray"
-
+#input$plotType="relative abundance"
+#input$showPrimers=FALSE
+#input
 
 ```
 
