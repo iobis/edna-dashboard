@@ -4,6 +4,8 @@
     overflow: auto;
     transition: transform 15s ease, opacity 15s ease;
     opacity: 1;
+    height: auto;
+    max-height: none; 
   }
 
   #image-sidebar.hidden {

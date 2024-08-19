@@ -111,3 +111,31 @@ li.nav-item {
 .bslib-mb-spacing {
     margin-bottom: 0 !important;
 }
+
+
+
+
+/* Species page */
+
+/* Image gallery context info */
+#species-cont-name {
+    font-size: 32px;
+    font-weight: 900;
+    font-style: italic;
+    color: #0277d4;
+}
+
+#species-cont-links a {
+    font-size: 12px;
+    font-style: normal;
+    text-decoration: none !important;
+    color: #0277d4;
+}
+
+#species-cont-common {
+  font-size: 12px;
+}
+
+#species-cont-content {
+  padding-bottom: 20px;
+}

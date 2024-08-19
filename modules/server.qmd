@@ -31,6 +31,8 @@ localities <- sites_samples %>%
   select(area_name, area_locality, parent_area_name, station, lon = area_longitude, lat = area_latitude) %>%
   group_by(area_name, area_locality, parent_area_name, station, lon, lat) %>%
   distinct(.keep_all = T)
+
+species_context_info <- readRDS("data/fishbase.rds")
 ```
 
 <!-- Shiny server component -->
@@ -110,6 +112,26 @@ observe({
     session$sendCustomMessage(type = "image_gallery_side", message = "toggleVisibility")
     species <- gsub("_", " ", gsub("link_", "", input$clicked_image_id))
     species_name <- species
+    
+    sel_aphiaid <- occurrence %>%
+      filter(scientificName == species) %>%
+      select(scientificNameID) %>%
+      mutate(scientificNameID = sub(".*:", "", scientificNameID)) %>%
+      slice_head(n = 1) %>% unlist()
+    
+    fb_content <- species_context_info$core_info %>% filter(Species == species)
+    fb_commons <- species_context_info$common_names %>% filter(Species == species)
+    
+    species_link_1 <- glue::glue('<a href="{paste0("https://www.marinespecies.org/aphia.php?p=taxdetails&id=", sel_aphiaid)}", target="_blank">WoRMS: {sel_aphiaid}</a>')
+    species_link_2 <- glue::glue('<a href="{paste0("https://www.fishbase.se/summary/", gsub(" ", "-", species), ".html")}", target="_blank">FishBase: {fb_content$SpecCode[1]}</a>')
+    
+    sp_fb_common_names <- ifelse(nrow(fb_commons) > 0, paste(fb_commons$ComName, collapse = ", "), "not found")
+    sp_fb_content <- fb_content$Comments
+    
+    output$species_links <- renderText({paste("<p>", species_link_1, " | ", species_link_2, "</p>")})
+    output$species_fb_common_names <- renderText({paste("Common names:", sp_fb_common_names)})
+    output$species_fb_content <- renderText({sp_fb_content})
+  
     #species_info <- paste("Information about species", species)
     species_info <- get_species_information(species, occurrence, input$higherGeography)
   } else {

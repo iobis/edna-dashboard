@@ -13,7 +13,7 @@ add_image_sidebar <- function(...) {
   output <- card(
     htmltools::tags$button(htmltools::HTML('<i class="bi bi-x-circle-fill" style="color: #CED6DC;"></i>'), id = "close-btn-sidebar"),
     ...,
-    id = "image-sidebar"
+    id = "image-sidebar", full_screen = T
   )
   
   htmltools::attachDependencies(output, deps)
