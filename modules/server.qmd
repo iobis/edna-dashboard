@@ -1,0 +1,220 @@
+<!-- Done just when the server start, shared across users-->
+```{r}
+#| context: server-start
+
+library(bslib)
+library(leaflet)
+library(shiny)
+library(dplyr)
+source("R/image-gallery.R")
+source("R/occurrence.R")
+source("R/value_boxes.R")
+source("R/Species_by_site_abundance.R")
+source("R/get_species_information.R")
+source("R/taxonomy_figures.R")
+source("R/species_diversity.R")
+
+sites_info <- read.table("data/sites_description.txt", header=T)
+occurrence <- read_occurrence_data()
+
+
+# Leaflet map data
+# TODO: pre-do that
+sites <- jsonlite::read_json("https://raw.githubusercontent.com/iobis/edna-tracker-data/data/generated.json")
+sites_list <- sites$sites
+sites_samples <- sites$samples
+
+sites_names <- sapply(sites_list, function(x) x$name)
+
+localities <- sites_samples %>% 
+  bind_rows() %>% 
+  select(area_name, area_locality, parent_area_name, station, lon = area_longitude, lat = area_latitude) %>%
+  group_by(area_name, area_locality, parent_area_name, station, lon, lat) %>%
+  distinct(.keep_all = T)
+```
+
+<!-- Shiny server component -->
+```{r}
+#| context: server
+
+output$mainMap <- renderLeaflet({
+  leaflet(width = "100%") %>%
+   addTiles(urlTemplate = "https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png") %>%
+   addMarkers(~lon, ~lat, popup = ~as.character(area_name), label = ~as.character(area_name),
+              layerId = ~station,
+              data = localities, clusterOptions = markerClusterOptions()) %>%
+   setView(0, 0, zoom = 2)
+})
+
+output$higherGeography <- renderText({
+  sel_site <- sites_info[sites_info$name == input$higherGeography,]
+  sel_site$name
+})
+
+output$siteDescription <- renderText({
+  sel_site <- sites_info[sites_info$name == input$higherGeography,]
+  sel_site$description
+})
+
+#input=list(higherGeography="Gulf of Porto: Calanche of Piana, Gulf of Girolata, Scandola Reserve", group="fish")
+#input=list(higherGeography="Lagoons of New Caledonia: Reef Diversity and Associated Ecosystems")
+
+output$eventDate <- renderText({"2024-05-01"})
+output$eventSamples <- renderText({"1000"})
+
+boxes_data <- reactiveValues()
+observe({
+  sel_site <- sites_info[sites_info$name == input$higherGeography,]
+  boxes_data$data <- n_species(sel_site$name, occurrence)
+}) %>% bindEvent(input$higherGeography)
+
+#https://raw.githubusercontent.com/iobis/edna-tracker-data/data/generated.json
+
+output$value_box_species <- renderText({
+  boxes_data$data$n_species
+})
+
+output$value_box_fish <- renderText({
+  boxes_data$data$n_fish
+})
+
+output$value_box_mammals <- renderText({
+  boxes_data$data$n_mammals
+})
+
+output$value_box_iucn <- renderText({
+  boxes_data$data$n_iucn
+})
+
+
+# Image galleries --
+
+# Front page gallery ----
+output$imageGallery <- renderUI({
+  species = c("Trachinotus baillonii", "Anguilla rostrata", "Liparis liparis")
+  generate_gallery(species, "data/images.txt")
+})
+
+# Species list gallery ----
+species_list <- reactive({
+    generate_ordered_species_list_bySite(input$higherGeography, occurrence, input$group)
+  })
+
+output$species_gallery <- renderUI({
+    generate_gallery(species_list()$scientificName, "data/images.txt", max_image_height = "250px",max_image_width = "200px", image_gap = "0.1em") 
+    })
+
+observe({
+  if (!is.null(input$clicked_image_id)) {
+    print(input$clicked_image_id)
+    session$sendCustomMessage(type = "image_gallery_side", message = "toggleVisibility")
+    species <- gsub("_", " ", gsub("link_", "", input$clicked_image_id))
+    species_name <- species
+    #species_info <- paste("Information about species", species)
+    species_info <- get_species_information(species, occurrence, input$higherGeography)
+  } else {
+    species_name <- "Select a species to start."
+    species_info <- ""
+  }
+    output$species_name <- renderText({species_name})
+    output$species_info <- DT::renderDataTable({species_info})
+})
+
+
+
+# Map input changes ----
+map_info <- reactive({
+  if (!is.null(input$mainMap_marker_click)) {
+    click <- input$mainMap_marker_click
+    if (!is.null(click$id)) {
+      locs <- localities[!is.na(localities$station),]
+      loc_sel <- locs[locs$station == click$id, ]
+      loc_sel <- loc_sel[loc_sel$lon == click$lng & loc_sel$lat == click$lat,]
+      loc_sel
+    } else {
+      NULL
+    }
+  } else {
+    NULL
+  }
+})
+
+observe({
+  updateVarSelectInput(session, "higherGeography", selected = map_info()$parent_area_name[1])
+}) %>%
+  bindEvent(map_info())
+
+observe({
+  proxy <- leafletProxy("mainMap")
+  
+  sel_loc <- localities[localities$parent_area_name == input$higherGeography,]
+  sel_loc <- sel_loc[!is.na(sel_loc$lon) & !is.na(sel_loc$lat),]
+  
+  if (nrow(sel_loc) > 0) {
+    proxy %>% flyToBounds(lng1 = min(sel_loc$lon), lat1 = min(sel_loc$lat),
+                          lng2 = max(sel_loc$lon), lat2 = max(sel_loc$lat))
+  }
+}) %>%
+  bindEvent(input$higherGeography, ignoreInit = T)
+
+
+
+# Taxa images ----
+
+taxbarplot <- reactive({
+  
+  make_image_taxonomy(occurrence, input$higherGeography, input$taxonLevel, input$plotType, input$showPrimers) 
+  
+  }) 
+
+
+output$tax_bar_plot <- renderPlot({
+ taxbarplot()
+})
+
+taxon_table<- reactive({ 
+  make_table_taxonomy(occurrence, input$higherGeography)})
+
+  output$rtable <- renderReactable({
+   taxon_table()
+ })
+
+
+treeplot <- reactive({
+make_taxonomic_tree(occurrence, input$higherGeography) })
+
+output$tree_plot <- renderPlot({
+ treeplot()
+})
+
+taxplot <- reactive({
+make_venn_diagram_species_primers(occurrence, input$higherGeography) })
+
+output$markers_plot <- renderPlot({
+ taxplot()
+})
+
+
+
+# Diversity metrics ----
+
+divplots <- reactive({
+ get_alpha_diversity(occurrence, input$higherGeography, input$taxonLevel, input$alpha_measure, input$beta_measure)
+})
+
+output$alpha_plot <- renderPlot({
+ divplots()[[1]]
+})
+
+output$beta_plot <- renderPlot({
+ divplots()[[2]]
+})
+
+#input$taxonLevel="phylum"
+#input$alpha_measure="Observed"
+#input$beta_measure="bray"
+#input$plotType="relative abundance"
+#input$showPrimers=FALSE
+#input
+
+```

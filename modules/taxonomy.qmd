@@ -1,0 +1,45 @@
+<!-- Orientation can be either columns or rows; each level 2 header becomes a card-->
+# Taxonomy {orientation="columns" scrolling="true"}
+
+## {.toolbar}
+
+```{r}
+selectInput("higherGeography", "Site:", sites_names)
+selectInput("taxonLevel", "Rank:", taxonLevels[-c(1,2)])
+selectInput("plotType", "Abundance:", plot_type)
+selectInput("showPrimers", "Show markers:", show_primers)
+```
+
+## Row
+
+```{r}
+#| title: Taxonomic composition of all samples across the site
+plotOutput("tax_bar_plot")
+```
+
+## Row
+
+```{r}
+#| title: All annotated names at the site
+#DT::dataTableOutput("taxon_table")
+reactable::reactableOutput("rtable")
+```
+
+
+## Row
+
+### Column
+```{r}
+#| title: Taxonomic tree of the most common phyla
+
+plotOutput("tree_plot")
+```
+
+
+
+### Column
+```{r}
+#| title: Number of species detected with different biomarkers
+
+plotOutput("markers_plot")
+```

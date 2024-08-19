@@ -1,0 +1,110 @@
+# Diversity metrics {orientation="columns" scrolling="true"}
+
+## {.toolbar}
+
+```{r}
+selectInput("higherGeography", "Site:", sites_names)
+```
+## Column
+
+```{r}
+cards <- list(
+  card("Card 1", full_screen = T,
+       class = "button-div clickable-div", id = "clickable-div-1"),
+  card("Card 2", full_screen = T,
+       class = "button-div clickable-div", id = "clickable-div-2")
+)
+layout_column_wrap(
+      width = "200px", gap = "10px",
+      heights_equal = "row",
+      !!!cards
+    )
+```
+
+
+```{=html}
+ <style>
+    .button-div {
+      cursor: pointer;
+      padding: 10px;
+      background-color: lightgray;
+      text-align: center;
+      transition: all 0.3s ease;
+      margin: 5px;
+    }
+
+    .button-div:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    }
+    
+    .button-div[data-full-screen="true"] {
+      transform: none !important;
+      box-shadow: none !important;
+     cursor: default;
+    }
+
+    #sidebar-gallery {
+      display: none;
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 250px;
+      height: 100%;
+      background-color: white;
+      box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
+      padding: 10px;
+    }
+  </style>
+  
+  <div id="sidebar-gallery">Sidebar Content</div>
+  
+  <script>
+    document.querySelectorAll('.clickable-div').forEach(function(element) {
+      element.addEventListener('click', function() {
+        var id = this.id.split('-')[2];
+        var sidebar = document.getElementById('sidebar-gallery');
+        if (sidebar.style.display === 'none') {
+          sidebar.style.display = 'block';
+        } else {
+          sidebar.style.display = 'none';
+        }
+
+        // Send a message to Shiny with the ID of the clicked element
+        console.log(id)
+        Shiny.onInputChange('buttonClicked', id);
+      });
+    });
+  </script>
+```
+
+## Row   {.flow}
+
+<!-- Or a mix of both-->
+
+### {.toolbar}
+```{r}
+
+ selectInput("taxonLevel", "Taxonomic rank:", choices = taxonLevels)
+ selectInput("alpha_measure", "Alpha diversity:", choices = alpha_measure)
+ selectInput("beta_measure", "Beta diversity:", choices = beta_measure)
+
+```
+
+## Row
+
+### Column 
+
+```{r}
+
+plotOutput("alpha_plot")
+
+```
+
+### Column 
+
+```{r}
+
+plotOutput("beta_plot")
+
+```

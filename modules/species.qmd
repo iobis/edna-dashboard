@@ -1,0 +1,38 @@
+# Species {orientation="columns" scrolling="true"}
+
+## {.toolbar}
+
+```{r}
+selectInput("higherGeography", "Site:", sites_names)
+
+selectInput("group", "Group:", groups_names)
+
+```
+
+
+## Row
+
+```{r}
+source("extensions/image-sidebar.R")
+layout_column_wrap(
+  width = 1,
+  heights_equal = "row",
+  add_image_sidebar(
+    textOutput("species_name"),
+    div(DT::dataTableOutput("species_info"), style = "font-size:50%")
+  ),
+  htmlOutput("species_gallery")
+)
+```
+
+# Sample {orientation="columns" scrolling="true"}
+
+## Column
+
+Test page 2
+
+## Column 
+
+```{r}
+plot(x = 1, y = 1)
+```
