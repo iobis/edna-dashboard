@@ -1,5 +1,5 @@
 # Load species list 
-library(dplyr)
+library(dplyr) 
 source("R/occurrence.R")
 
 sites_info <- read.table("data/sites_description.txt", header=T)
@@ -15,11 +15,6 @@ sp_sealifebase <- sp_level %>% filter(!scientificName %in% fish_base_info$Specie
 sealife_base_info <- rfishbase::species(unique(na.omit(sp_sealifebase$scientificName)), server="sealifebase")
 
 #combine the two tables
-fish_base_info$DateEntered <- as.character(fish_base_info$DateEntered)
-fish_base_info$DateModified <- as.character(fish_base_info$DateModified)
-fish_base_info$DateChecked <- as.character(fish_base_info$DateChecked)
-fish_base_info$TS <- as.character(fish_base_info$TS)
-
 fish_base_info <- bind_rows(fish_base_info, sealife_base_info)
 
 
