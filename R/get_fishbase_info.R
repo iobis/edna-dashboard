@@ -8,7 +8,20 @@ occurrence <- read_occurrence_data()
 sp_level <- occurrence[occurrence$taxonRank == "species",]
 
 # Get info from Fishbase, if available
-fish_base_info <- rfishbase::species(na.omit(sp_level$scientificName))
+fish_base_info <- rfishbase::species(unique(na.omit(sp_level$scientificName)))
+
+# Get other marine species information 
+sp_sealifebase <- sp_level %>% filter(!scientificName %in% fish_base_info$Species)
+sealife_base_info <- rfishbase::species(unique(na.omit(sp_sealifebase$scientificName)), server="sealifebase")
+
+#combine the two tables
+fish_base_info$DateEntered <- as.character(fish_base_info$DateEntered)
+fish_base_info$DateModified <- as.character(fish_base_info$DateModified)
+fish_base_info$DateChecked <- as.character(fish_base_info$DateChecked)
+fish_base_info$TS <- as.character(fish_base_info$TS)
+
+fish_base_info <- bind_rows(fish_base_info, sealife_base_info)
+
 
 fish_base_info$Comments <- gsub(" \\(Ref\\. [0-9]+\\)", "", fish_base_info$Comments)
 
@@ -17,7 +30,11 @@ fish_base_info <- fish_base_info %>%
          DepthRangeShallow, DepthRangeDeep, Length, Weight, Importance, UsedforAquaculture,
          Aquarium, Dangerous, Comments)
 
-fish_base_commons <- rfishbase::common_names(na.omit(sp_level$scientificName))
+fish_base_commons <- rfishbase::common_names(unique(na.omit(sp_level$scientificName)))
+sealife_base_commons <- rfishbase::common_names(unique(na.omit(sp_sealifebase$scientificName)), server="sealifebase")
+
+fish_base_commons <- bind_rows(fish_base_commons, sealife_base_commons,  )
+
 fish_base_commons <- fish_base_commons %>%
   group_by(Species) %>%
   slice_head(n = 3)
