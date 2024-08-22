@@ -14,10 +14,10 @@ source("R/get_species_information.R")
 source("R/taxonomy_figures.R")
 source("R/species_diversity.R")
 source("R/get_dna_statistics.R")
-source("R/fix_taxonomy.R")
+#source("R/fix_taxonomy.R")
 
 sites_info <- read.table("data/sites_description.txt", header=T)
-#occurrence <- read_occurrence_data()
+occurrence <- read_occurrence_data()
 
 
 # Leaflet map data
