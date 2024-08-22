@@ -7,14 +7,13 @@ library(tidyr)
 library(data.tree)
 library(ggtree)
 library(ggtreeExtra)
+library(phyloseq)
+library(psadd)
 
 
 
-make_image_taxonomy <- function(occurrence, site, taxonLevel, plot_type, show_primers){
+make_image_taxonomy <- function(occurrence, site, taxonLevel, plot_type){
 
-#taxonLevel="phylum"
-#plot_type="reads"
-#show_primers=FALSE
 
 occurrence_site <- occurrence %>%
                         filter(higherGeography==site) %>%
@@ -63,18 +62,18 @@ df_modified <- stats_phylum  %>%
   summarize(reads = sum(reads)) %>%
   ungroup()
 
+#For plots separated by markers add and input for show_primers (but to do: calculate new relative abundance also)
+#if (show_primers) {
 
-if (show_primers) {
+#ggplot(data=df_modified, aes(y=reads, x=materialSampleID, fill=taxonLevel), color="gray") +
+#    geom_bar(stat="identity",color="gray") + 
+#    facet_grid(pcr_primer_name_forward~locality, scales="free_x", space = "free")+
+#    theme_minimal() + 
+#    guides(fill=guide_legend(title=taxonLevel))+
+#    ggtitle("The ten most common taxa")+
+#    scale_fill_viridis(discrete=T,na.value = "gray")
 
-ggplot(data=df_modified, aes(y=reads, x=materialSampleID, fill=taxonLevel), color="gray") +
-    geom_bar(stat="identity",color="gray") + 
-    facet_grid(pcr_primer_name_forward~locality, scales="free_x", space = "free")+
-    theme_minimal() + 
-    guides(fill=guide_legend(title=taxonLevel))+
-    ggtitle("The ten most common taxa")+
-    scale_fill_viridis(discrete=T,na.value = "gray")
-
-} else {
+#} else {
 
 df_modified <- df_modified %>%  group_by(taxonLevel, locality, materialSampleID) %>%
   summarize(reads = sum(reads)) %>%
@@ -90,7 +89,7 @@ ggplot(data=df_modified, aes(y=reads, x=materialSampleID, fill=taxonLevel), colo
 
 }
 
-}
+#}
 
 
 #make searchable table for browsing. 
@@ -140,31 +139,50 @@ rtable<-table_data %>%
 return(rtable)
 }
 
+make_krona_plot <- function(occurrence, site){
+
+occurrence_site <- occurrence %>% filter(higherGeography==site) %>%
+                        mutate(species = ifelse(taxonRank == 'species', scientificName, NA))
+
+#Make a phyloseq object for ease of access
+
+otu_table <- occurrence_site %>% 
+  select(DNA_sequence, organismQuantity, materialSampleID) %>%
+  pivot_wider(names_from = materialSampleID, values_from = organismQuantity, values_fn=sum)
+
+otu_table=as.data.frame(otu_table)
+rownames(otu_table)=otu_table$DNA_sequence
+otu_table=otu_table[,-1]
+otu_table[is.na(otu_table)]=0
+
+tax_table= occurrence_site %>% 
+  select(DNA_sequence, kingdom, phylum, class, order, family, genus, species) %>% distinct(DNA_sequence, .keep_all = T)
+rownames(tax_table)=tax_table$DNA_sequence
+tax_table=tax_table[,-1]
+colnames(tax_table) <- c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species")
+taxmat=as.matrix(tax_table, rownames.force = T)
+
+sample_data = occurrence_site %>% 
+  select(materialSampleID, eventRemarks, locality, decimalLongitude, decimalLatitude, sampleSize, higherGeography, locationID) %>% distinct()
+
+rownames(sample_data)=sample_data$materialSampleID
+sample_data=sample_data[,-1]
+
+#sequences <- Biostrings::DNAStringSet(rownames(otu_table))
+
+otutab=phyloseq::otu_table(otu_table, taxa_are_rows = T)
+taxtab=phyloseq::tax_table(taxmat)
+sampledat=phyloseq::sample_data(sample_data)
+
+ps=phyloseq::phyloseq(otutab, taxtab, sampledat)
 
 
-make_venn_diagram_species_primers <- function(occurrence, site){
+unique(occurrence_site$kingdom)
+unique(occurrence_site$phylum)
 
-occurrence_site <- occurrence %>% filter(higherGeography==site) %>% filter(taxonRank=="species")
+psadd::plot_krona(ps, "./data/krona_plots", "higherGeography", trim=TRUE)
 
-primers<-unique(occurrence_site$pcr_primer_name_forward)
-
-species_by_primer <- list(
-  MifishUE = unique(occurrence_site$scientificName[occurrence_site$pcr_primer_name_forward=="MiFish-UE-F"]),
-  MiMammalUEB = unique(occurrence_site$scientificName[occurrence_site$pcr_primer_name_forward=="MiMammal-UEB-F"]),
-  Teleo = unique(occurrence_site$scientificName[occurrence_site$pcr_primer_name_forward=="teleo_F_L1848"]),
-  Vert16S = unique(occurrence_site$scientificName[occurrence_site$pcr_primer_name_forward=="Vert-16S-eDNA-F1"]),
-  COI = unique(occurrence_site$scientificName[occurrence_site$pcr_primer_name_forward=="mlCOIintF"])
-)
-set.seed(1)
-return(plot(euler(species_by_primer[1:4], shape = "ellipse"), quantities = TRUE))
-
-#ggplot(occurrence_site %>% group_by(pcr_primer_name_forward) %>% summarize(n=sum(organismQuantity)), aes(x=pcr_primer_name_forward, y=n)) + geom_bar(stat="identity")
-#ggplot(occurrence_site %>% group_by(pcr_primer_name_forward) %>% summarize(n=length(unique(scientificName))), aes(x=pcr_primer_name_forward, y=n)) + geom_bar(stat="identity")
 }
-
-#site="Lagoons of New Caledonia: Reef Diversity and Associated Ecosystems"
-
-
 
 
 make_taxonomic_tree <- function(occurrence, site){
