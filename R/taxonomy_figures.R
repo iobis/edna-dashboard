@@ -127,12 +127,13 @@ text_def_narrow <- colDef(
 
 
 rtable<-table_data %>%
-  reactable(pagination = TRUE, wrap = FALSE, highlight = TRUE, outlined = TRUE, striped = TRUE, defaultPageSize = 20, filterable = TRUE, columns = list(
+  reactable(pagination = TRUE, wrap = FALSE, highlight = TRUE, outlined = TRUE, striped = TRUE, defaultPageSize = 20, filterable = TRUE, defaultSortOrder = "desc", columns = list(
     "phylum" = text_def_narrow,
     "class" = text_def_narrow,
     "species" = species_def,
     "reads" = reads_def
-  ))
+  ),
+  defaultSorted ="reads")
 
 
 #return(table_data)
