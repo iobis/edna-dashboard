@@ -10,15 +10,22 @@ selectInput("taxonLevel", "Rank:", taxonLevels)
 
 
 ## Row
+::: {.card title="Information about the sequenced DNA"}
+
+In this project species diversity was evaluated with 5 different target biomarkers (or genetic regions, selected with primer pairs), to select the fish (Mifish, Teleo), vertebrate (Mimammal, Vert16S) and other animals (COI). The total statistics on the DNA information is indicate in the left column. In the right column you can see how many species/sequences were detected with each primer pair, within the taxonomic level of your choosing.
+::: 
+
+## Row
 
 ### Column
 ::: {.card}
 ```{r}
 verbatimTextOutput("dna_statistics")
 ```
+
 :::
 
-###
+### Column
 
 ```{r}
 #| title: Number of species detected with different biomarkers
@@ -27,7 +34,7 @@ plotOutput("markers_plot")
 ```
 
 
-## Row {height = 800}
+## Row {height = 1000}
 
 ```{r}
 #| title: Taxonomic tree of the most common phyla
