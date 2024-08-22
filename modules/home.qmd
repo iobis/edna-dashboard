@@ -25,7 +25,10 @@ beta_measure <- c("bray", "jaccard")
 
 plot_type<-c("reads", "relative abundance")
 
-show_primers<-c(FALSE, TRUE)
+iucn <- read.csv("data/supporting_data/redlist.csv")
+iucn_names <- c("all species", unique(iucn$category))
+
+#show_primers<-c(FALSE, TRUE)
 
 ```
 

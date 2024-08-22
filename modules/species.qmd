@@ -7,6 +7,8 @@ selectInput("higherGeography", "Site:", sites_names)
 
 selectInput("group", "Group:", groups_names)
 
+selectInput("iucn", "IUCN category:", iucn_names)
+
 ```
 
 

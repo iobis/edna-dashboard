@@ -3,7 +3,7 @@ library(purrr)
 library(glue)
 
 # Order species names based on abundance
-generate_ordered_species_list_bySite <- function(site, occurrence, selected_group) {
+generate_ordered_species_list_bySite <- function(site, occurrence, selected_group, selected_iucn) {
 
   # Add categories for further filtering
   groups=read.csv("data/supporting_data/groups.csv")
@@ -36,6 +36,10 @@ generate_ordered_species_list_bySite <- function(site, occurrence, selected_grou
 
 if( selected_group != "all species"){
   species_names <- species_names %>% filter(group == selected_group)
+}
+
+if( selected_iucn != "all species"){
+  species_names <- species_names %>% filter(category == selected_iucn)
 }
 
   return(species_names)

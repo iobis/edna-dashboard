@@ -101,7 +101,7 @@ output$imageGallery <- renderUI({
 
 # Species list gallery ----
 species_list <- reactive({
-    generate_ordered_species_list_bySite(input$higherGeography, occurrence, input$group)
+    generate_ordered_species_list_bySite(input$higherGeography, occurrence, input$group, input$iucn)
   })
 
 output$species_gallery <- renderUI({
