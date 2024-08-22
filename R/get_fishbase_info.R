@@ -28,7 +28,7 @@ fish_base_info <- fish_base_info %>%
 fish_base_commons <- rfishbase::common_names(unique(na.omit(sp_level$scientificName)))
 sealife_base_commons <- rfishbase::common_names(unique(na.omit(sp_sealifebase$scientificName)), server="sealifebase")
 
-fish_base_commons <- bind_rows(fish_base_commons, sealife_base_commons,  )
+fish_base_commons <- bind_rows(fish_base_commons, sealife_base_commons)
 
 fish_base_commons <- fish_base_commons %>%
   group_by(Species) %>%
