@@ -95,16 +95,30 @@ layout_column_wrap(
 
 ### Column 
 
+::: {.card title="Alpha diversity: How diverse are the samples in relation to each other?"}
+
+In this figure we show the alpha diversity of every sample, grouped by location name (samples from the same location are considered replicates). The most simple measure of alpha diversity is the number of species/sequences found in each sample. You can check the alpha diversity measure at all different taxonomic levels, or considering all sequences (also unnamed ones). Other measures of alpha diversity take into account also the abundance of different species/sequences.
+
 ```{r}
 
 plotOutput("alpha_plot")
 
 ```
 
+:::
+
+
 ### Column 
+
+
+::: {.card title="Beta diversity: How does the diversity compare across samples?"}
+
+Beta-diversity measures, show how close to each other the samples are in terms of species composition. A distance matrix is calculated for each sample, and the distances are plotted. The further the points are from each other, the more different the samples are from each other. Here, you may be able to see that samples from the same location cluster together.
 
 ```{r}
 
 plotOutput("beta_plot")
 
 ```
+
+:::

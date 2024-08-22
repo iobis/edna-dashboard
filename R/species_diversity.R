@@ -80,7 +80,7 @@ if(taxonLevel == "ASV"){
     p2 <- ggplot(PCOAaxes, aes(x=!!sym(val1), y=!!sym(val2), fill=locality, shape=locality))+
                     geom_point(size=5)+
                     theme_classic() +
-                    scale_shape_manual(values=c(21:25))+
+                    scale_shape_manual(values=c(21:26))+
                     scale_fill_brewer(palette = "Blues")
 
     list(p1, p2)
