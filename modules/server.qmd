@@ -13,9 +13,11 @@ source("R/Species_by_site_abundance.R")
 source("R/get_species_information.R")
 source("R/taxonomy_figures.R")
 source("R/species_diversity.R")
+source("R/get_dna_statistics.R")
+source("R/fix_taxonomy.R")
 
 sites_info <- read.table("data/sites_description.txt", header=T)
-occurrence <- read_occurrence_data()
+#occurrence <- read_occurrence_data()
 
 
 # Leaflet map data
@@ -185,14 +187,15 @@ observe({
 
 taxbarplot <- reactive({
   
-  make_image_taxonomy(occurrence, input$higherGeography, input$taxonLevel, input$plotType, input$showPrimers) 
+  make_image_taxonomy(occurrence, input$higherGeography, input$taxonLevel, input$plotType)#, #input$showPrimers)
   
   }) 
 
 
 output$tax_bar_plot <- renderPlot({
- taxbarplot()
-})
+ #taxbarplot() 
+ make_image_taxonomy(occurrence, input$higherGeography, input$taxonLevel, input$plotType)}, height=400
+)
 
 taxon_table<- reactive({ 
   make_table_taxonomy(occurrence, input$higherGeography)})
@@ -210,12 +213,15 @@ output$tree_plot <- renderPlot({
 })
 
 taxplot <- reactive({
-make_venn_diagram_species_primers(occurrence, input$higherGeography) })
+make_venn_diagram_species_primers(occurrence, input$higherGeography, input$taxonLevel) })
 
 output$markers_plot <- renderPlot({
  taxplot()
 })
 
+output$dna_statistics <- renderPrint({
+  get_dna_statistics(occurrence, input$higherGeography)
+})
 
 
 # Diversity metrics ----
@@ -237,6 +243,7 @@ output$beta_plot <- renderPlot({
 #input$beta_measure="bray"
 #input$plotType="relative abundance"
 #input$showPrimers=FALSE
-#input
+#input=list()
+#input$higherGeography=site
 
 ```
