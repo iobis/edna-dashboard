@@ -24,4 +24,6 @@ server: shiny
 
 {{< include modules/species.qmd >}}
 
+{{< include modules/dna.qmd >}}
+
 {{< include modules/server.qmd >}}

@@ -1,0 +1,36 @@
+<!-- Orientation can be either columns or rows; each level 2 header becomes a card-->
+# DNA {orientation="columns" scrolling="true"}
+
+## {.toolbar}
+
+```{r}
+selectInput("higherGeography", "Site:", sites_names)
+selectInput("taxonLevel", "Rank:", taxonLevels)
+```
+
+
+## Row
+
+### Column
+::: {.card}
+```{r}
+verbatimTextOutput("dna_statistics")
+```
+:::
+
+###
+
+```{r}
+#| title: Number of species detected with different biomarkers
+
+plotOutput("markers_plot")
+```
+
+
+## Row {height = 800}
+
+```{r}
+#| title: Taxonomic tree of the most common phyla
+
+plotOutput("tree_plot")
+```
