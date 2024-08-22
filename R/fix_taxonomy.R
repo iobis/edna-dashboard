@@ -34,6 +34,7 @@ taxonomic_info <- lapply(unique_ids, function(id) {
 
 # Combine the list into a single data frame
 taxonomic_info_df <- bind_rows(taxonomic_info)
+#write.csv2(taxonomic_info_df, "worms_tax_levels.csv", row.names=F)
 
 # Now merge the taxonomic information back to the original data frame by aphiaID
 occurrence <- occurrence %>%

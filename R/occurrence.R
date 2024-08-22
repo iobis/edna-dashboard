@@ -17,5 +17,23 @@ read_occurrence_data <- function() {
     mutate_if(is.character, na_if, "")%>%
     left_join(dna, by = "occurrenceID")
 
-  
+  occurrence <- occurrence %>%
+  mutate(aphiaID = as.numeric(str_extract(scientificNameID, "\\d+$")))
+
+ #Fix taxonomic levels 
+ worms_tax_levels <- read.csv2("data/supporting_data/worms_tax_levels.csv")
+
+#  merge the taxonomic information to the dataframe by aphiaID
+occurrence <- occurrence %>%
+  left_join(worms_tax_levels, by = "aphiaID") %>%
+  mutate(
+    kingdom = coalesce(kingdom.y, kingdom.x),
+    phylum = coalesce(phylum.y, phylum.x),
+    class = coalesce(class.y, class.x),
+    order = coalesce(order.y, order.x),
+    family = coalesce(family.y, family.x),
+    genus = coalesce(genus.y, genus.x)
+  ) %>%
+  select(-ends_with(".x"), -ends_with(".y"))  # Clean up the columns
+
 }
