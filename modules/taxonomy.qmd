@@ -7,15 +7,23 @@
 selectInput("higherGeography", "Site:", sites_names)
 selectInput("taxonLevel", "Rank:", taxonLevels[-c(1,2)])
 selectInput("plotType", "Abundance:", plot_type)
-selectInput("showPrimers", "Show markers:", show_primers)
+#selectInput("showPrimers", "Show markers:", show_primers)
 ```
 
-## Row
+## Row {height=800}
+::: {.card title="Taxonomic composition across samples"}
+
+This figure shows the taxonomic composition across all reads in the received samples. All sequences that received names are colored, the grey area therefore shows read abundances that were not assigned a taxonomy. You can toggle the taxonomic level that is shown as well as looking at the number of reads (number of sequences), or the relative abundance of these sequences across the samples. At each taxonomic level the 10 most common names receive a distinct color. Clear contaminations from humans, bacteria (and other prokaryotes), fungi and domestic animals have been removed prior to the analysis, therefore the relative abundance is not 100 %. 
 
 ```{r}
 #| title: Taxonomic composition of all samples across the site
+#| height: 500px
+
 plotOutput("tax_bar_plot")
 ```
+
+
+:::
 
 ## Row
 
