@@ -4,7 +4,7 @@
 ## {.toolbar}
 
 ```{r}
-selectInput("higherGeography", "Site:", sites_names)
+selectInput("higherGeographyTaxonomy", "Site:", sites_names)
 ```
 
 ## Row

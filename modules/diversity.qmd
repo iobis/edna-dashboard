@@ -3,7 +3,7 @@
 ## {.toolbar}
 
 ```{r}
-selectInput("higherGeography", "Site:", sites_names)
+selectInput("higherGeographyDiversity", "Site:", sites_names)
 ```
 ## Column
 

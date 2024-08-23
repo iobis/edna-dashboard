@@ -163,10 +163,8 @@ map_info <- reactive({
   }
 })
 
-observe({
-  updateVarSelectInput(session, "higherGeography", selected = map_info()$parent_area_name[1])
-}) %>%
-  bindEvent(map_info())
+# Update inputs across pages and according to map
+source("R/server_updategeography.R", local = TRUE)
 
 observe({
   proxy <- leafletProxy("mainMap")
