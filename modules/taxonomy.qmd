@@ -20,30 +20,6 @@ reactable::reactableOutput("rtable")
 
 :::
 
-## {.toolbar}
-
-```{r}
-selectInput("higherGeography", "Site:", sites_names)
-selectInput("taxonLevel", "Rank:", taxonLevels[-c(1,2)])
-selectInput("plotType", "Abundance:", plot_type)
-```
-
-## Row {height=800}
-
-::: {.card title="Taxonomic composition across samples"}
-
-This figure shows the number of sequences (also called reads) in each sample after filtering for quality control, both as absolute numbers as well in relative abundance of the total reads. All sequences that received names are colored, the grey area therefore shows reads that were not assigned a taxonomy. You can toggle the taxonomic level that is shown. At each taxonomic level the 10 most common names receive a distinct color. Clear contaminations from humans, bacteria (and other prokaryotes), fungi and domestic animals have been removed prior to the analysis, and the calculation of relative abundance.  
-
-```{r}
-#| title: Taxonomic composition of all samples across the site
-#| height: 500px
-
-plotOutput("tax_bar_plot")
-```
-
-
-:::
-
 ## Row
 
 ```{r}
