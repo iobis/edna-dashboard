@@ -14,6 +14,7 @@ source("R/get_species_information.R")
 source("R/taxonomy_figures.R")
 source("R/species_diversity.R")
 source("R/get_dna_statistics.R")
+source("extensions/front-gallery.R")
 #source("R/fix_taxonomy.R")
 
 sites_info <- read.table("data/sites_description.txt", header=T)
@@ -94,9 +95,10 @@ output$value_box_iucn <- renderText({
 # Image galleries --
 
 # Front page gallery ----
-output$imageGallery <- renderUI({
-  species = c("Acanthurus olivaceus", "Trachinotus baillonii", "Anguilla rostrata", "Liparis liparis")
-  generate_gallery(species, "data/images.txt")
+output$imageGalleryFront <- renderUI({
+  site <- input$higherGeography
+  print(site);cat(site)
+  front_gallery(site, "data/front-images.txt")
 })
 
 # Species list gallery ----

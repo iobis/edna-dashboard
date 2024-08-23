@@ -139,7 +139,7 @@ value_box(
 ## Row 2 {.flow}
 
 ```{r}
-htmlOutput("imageGallery")
+htmlOutput("imageGalleryFront")
 ```
 
 <br>

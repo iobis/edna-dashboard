@@ -66,4 +66,4 @@ all_sp <- all_sp %>%
 
 df_combined <- merge(df_combined, all_sp[,c("species", "alt_url")], by = "species", all.x = TRUE)
 
-write.table(df_combined[, c("species", "image_url")], "data/proc_images.txt", row.names = F)
+write.table(df_combined[, c("species", "image_url", "alt_url")], "data/proc_images.txt", row.names = F)
