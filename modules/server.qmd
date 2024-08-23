@@ -95,7 +95,7 @@ output$value_box_iucn <- renderText({
 
 # Front page gallery ----
 output$imageGallery <- renderUI({
-  species = c("Trachinotus baillonii", "Anguilla rostrata", "Liparis liparis")
+  species = c("Acanthurus olivaceus", "Trachinotus baillonii", "Anguilla rostrata", "Liparis liparis")
   generate_gallery(species, "data/images.txt")
 })
 
@@ -105,7 +105,7 @@ species_list <- reactive({
   })
 
 output$species_gallery <- renderUI({
-    generate_gallery(species_list()$scientificName, "data/images.txt", max_image_height = "250px",max_image_width = "200px", image_gap = "0.1em") 
+    generate_gallery(species_list()$scientificName, "data/proc_images.txt", max_image_height = "250px",max_image_width = "200px", image_gap = "0.1em") 
     })
 
 observe({
