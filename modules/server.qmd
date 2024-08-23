@@ -246,4 +246,8 @@ output$beta_plot <- renderPlot({
 #input=list()
 #input$higherGeography=site
 
+# Output Krona plot
+output$krona_plot <- renderUI({
+    tags$iframe(src="www/krona_plots.html", height=600, width="100%")
+  })
 ```

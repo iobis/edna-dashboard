@@ -44,3 +44,8 @@ plotOutput("tax_bar_plot")
 
 :::
 
+## Row
+
+```{r}
+htmlOutput("krona_plot")
+```
