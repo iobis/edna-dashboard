@@ -51,3 +51,6 @@ index.html
 
 # dwc dataset
 output
+
+images/*
+!images/placeholders/

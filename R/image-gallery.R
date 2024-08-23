@@ -24,6 +24,8 @@ generate_gallery <- function(species,
   image_table <- as.data.frame(data.table::fread(image_table))
   
   image_table_filt <- image_table[match(species, image_table$species),]
+
+  image_table_filt <- image_table_filt[!is.na(image_table_filt$species),]
   
   if (nrow(image_table_filt) > 0) {
     cards <- list()
@@ -39,6 +41,7 @@ generate_gallery <- function(species,
         inputId = link_id,
         header = header,
         image_src = image_table_filt$image_url[i],
+        alt_src = "images/placeholders/general.webp",
         max_image_height = max_image_height
       )
 
