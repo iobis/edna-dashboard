@@ -29,12 +29,22 @@ stats_phylum <- occurrence_site %>%
 
 } else {
 
-#relative abundance:
+#relative abundance (if we want to 'original' relative abundance calculate like this):
+#original: we remove the contaminants, so the relative abundance is not 1
+#occurrence_site = occurrence_site %>% 
+#                        group_by(materialSampleID) %>% 
+#                        mutate(totalSampleSizeValue = sum(unique(sampleSizeValue)))
+
+#occurrence_site = occurrence_site %>% mutate(relative_abundance = organismQuantity/totalSampleSizeValue)
+
+#Relative abundance, calculate based on the remaining reads after removal of contaminants:
 occurrence_site = occurrence_site %>% 
                         group_by(materialSampleID) %>% 
-                        mutate(totalSampleSizeValue = sum(unique(sampleSizeValue)))
+                        mutate(totalSampleSizeValue = sum(organismQuantity))
 
 occurrence_site = occurrence_site %>% mutate(relative_abundance = organismQuantity/totalSampleSizeValue)
+
+
 
 stats_phylum <- occurrence_site %>%
   group_by(!!sym(taxonLevel), locality, materialSampleID, pcr_primer_name_forward) %>%
