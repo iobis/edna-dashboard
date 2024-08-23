@@ -4,79 +4,25 @@
 
 ```{r}
 selectInput("higherGeographyDiversity", "Site:", sites_names)
+selectInput("taxonLevel", "Rank:", taxonLevels[-c(1,2)])
+selectInput("plotType", "Abundance:", plot_type)
 ```
-## Column
+
+
+## Row {height=800}
+
+::: {.card title="Taxonomic composition across samples"}
+
+This figure shows the number of sequences (also called reads) in each sample after filtering for quality control, both as absolute numbers as well in relative abundance of the total reads. All sequences that received names are colored, the grey area therefore shows reads that were not assigned a taxonomy. You can toggle the taxonomic level that is shown. At each taxonomic level the 10 most common names receive a distinct color. Clear contaminations from humans, bacteria (and other prokaryotes), fungi and domestic animals have been removed prior to the analysis, and the calculation of relative abundance.  
 
 ```{r}
-cards <- list(
-  card("Card 1", full_screen = T,
-       class = "button-div clickable-div", id = "clickable-div-1"),
-  card("Card 2", full_screen = T,
-       class = "button-div clickable-div", id = "clickable-div-2")
-)
-layout_column_wrap(
-      width = "200px", gap = "10px",
-      heights_equal = "row",
-      !!!cards
-    )
+#| title: Taxonomic composition of all samples across the site
+#| height: 500px
+
+plotOutput("tax_bar_plot")
 ```
 
-
-```{=html}
- <style>
-    .button-div {
-      cursor: pointer;
-      padding: 10px;
-      background-color: lightgray;
-      text-align: center;
-      transition: all 0.3s ease;
-      margin: 5px;
-    }
-
-    .button-div:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-    }
-    
-    .button-div[data-full-screen="true"] {
-      transform: none !important;
-      box-shadow: none !important;
-     cursor: default;
-    }
-
-    #sidebar-gallery {
-      display: none;
-      position: absolute;
-      top: 0;
-      right: 0;
-      width: 250px;
-      height: 100%;
-      background-color: white;
-      box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
-      padding: 10px;
-    }
-  </style>
-  
-  <div id="sidebar-gallery">Sidebar Content</div>
-  
-  <script>
-    document.querySelectorAll('.clickable-div').forEach(function(element) {
-      element.addEventListener('click', function() {
-        var id = this.id.split('-')[2];
-        var sidebar = document.getElementById('sidebar-gallery');
-        if (sidebar.style.display === 'none') {
-          sidebar.style.display = 'block';
-        } else {
-          sidebar.style.display = 'none';
-        }
-
-        // Send a message to Shiny with the ID of the clicked element
-        console.log(id)
-        Shiny.onInputChange('buttonClicked', id);
-      });
-    });
-  </script>
-```
+:::
 
 ## Row   {.flow}
 
