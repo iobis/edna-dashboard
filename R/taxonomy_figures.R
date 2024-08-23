@@ -150,10 +150,27 @@ rtable<-table_data %>%
 return(rtable)
 }
 
-make_krona_plot <- function(occurrence, site){
+make_krona_plot <- function(){
 
+#Add simplified site name for file headers because otherwise kronatools does not work
+sites <- jsonlite::read_json("https://raw.githubusercontent.com/iobis/edna-tracker-data/data/generated.json")
+sites_list <- sites$sites
+sites_samples <- sites$samples
+
+sites_names <- sapply(sites_list, function(x) x$name)
+sites_names_simple <- sapply(sites_list, function(x) x$simplified_name)
+
+site_naming <- data.frame(sites_names, sites_names_simple)
+
+for (i in 1:20){
+  site=unique(occurrence$higherGeography)[i]
+  simple_site_name <- site_naming %>% filter(sites_names==site) %>% select(sites_names_simple)
+
+#occurrence_site <- occurrence %>% filter(higherGeography==unique(occurrence$higherGeography)[i]) %>%
 occurrence_site <- occurrence %>% filter(higherGeography==site) %>%
-                        mutate(species = ifelse(taxonRank == 'species', scientificName, NA))
+                        mutate(species = ifelse(taxonRank == 'species', scientificName, NA))%>%
+                        mutate(simple_site_name = simple_site_name$sites_names_simple)
+
 
 #Make a phyloseq object for ease of access
 
@@ -174,7 +191,7 @@ colnames(tax_table) <- c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus
 taxmat=as.matrix(tax_table, rownames.force = T)
 
 sample_data = occurrence_site %>% 
-  select(materialSampleID, eventRemarks, locality, decimalLongitude, decimalLatitude, sampleSize, higherGeography, locationID) %>% distinct()
+  select(materialSampleID, eventRemarks, locality, decimalLongitude, decimalLatitude, sampleSize, higherGeography, locationID, simple_site_name) %>% distinct()
 
 rownames(sample_data)=sample_data$materialSampleID
 sample_data=sample_data[,-1]
@@ -187,14 +204,14 @@ sampledat=phyloseq::sample_data(sample_data)
 
 ps=phyloseq::phyloseq(otutab, taxtab, sampledat)
 
+#plot_name=paste0("./www/krona_plots/",gsub(" ", "_", unique(occurrence$higherGeography)[i]))
+plot_name=paste0("./www/krona_plots/",gsub(" |\\(|\\)","", simple_site_name$sites_names_simple))
 
-unique(occurrence_site$kingdom)
-unique(occurrence_site$phylum)
-
-psadd::plot_krona(ps, "./data/krona_plots", "higherGeography", trim=TRUE)
+#Special characters in higherGeography are ruining this run:
+psadd::plot_krona(ps, plot_name, "simple_site_name", trim=TRUE)
 
 }
-
+}
 
 make_taxonomic_tree <- function(occurrence, site){
 
