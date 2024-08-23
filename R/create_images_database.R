@@ -1,3 +1,8 @@
+source("R/occurrence.R")
+all_sp <- read_occurrence_data()
+all_sp <- all_sp %>% distinct(scientificName, .keep_all = T) %>%
+    select(species = scientificName, kingdom, phylum, class, order, family)
+
 images <- data.table::fread("data/images.txt")
 
 for (i in 1:nrow(images)) {
@@ -42,5 +47,23 @@ df_combined <- merge(images, all_images_table, by = "species", all.x = TRUE,
  suffixes = c("_old", "_new"))
 
 df_combined$image_url <- ifelse(!is.na(df_combined$image_url_new), df_combined$image_url_new, df_combined$image_url_old)
+
+# Add groups and placeholders
+all_sp <- all_sp %>%
+    mutate(alt_url = case_when(
+        kingdom %in% c("Archaea", "Bacteria", "Fungi", "Protozoa", "Viruses") ~ "images/placeholders/bacteria.webp",
+        kingdom %in% c("Chromista", "Plantae") ~ "images/placeholders/algae.webp",
+        phylum == "Annelida" ~ "images/placeholders/worms.webp",
+        phylum == "Cnidaria" ~ "images/placeholders/jelly.webp",
+        phylum == "Arthropoda" ~ "images/placeholders/crustaceans.webp",
+        phylum == "Echinodermata" ~ "images/placeholders/urchins.webp",
+        phylum == "Mollusca" ~ "images/placeholders/molluscs.webp",
+        class == "Mammalia" ~ "images/placeholders/mammals.webp",
+        class == "Teleostei" | class == "Coelacanthi" | 
+        class == "Petromyzonti" | class == "Elasmobranchii" | class == "Holocephali" ~ "images/placeholders/fishes.webp",
+        .default = "images/placeholders/general.webp"
+    ))
+
+df_combined <- merge(df_combined, all_sp[,c("species", "alt_url")], by = "species", all.x = TRUE)
 
 write.table(df_combined[, c("species", "image_url")], "data/proc_images.txt", row.names = F)
