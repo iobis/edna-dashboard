@@ -142,7 +142,12 @@ observe({
     species_info <- ""
   }
     output$species_name <- renderText({species_name})
-    output$species_info <- DT::renderDataTable({species_info})
+    output$species_info <- reactable::renderReactable({reactable::reactable(species_info, defaultPageSize = 4, columns = list(
+    target_gene = colDef(name = "Target gene", maxWidth = 70),
+    reads = colDef(name = "Reads", maxWidth = 70)),
+    height = 270, theme = reactableTheme(
+      backgroundColor = "rgba(0, 0, 0, 0)" # remove this line if want the table white
+      ))})
 })
 
 

@@ -24,7 +24,7 @@ layout_column_wrap(
     span(htmlOutput("species_links"), id = "species-cont-links"),
     span(textOutput("species_fb_common_names"), id = "species-cont-common"),
     span(htmlOutput("species_fb_content"), id = "species-cont-content"),
-    div(DT::dataTableOutput("species_info"), style = "font-size:50%")
+    div(reactable::reactableOutput("species_info"), style = "font-size:50%")
   )),
   htmlOutput("species_gallery")
 )
