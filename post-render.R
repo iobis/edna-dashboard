@@ -14,6 +14,7 @@ content_update <- gsub("Taxonomy", '<i class="bi bi-bar-chart-steps"></i> Taxono
 content_update <- gsub("Diversity", '<i class="bi bi-boxes"></i> Diversity', content_update)
 content_update <- gsub("Species", '<i class="bi bi-bug"></i> Species', content_update)
 content_update <- gsub("Sample", '<i class="bi bi-droplet"></i> Sample', content_update)
+content_update <- gsub("DNA", '<i class="bi bi-eyedropper"></i> DNA', content_update)
 
 content[navbar] <- content_update
 
