@@ -97,8 +97,7 @@ output$value_box_iucn <- renderText({
 # Front page gallery ----
 output$imageGalleryFront <- renderUI({
   site <- input$higherGeography
-  print(site);cat(site)
-  front_gallery(site, "data/front-images.txt")
+  front_gallery(site, "data/front-images.txt", show_counter = FALSE)
 })
 
 # Species list gallery ----
@@ -248,6 +247,11 @@ output$beta_plot <- renderPlot({
 
 # Output Krona plot
 output$krona_plot <- renderUI({
-    tags$iframe(src="www/krona_plots.html", height=600, width="100%")
+    # TO BE IMPROVED: would be better to have short names as one of the columns
+    sel_loc <- localities[localities$parent_area_name == input$higherGeography,]
+    sel_loc <- substr(tolower(sel_loc$parent_area_name[1]), 1, 4)
+    f <- list.files("www/krona_plots")
+    f <- f[grepl(sel_loc, f)]
+    tags$iframe(src = paste0("www/krona_plots/", f), height=600, width="100%")
   })
 ```
