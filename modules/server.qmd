@@ -42,63 +42,13 @@ species_context_info <- readRDS("data/fishbase.rds")
 ```{r}
 #| context: server
 
-output$mainMap <- renderLeaflet({
-  leaflet(width = "100%") %>%
-   addTiles(urlTemplate = "https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png") %>%
-   addMarkers(~lon, ~lat, popup = ~as.character(area_name), label = ~as.character(area_name),
-              layerId = ~station,
-              data = localities, clusterOptions = markerClusterOptions()) %>%
-   setView(0, 0, zoom = 2)
-})
+# HOME page
+source("R/home_server.R", local = TRUE)
 
-output$higherGeography <- renderText({
-  sel_site <- sites_info[sites_info$name == input$higherGeography,]
-  sel_site$name
-})
-
-output$siteDescription <- renderText({
-  sel_site <- sites_info[sites_info$name == input$higherGeography,]
-  sel_site$description
-})
-
-#input=list(higherGeography="Gulf of Porto: Calanche of Piana, Gulf of Girolata, Scandola Reserve", group="fish")
-#input=list(higherGeography="Lagoons of New Caledonia: Reef Diversity and Associated Ecosystems")
-
-output$eventDate <- renderText({"2024-05-01"})
-output$eventSamples <- renderText({"1000"})
-
-boxes_data <- reactiveValues()
-observe({
-  sel_site <- sites_info[sites_info$name == input$higherGeography,]
-  boxes_data$data <- n_species(sel_site$name, occurrence)
-}) %>% bindEvent(input$higherGeography)
-
-#https://raw.githubusercontent.com/iobis/edna-tracker-data/data/generated.json
-
-output$value_box_species <- renderText({
-  boxes_data$data$n_species
-})
-
-output$value_box_fish <- renderText({
-  boxes_data$data$n_fish
-})
-
-output$value_box_mammals <- renderText({
-  boxes_data$data$n_mammals
-})
-
-output$value_box_iucn <- renderText({
-  boxes_data$data$n_iucn
-})
-
+# Update inputs across pages and according to map
+source("R/server_updategeography.R", local = TRUE)
 
 # Image galleries --
-
-# Front page gallery ----
-output$imageGalleryFront <- renderUI({
-  site <- input$higherGeography
-  front_gallery(site, "data/front-images.txt", show_counter = FALSE)
-})
 
 # Species list gallery ----
 species_list <- reactive({
@@ -149,43 +99,6 @@ observe({
       backgroundColor = "rgba(0, 0, 0, 0)" # remove this line if want the table white
       ))})
 })
-
-
-
-# Map input changes ----
-map_info <- reactive({
-  if (!is.null(input$mainMap_marker_click)) {
-    click <- input$mainMap_marker_click
-    if (!is.null(click$id)) {
-      locs <- localities[!is.na(localities$station),]
-      loc_sel <- locs[locs$station == click$id, ]
-      loc_sel <- loc_sel[loc_sel$lon == click$lng & loc_sel$lat == click$lat,]
-      loc_sel
-    } else {
-      NULL
-    }
-  } else {
-    NULL
-  }
-})
-
-# Update inputs across pages and according to map
-source("R/server_updategeography.R", local = TRUE)
-
-observe({
-  proxy <- leafletProxy("mainMap")
-  
-  sel_loc <- localities[localities$parent_area_name == input$higherGeography,]
-  sel_loc <- sel_loc[!is.na(sel_loc$lon) & !is.na(sel_loc$lat),]
-  
-  if (nrow(sel_loc) > 0) {
-    proxy %>% flyToBounds(lng1 = min(sel_loc$lon), lat1 = min(sel_loc$lat),
-                          lng2 = max(sel_loc$lon), lat2 = max(sel_loc$lat))
-  }
-}) %>%
-  bindEvent(input$higherGeography, ignoreInit = T)
-
-
 
 # Taxa images ----
 
