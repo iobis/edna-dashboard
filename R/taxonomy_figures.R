@@ -185,6 +185,7 @@ otu_table[is.na(otu_table)]=0
 
 tax_table= occurrence_site %>% 
   select(DNA_sequence, kingdom, phylum, class, order, family, genus, species) %>% distinct(DNA_sequence, .keep_all = T)
+tax_table= as.data.frame(tax_table)
 rownames(tax_table)=tax_table$DNA_sequence
 tax_table=tax_table[,-1]
 colnames(tax_table) <- c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species")
@@ -193,6 +194,7 @@ taxmat=as.matrix(tax_table, rownames.force = T)
 sample_data = occurrence_site %>% 
   select(materialSampleID, eventRemarks, locality, decimalLongitude, decimalLatitude, sampleSize, higherGeography, locationID, simple_site_name) %>% distinct()
 
+sample_data = as.data.frame(sample_data)
 rownames(sample_data)=sample_data$materialSampleID
 sample_data=sample_data[,-1]
 
