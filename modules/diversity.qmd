@@ -4,7 +4,7 @@
 
 ```{r}
 selectInput("higherGeographyDiversity", "Site:", sites_names)
-selectInput("taxonLevel", "Rank:", taxonLevels[-c(1,2)])
+selectInput("taxonLevelDiversity", "Rank:", taxonLevels[-c(1,2)])
 selectInput("plotType", "Abundance:", plot_type)
 ```
 

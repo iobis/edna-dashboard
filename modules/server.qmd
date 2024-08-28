@@ -102,16 +102,16 @@ observe({
 
 # Taxa images ----
 
-taxbarplot <- reactive({
+#taxbarplot <- reactive({
   
-  make_image_taxonomy(occurrence, input$higherGeography, input$taxonLevel, input$plotType)#, #input$showPrimers)
+#  make_image_taxonomy(occurrence, input$higherGeography, input$taxonLevelDiversity, input$plotType)#, #input$showPrimers)
   
-  }) 
+#  }) 
 
 
 output$tax_bar_plot <- renderPlot({
  #taxbarplot() 
- make_image_taxonomy(occurrence, input$higherGeography, input$taxonLevel, input$plotType)}, height=400
+ make_image_taxonomy(occurrence, input$higherGeography, input$taxonLevelDiversity, input$plotType)}, height=400
 )
 
 taxon_table<- reactive({ 
