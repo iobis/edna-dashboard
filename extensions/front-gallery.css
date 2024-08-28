@@ -1,0 +1,31 @@
+/* Counter styling */
+.carousel-counter {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  padding: 5px 10px;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  font-size: 14px;
+  border-radius: 5px;
+  z-index: 10;
+}
+
+/* Caption styling */
+.carousel-caption {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 10px;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  text-align: center;
+}
+
+.carousel-inner img {
+  max-height: 700px;
+  object-fit: cover; /* This ensures the image fills the box, potentially cutting off parts */
+  width: 100%; /* Ensures the image maintains its width */
+  overflow: hidden; /* Hides any parts of the image that exceed the 300px height */
+}

@@ -14,6 +14,7 @@ source("R/get_species_information.R")
 source("R/taxonomy_figures.R")
 source("R/species_diversity.R")
 source("R/get_dna_statistics.R")
+source("extensions/front-gallery.R")
 #source("R/fix_taxonomy.R")
 
 sites_info <- read.table("data/sites_description.txt", header=T)
@@ -41,63 +42,13 @@ species_context_info <- readRDS("data/fishbase.rds")
 ```{r}
 #| context: server
 
-output$mainMap <- renderLeaflet({
-  leaflet(width = "100%") %>%
-   addTiles(urlTemplate = "https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png") %>%
-   addMarkers(~lon, ~lat, popup = ~as.character(area_name), label = ~as.character(area_name),
-              layerId = ~station,
-              data = localities, clusterOptions = markerClusterOptions()) %>%
-   setView(0, 0, zoom = 2)
-})
+# HOME page
+source("R/home_server.R", local = TRUE)
 
-output$higherGeography <- renderText({
-  sel_site <- sites_info[sites_info$name == input$higherGeography,]
-  sel_site$name
-})
-
-output$siteDescription <- renderText({
-  sel_site <- sites_info[sites_info$name == input$higherGeography,]
-  sel_site$description
-})
-
-#input=list(higherGeography="Gulf of Porto: Calanche of Piana, Gulf of Girolata, Scandola Reserve", group="fish")
-#input=list(higherGeography="Lagoons of New Caledonia: Reef Diversity and Associated Ecosystems")
-
-output$eventDate <- renderText({"2024-05-01"})
-output$eventSamples <- renderText({"1000"})
-
-boxes_data <- reactiveValues()
-observe({
-  sel_site <- sites_info[sites_info$name == input$higherGeography,]
-  boxes_data$data <- n_species(sel_site$name, occurrence)
-}) %>% bindEvent(input$higherGeography)
-
-#https://raw.githubusercontent.com/iobis/edna-tracker-data/data/generated.json
-
-output$value_box_species <- renderText({
-  boxes_data$data$n_species
-})
-
-output$value_box_fish <- renderText({
-  boxes_data$data$n_fish
-})
-
-output$value_box_mammals <- renderText({
-  boxes_data$data$n_mammals
-})
-
-output$value_box_iucn <- renderText({
-  boxes_data$data$n_iucn
-})
-
+# Update inputs across pages and according to map
+source("R/server_updategeography.R", local = TRUE)
 
 # Image galleries --
-
-# Front page gallery ----
-output$imageGallery <- renderUI({
-  species = c("Acanthurus olivaceus", "Trachinotus baillonii", "Anguilla rostrata", "Liparis liparis")
-  generate_gallery(species, "data/images.txt")
-})
 
 # Species list gallery ----
 species_list <- reactive({
@@ -141,45 +92,13 @@ observe({
     species_info <- ""
   }
     output$species_name <- renderText({species_name})
-    output$species_info <- DT::renderDataTable({species_info})
+    output$species_info <- reactable::renderReactable({reactable::reactable(species_info, defaultPageSize = 4, columns = list(
+    target_gene = colDef(name = "Target gene", maxWidth = 70),
+    reads = colDef(name = "Reads", maxWidth = 70)),
+    height = 270, theme = reactableTheme(
+      backgroundColor = "rgba(0, 0, 0, 0)" # remove this line if want the table white
+      ))})
 })
-
-
-
-# Map input changes ----
-map_info <- reactive({
-  if (!is.null(input$mainMap_marker_click)) {
-    click <- input$mainMap_marker_click
-    if (!is.null(click$id)) {
-      locs <- localities[!is.na(localities$station),]
-      loc_sel <- locs[locs$station == click$id, ]
-      loc_sel <- loc_sel[loc_sel$lon == click$lng & loc_sel$lat == click$lat,]
-      loc_sel
-    } else {
-      NULL
-    }
-  } else {
-    NULL
-  }
-})
-
-# Update inputs across pages and according to map
-source("R/server_updategeography.R", local = TRUE)
-
-observe({
-  proxy <- leafletProxy("mainMap")
-  
-  sel_loc <- localities[localities$parent_area_name == input$higherGeography,]
-  sel_loc <- sel_loc[!is.na(sel_loc$lon) & !is.na(sel_loc$lat),]
-  
-  if (nrow(sel_loc) > 0) {
-    proxy %>% flyToBounds(lng1 = min(sel_loc$lon), lat1 = min(sel_loc$lat),
-                          lng2 = max(sel_loc$lon), lat2 = max(sel_loc$lat))
-  }
-}) %>%
-  bindEvent(input$higherGeography, ignoreInit = T)
-
-
 
 # Taxa images ----
 
@@ -246,6 +165,11 @@ output$beta_plot <- renderPlot({
 
 # Output Krona plot
 output$krona_plot <- renderUI({
-    tags$iframe(src="www/krona_plots.html", height=600, width="100%")
+    # TO BE IMPROVED: would be better to have short names as one of the columns
+    sel_loc <- localities[localities$parent_area_name == input$higherGeography,]
+    sel_loc <- substr(tolower(sel_loc$parent_area_name[1]), 1, 4)
+    f <- list.files("www/krona_plots")
+    f <- f[grepl(sel_loc, f)]
+    tags$iframe(src = paste0("www/krona_plots/", f), height=600, width="100%")
   })
 ```
