@@ -9,7 +9,7 @@ selectInput("plotType", "Abundance:", plot_type)
 ```
 
 
-## Row {height=800}
+## Row
 
 ::: {.card title="Taxonomic composition across samples"}
 
@@ -17,7 +17,6 @@ This figure shows the number of sequences (also called reads) in each sample aft
 
 ```{r}
 #| title: Taxonomic composition of all samples across the site
-#| height: 500px
 
 plotOutput("tax_bar_plot")
 ```
@@ -47,7 +46,7 @@ In this figure we show the alpha diversity of every sample, grouped by location 
 
 ```{r}
 
-plotOutput("alpha_plot")
+plotly::plotlyOutput("alpha_plot")
 
 ```
 
@@ -63,7 +62,7 @@ Beta-diversity measures, show how close to each other the samples are in terms o
 
 ```{r}
 
-plotOutput("beta_plot")
+plotly::plotlyOutput("beta_plot")
 
 ```
 

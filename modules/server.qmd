@@ -92,12 +92,25 @@ observe({
     species_info <- ""
   }
     output$species_name <- renderText({species_name})
-    output$species_info <- reactable::renderReactable({reactable::reactable(species_info, defaultPageSize = 4, columns = list(
-    target_gene = colDef(name = "Target gene", maxWidth = 70),
-    reads = colDef(name = "Reads", maxWidth = 70)),
-    height = 270, theme = reactableTheme(
-      backgroundColor = "rgba(0, 0, 0, 0)" # remove this line if want the table white
-      ))})
+    output$species_info <- reactable::renderReactable({
+      reactable::reactable(species_info, defaultPageSize = 4,
+    resizable = TRUE, columns = list(
+     samples = colDef(name = "Samples", width = 100),
+     localities = colDef(name = "Localities", width = 150), 
+     target_gene = colDef(name = "Target gene", maxWidth = 70),
+     reads = colDef(name = "Reads", maxWidth = 70),
+     DNA_sequence = colDef(name = "DNA sequence",
+       cell = function(value, index, name) {
+        value <- gsub("A", '<span style="color: #5d1af6">A</span>', value)
+        value <- gsub("T", '<span style="color: #f6d11a">T</span>', value)
+        value <- gsub("G", '<span style="color: #0eab72">G</span>', value)
+        value <- gsub("C", '<span style="color: #c50936">C</span>', value)
+             htmltools::HTML(value)
+  }, width = 700, html = TRUE)),
+  height = 270, theme = reactableTheme(
+    backgroundColor = "rgba(0, 0, 0, 0)" # remove this line if want the table white
+    ))
+    })
 })
 
 # Taxa images ----
@@ -147,12 +160,12 @@ divplots <- reactive({
  get_alpha_diversity(occurrence, input$higherGeography, input$taxonLevel, input$alpha_measure, input$beta_measure)
 })
 
-output$alpha_plot <- renderPlot({
- divplots()[[1]]
+output$alpha_plot <- plotly::renderPlotly({
+  plotly::ggplotly(divplots()[[1]])
 })
 
-output$beta_plot <- renderPlot({
- divplots()[[2]]
+output$beta_plot <- plotly::renderPlotly({
+  plotly::ggplotly(divplots()[[2]])
 })
 
 #input$taxonLevel="phylum"

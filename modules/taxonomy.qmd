@@ -7,7 +7,10 @@
 selectInput("higherGeographyTaxonomy", "Site:", sites_names)
 ```
 
-## Row
+## Row {.tabset}
+### Taxonomic composition {orientation="rows" scrolling="true"}
+####
+##### Row 1
 ::: {.card title="Taxonomic composition across samples"}
 
 This table shows all species that were identified from the site, ordered by abundance. You can search on the different taxonomic levels, species names, samples or locations. For more information on each species check out the species tab!
@@ -20,8 +23,47 @@ reactable::reactableOutput("rtable")
 
 :::
 
-## Row
-
+##### Row 2
 ```{r}
 htmlOutput("krona_plot")
 ```
+
+### Sources
+
+##### Row 1
+
+```{r}
+#| title: Source of species
+library(plotly)
+
+dat <- data.frame(
+    labels = c("Total", "OBIS", "GBIF", "Shared"),
+    parents = c("", "Total", "Total", "Total"),
+    values = c(50, 10, 15, 25)
+)
+
+fig <- plot_ly(
+  type='treemap',
+  labels=dat$labels,
+  parents=dat$parents,
+  values= dat$values,
+  textinfo="label+percent parent",
+  branchvalues="total",
+  marker=list(colors=c("white", "#1e6091", "#1a759f", "#168aad")),
+  domain=list(column=0))
+
+fig
+```
+
+##### Row 2
+
+::: {.card title="Status of knowledge on databases"}
+Number of records: <span style="font-weight: 900; font-size: 30px; color: #0277d4;">1500000</span>
+
+The first record for this region on OBIS is from: 
+<span style="font-weight: 900; font-size: 30px; color: #0277d4;">1995</span>
+
+The most recent record for this region on GBIF is from: 
+<span style="font-weight: 900; font-size: 30px; color: #0277d4;">2024</span>
+
+:::

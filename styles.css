@@ -60,6 +60,66 @@ li.nav-item {
   color: #3D3D3D;
 }
 
+.card-title {
+  font-weight: 900;
+  color: #0277d4;
+}
+
+/* Tabs */
+.card-header.dashboard-card-no-title.bslib-navs-card-title {
+  background: none;
+}
+
+/* General tab link styling */
+.nav-tabs .nav-link {
+  margin-bottom: calc(-1 * var(--bs-nav-tabs-border-width));
+  border: none; /* Remove the default border */
+  position: relative;
+  padding-bottom: 5px; /* Space for the underline */
+  text-align: center; /* Center align the text */
+  font-weight: 500;
+  color: #3D3D3D;
+}
+
+/* Styling for the active (selected) tab link */
+.nav-tabs .nav-link.active {
+  border-bottom: 2px solid #0277d4; /* Bottom border line */
+  padding-bottom: 5px;
+  color: #0277d4;
+}
+
+/* Create the small triangle under the selected tab */
+.nav-tabs .nav-link.active::after {
+  content: "";
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid #0277d4; /* Triangle color */
+  position: absolute;
+  bottom: -5px; /* Position it below the bottom border */
+  left: 50%; /* Center it horizontally */
+  transform: translateX(-50%);
+}
+
+/* Hover effect for non-selected tab links */
+.nav-tabs .nav-link:not(.active)::before {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: 0;
+  left: 50%;
+  background-color: #0277d4;
+  transition: width 0.4s ease, left 0.4s ease, box-shadow 0.4s ease;
+}
+
+/* Animation for growing line and slight glow on hover */
+.nav-tabs .nav-link:not(.active):hover::before {
+  width: 100%;
+  left: 0;
+  box-shadow: 0 0 4px #0277d4;
+}
 
 
 /* Image gallery */

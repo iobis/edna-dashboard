@@ -30,14 +30,3 @@ layout_column_wrap(
 )
 ```
 
-# Sample {orientation="columns" scrolling="true"}
-
-## Column
-
-Test page 2
-
-## Column 
-
-```{r}
-plot(x = 1, y = 1)
-```
