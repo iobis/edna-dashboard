@@ -84,7 +84,7 @@ li.nav-item {
 /* Styling for the active (selected) tab link */
 .nav-tabs .nav-link.active {
   border-bottom: 2px solid #0277d4; /* Bottom border line */
-  padding-bottom: 5px;
+  padding-bottom: 4px !important;
   color: #0277d4;
 }
 
@@ -97,7 +97,7 @@ li.nav-item {
   border-right: 5px solid transparent;
   border-top: 5px solid #0277d4; /* Triangle color */
   position: absolute;
-  bottom: -5px; /* Position it below the bottom border */
+  bottom: -7px; /* Position it below the bottom border */
   left: 50%; /* Center it horizontally */
   transform: translateX(-50%);
 }
