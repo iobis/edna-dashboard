@@ -24,7 +24,13 @@ layout_column_wrap(
     span(htmlOutput("species_links"), id = "species-cont-links"),
     span(textOutput("species_fb_common_names"), id = "species-cont-common"),
     span(htmlOutput("species_fb_content"), id = "species-cont-content"),
-    div(reactable::reactableOutput("species_info"), style = "font-size:50%")
+    div(reactable::reactableOutput("species_info"), style = "font-size:50%"),
+    div(htmltools::tags$span(
+      bslib::input_switch("spi_dna_col", "Color DNA", TRUE), 
+      bslib::input_switch("spi_dna_back", "Background DNA", FALSE),
+      bslib::input_switch("spi_dna_strips", "Table strips", FALSE)
+        ),
+      id = "species-add-control")
   )),
   htmlOutput("species_gallery")
 )

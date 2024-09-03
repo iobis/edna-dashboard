@@ -93,21 +93,31 @@ observe({
   }
     output$species_name <- renderText({species_name})
     output$species_info <- reactable::renderReactable({
-      reactable::reactable(species_info, defaultPageSize = 4,
-    resizable = TRUE, columns = list(
-     samples = colDef(name = "Samples", width = 100),
-     localities = colDef(name = "Localities", width = 150), 
-     target_gene = colDef(name = "Target gene", maxWidth = 70),
-     reads = colDef(name = "Reads", maxWidth = 70),
+      ts <- max(sapply(species_info$DNA_sequence, nchar))
+      reactable::reactable(species_info, defaultPageSize = 7,
+    resizable = TRUE, wrap = FALSE, bordered = TRUE, highlight = TRUE,
+    striped = input$spi_dna_strips,
+    columns = list(
+     samples = colDef(name = "Samples"),
+     localities = colDef(name = "Localities"), 
+     target_gene = colDef(name = "Target gene"),
+     reads = colDef(name = "Reads"),
      DNA_sequence = colDef(name = "DNA sequence",
        cell = function(value, index, name) {
-        value <- gsub("A", '<span style="color: #5d1af6">A</span>', value)
-        value <- gsub("T", '<span style="color: #f6d11a">T</span>', value)
-        value <- gsub("G", '<span style="color: #0eab72">G</span>', value)
-        value <- gsub("C", '<span style="color: #c50936">C</span>', value)
+        if (input$spi_dna_col & !input$spi_dna_back) {
+          value <- gsub("A", '<span style="color: #5d1af6"; font-weight: bold;>A</span>', value)
+          value <- gsub("T", '<span style="color: #f6d11a"; font-weight: bold;>T</span>', value)
+          value <- gsub("G", '<span style="color: #0eab72"; font-weight: bold;>G</span>', value)
+          value <- gsub("C", '<span style="color: #c50936"; font-weight: bold;>C</span>', value)
+        } else if (input$spi_dna_back) {
+          value <- gsub("A", '<span style="color: white; background-color: #5d1af6"; font-weight: bold;>A</span>', value)
+          value <- gsub("T", '<span style="color: white; background-color: #f6d11a"; font-weight: bold;>T</span>', value)
+          value <- gsub("G", '<span style="color: white; background-color: #0eab72"; font-weight: bold;>G</span>', value)
+          value <- gsub("C", '<span style="color: white; background-color: #c50936"; font-weight: bold;>C</span>', value)
+        }
              htmltools::HTML(value)
-  }, width = 700, html = TRUE)),
-  height = 270, theme = reactableTheme(
+  }, minWidth = (ts*10), html = TRUE)),
+  height = 250, theme = reactableTheme(
     backgroundColor = "rgba(0, 0, 0, 0)" # remove this line if want the table white
     ))
     })

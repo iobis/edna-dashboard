@@ -91,6 +91,6 @@ occurrences <- occurrence %>%
 #-------------------------#
 
 #These mostly removed in the annotation step. 
-
+  return(occurrence)
 
 }

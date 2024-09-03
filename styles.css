@@ -199,3 +199,16 @@ li.nav-item {
 #species-cont-content {
   padding-bottom: 20px;
 }
+
+/* Other controls */
+.form-switch .form-check-input {
+  border-radius: 20px;
+}
+
+#species-add-control span .html-fill-container {
+  display: block !important; /* Forces the display property to be block */
+}
+
+#species-add-control span {
+  display: flex;
+}
