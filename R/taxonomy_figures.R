@@ -144,7 +144,6 @@ phylum_def_narrow <- colDef(
       value == "Chordata" ~ '<img src="images/icons/taxon_Chordata.svg" alt="Chordata" width = "15" height = "15"></i> Chordata',
       .default = paste('<img src="images/icons/taxon_unknown.svg" alt="Others" width = "15" height = "15"></i>', value)
     )
-    print(value)
     htmltools::HTML(value)
   },
   html = TRUE
