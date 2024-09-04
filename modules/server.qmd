@@ -117,7 +117,7 @@ observe({
         }
              htmltools::HTML(value)
   }, minWidth = (ts*10), html = TRUE)),
-  height = 250, theme = reactableTheme(
+  height = 260, theme = reactableTheme(
     backgroundColor = "rgba(0, 0, 0, 0)" # remove this line if want the table white
     ))
     })

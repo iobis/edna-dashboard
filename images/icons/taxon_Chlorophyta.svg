@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="127.54132mm"
+   height="127.54132mm"
+   viewBox="0 0 127.54132 127.54132"
+   version="1.1"
+   id="svg5"
+   xml:space="preserve"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"><sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     showgrid="false" /><defs
+     id="defs2" /><g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-31.491688,-147.22363)"><circle
+       style="fill:#0277d4;fill-opacity:1;stroke-width:0.625213;-inkscape-stroke:none;stop-color:#000000"
+       id="path265-9"
+       cx="95.262352"
+       cy="210.99429"
+       r="63.770664"
+       inkscape:export-filename="taxon_chlorophyta.svg"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" /><circle
+       style="fill:#ffffff;fill-opacity:1;stroke-width:0.933478;-inkscape-stroke:none;stop-color:#000000"
+       id="path1709-3"
+       cx="95.262352"
+       cy="210.99429"
+       r="56.4226" /><path
+       d="m 99.218486,191.78602 c 0,-4.45367 3.617714,-8.07138 8.071384,-8.07138 4.45367,0 8.07136,3.61771 8.07136,8.07138 v 1.87371 c -4.22304,1.44132 -6.91831,4.97255 -6.91831,10.10364 0,4.02127 3.64653,10.78105 9.51269,16.0851 0.5477,0.50446 1.28277,0.7639 2.01784,0.7639 0.73507,0 1.47015,-0.25944 2.01785,-0.7639 5.86616,-5.30405 9.51269,-12.06383 9.51269,-16.0851 0,-5.13109 -2.69526,-8.67674 -6.91832,-10.10364 v -1.87371 c 0,-9.55593 -7.73988,-17.29581 -17.2958,-17.29581 -9.555937,0 -17.295814,7.73988 -17.295814,17.29581 v 3.14207 c -2.407,-1.26836 -5.159916,-1.98902 -8.071377,-1.98902 -9.555934,0 -17.295809,7.73988 -17.295809,17.29581 v 1.87371 c -4.223059,1.44132 -6.918323,4.97255 -6.918323,10.10364 0,4.02127 3.646533,10.78105 9.512695,16.0851 0.5477,0.50446 1.282772,0.7639 2.017844,0.7639 0.735072,0 1.470144,-0.25944 2.017844,-0.7639 5.866162,-5.30405 9.512695,-12.06383 9.512695,-16.0851 0,-5.13109 -2.695263,-8.67673 -6.918324,-10.10364 v -1.87371 c 0,-4.45367 3.617707,-8.07138 8.071378,-8.07138 4.453671,0 8.071377,3.61771 8.071377,8.07138 v 4.61222 28.82634 c 0,2.55113 2.061083,4.61222 4.612218,4.61222 2.551129,0 4.612212,-2.06109 4.612212,-4.61222 v -28.82634 -4.61222 z"
+       id="path2142"
+       style="fill:#0277d4;fill-opacity:1;stroke-width:0.144132" /></g></svg>

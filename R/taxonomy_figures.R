@@ -135,10 +135,25 @@ text_def_narrow <- colDef(
   style = list("font-size" = "0.9em")
 )
 
+phylum_def_narrow <- colDef(
+  maxWidth = 130,
+  style = list("font-size" = "0.9em"),
+  cell = function(value, index, name) {
+    value <- dplyr::case_when(
+      value == "Chlorophyta" ~ '<img src="images/icons/taxon_Chlorophyta.svg" alt="Chlorophyta" width = "15" height = "15"></i> Chlorophyta',
+      value == "Chordata" ~ '<img src="images/icons/taxon_Chordata.svg" alt="Chordata" width = "15" height = "15"></i> Chordata',
+      .default = paste('<img src="images/icons/taxon_unknown.svg" alt="Others" width = "15" height = "15"></i>', value)
+    )
+    print(value)
+    htmltools::HTML(value)
+  },
+  html = TRUE
+)
+
 
 rtable<-table_data %>%
   reactable(pagination = TRUE, wrap = FALSE, highlight = TRUE, outlined = TRUE, striped = TRUE, defaultPageSize = 10, filterable = TRUE, defaultSortOrder = "desc", columns = list(
-    "phylum" = text_def_narrow,
+    "phylum" = phylum_def_narrow,
     "class" = text_def_narrow,
     "species" = species_def,
     "reads" = reads_def

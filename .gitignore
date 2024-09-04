@@ -54,3 +54,4 @@ output
 
 images/*
 !images/placeholders/
+!images/icons/
