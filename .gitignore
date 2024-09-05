@@ -50,7 +50,8 @@ index.html
 .quarto/
 
 # dwc dataset
-output
+data/output*
+output*
 
 images/*
 !images/placeholders/
