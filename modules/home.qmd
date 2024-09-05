@@ -23,7 +23,7 @@ alpha_measure <- c("Observed", "Chao1", "Shannon", "Simpson")
 
 beta_measure <- c("bray", "jaccard")
 
-plot_type<-c("reads", "relative abundance")
+plot_type<-c("relative abundance", "reads")
 
 #iucn <- read.csv("data/supporting_data/redlist.csv")
 #iucn_names <- c("all species", unique(iucn$category))
