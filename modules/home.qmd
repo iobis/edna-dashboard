@@ -38,7 +38,15 @@ iucn_names <- c("all species", "CR", "EN", "VU", "NT", "LC", "DD")
 #| expandable: false
 htmltools::includeCSS("styles.css")
 
-leafletOutput("mainMap")
+#leafletOutput("mainMap")
+htmltools::tags$div(
+  htmltools::div(
+    selectInput("higherGeography", "Site:", sites_names),
+    class = "navbar-dropdown-top",
+    id = "top-selector-new"
+   ),
+  leafletOutput("mainMap"), id = "top-selector-parent"
+)
 ```
 
 
@@ -47,9 +55,7 @@ leafletOutput("mainMap")
 
 ## {.toolbar}
 
-```{r}
-selectInput("higherGeography", "Site:", sites_names)
-```
+<span style="color: #f9f9f9">invisible</span>
 
 ## Row 1 {.flow}
 
@@ -119,6 +125,30 @@ value_box(
   title = "Number of mammals",
   value = textOutput("value_box_mammals"),
   showcase = icon("otter", class = 'fa-3x'),#bsicons::bs_icon("bank2"),
+  theme = "bg-gradient-indigo-blue"
+)
+```
+
+#### Row
+
+```{r}
+
+value_box(
+  title = "Number of sharks",
+  value = textOutput("value_box_sharks"),
+  showcase = htmltools::img(src = "images/icons/shark.svg",
+  width = "80px", height = "100%", opacity = 0.3),#bsicons::bs_icon("bank2"),
+  theme = "bg-gradient-indigo-blue"
+)
+```
+
+```{r}
+
+value_box(
+  title = "Number of turtles",
+  value = textOutput("value_box_turtles"),
+  showcase = htmltools::img(src = "images/icons/turtle.svg",
+  width = "50px", height = "100%", opacity = 0.3),#bsicons::bs_icon("bank2"),
   theme = "bg-gradient-indigo-blue"
 )
 ```

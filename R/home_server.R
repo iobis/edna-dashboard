@@ -1,8 +1,12 @@
 # HOME server code
 # Main map ----
 output$mainMap <- renderLeaflet({
+  sites_shape <- sf::read_sf("https://samples.ednaexpeditions.org/sites.geojson")
+  sites_shape <- sites_shape[sites_shape$name %in% localities$parent_area_name,]
   leaflet(width = "100%") %>%
    addTiles(urlTemplate = "https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png") %>%
+   addPolygons(stroke = TRUE, color = "#efa16e", weight = 1, opacity = 0.6, fill = TRUE,
+    label = ~name, data = sites_shape) %>%
    addMarkers(~lon, ~lat, popup = ~as.character(area_name), label = ~as.character(area_name),
               layerId = ~station,
               data = localities, clusterOptions = markerClusterOptions()) %>%
@@ -40,6 +44,14 @@ output$value_box_fish <- renderText({
 
 output$value_box_mammals <- renderText({
   boxes_data$data$n_mammals
+})
+
+output$value_box_sharks <- renderText({
+  ceiling(boxes_data$data$n_fish/3)
+})
+
+output$value_box_turtles <- renderText({
+  2
 })
 
 output$value_box_iucn <- renderText({

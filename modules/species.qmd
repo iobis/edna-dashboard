@@ -27,8 +27,7 @@ layout_column_wrap(
     div(reactable::reactableOutput("species_info"), style = "font-size:50%"),
     div(htmltools::tags$span(
       bslib::input_switch("spi_dna_col", "Color DNA", TRUE), 
-      bslib::input_switch("spi_dna_back", "Background DNA", FALSE),
-      bslib::input_switch("spi_dna_strips", "Table strips", FALSE)
+      bslib::input_switch("spi_dna_back", "Background DNA", FALSE)
         ),
       id = "species-add-control")
   )),

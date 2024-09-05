@@ -96,7 +96,7 @@ observe({
       ts <- max(sapply(species_info$DNA_sequence, nchar))
       reactable::reactable(species_info, defaultPageSize = 7,
     resizable = TRUE, wrap = FALSE, bordered = TRUE, highlight = TRUE,
-    striped = input$spi_dna_strips,
+    striped = TRUE,
     columns = list(
      samples = colDef(name = "Samples"),
      localities = colDef(name = "Localities"), 
