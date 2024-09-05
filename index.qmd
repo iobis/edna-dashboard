@@ -18,14 +18,12 @@ server: shiny
 
 {{< include modules/home.qmd >}}
 
+{{< include modules/species.qmd >}}
+
 {{< include modules/taxonomy.qmd >}}
 
 {{< include modules/diversity.qmd >}}
 
-{{< include modules/species.qmd >}}
-
 {{< include modules/sample.qmd >}}
-
-{{< include modules/dna.qmd >}}
 
 {{< include modules/server.qmd >}}
