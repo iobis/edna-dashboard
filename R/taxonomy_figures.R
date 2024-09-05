@@ -10,7 +10,7 @@ library(ggtreeExtra)
 library(phyloseq)
 library(psadd)
 
-
+#site="The Sundarbans"
 
 make_image_taxonomy <- function(occurrence, site, taxonLevel, plot_type){
 
@@ -19,11 +19,16 @@ occurrence_site <- occurrence %>%
                         filter(higherGeography==site) %>%
                         mutate(species = ifelse(taxonRank == 'species', scientificName, NA))
 
+#Filter out samples with very low read counts (failed samples)
+reads_site <- occurrence_site %>% group_by(materialSampleID) %>% summarize(read_sum =sum(organismQuantity))
+reads_site <- reads_site %>% filter(read_sum > 50000)
+
+occurrence_site <- occurrence_site %>% filter(materialSampleID %in% reads_site$materialSampleID)
 
 if (plot_type == "reads") {
 
 stats_phylum <- occurrence_site %>%
-  group_by(!!sym(taxonLevel), locality, materialSampleID, pcr_primer_name_forward) %>%
+  group_by(!!sym(taxonLevel), locationID, materialSampleID, pcr_primer_name_forward) %>%
   summarize(reads = sum(organismQuantity)) %>%
   ungroup()
 
@@ -47,7 +52,7 @@ occurrence_site = occurrence_site %>% mutate(relative_abundance = organismQuanti
 
 
 stats_phylum <- occurrence_site %>%
-  group_by(!!sym(taxonLevel), locality, materialSampleID, pcr_primer_name_forward) %>%
+  group_by(!!sym(taxonLevel), locationID, materialSampleID, pcr_primer_name_forward) %>%
   summarize(reads = sum(relative_abundance)) %>%
   ungroup()
 
@@ -68,7 +73,7 @@ top_10_classes <- class_summary %>%
 # Step 3: Rename all other classes to "other"
 df_modified <- stats_phylum  %>%
   mutate(taxonLevel = ifelse(!!sym(taxonLevel) %in% top_10_classes, !!sym(taxonLevel), "other")) %>% 
-  group_by(taxonLevel, locality, materialSampleID, pcr_primer_name_forward) %>%
+  group_by(taxonLevel, locationID, materialSampleID, pcr_primer_name_forward) %>%
   summarize(reads = sum(reads)) %>%
   ungroup()
 
@@ -85,13 +90,13 @@ df_modified <- stats_phylum  %>%
 
 #} else {
 
-df_modified <- df_modified %>%  group_by(taxonLevel, locality, materialSampleID) %>%
+df_modified <- df_modified %>%  group_by(taxonLevel, locationID, materialSampleID) %>%
   summarize(reads = sum(reads)) %>%
   ungroup()
 
 ggplot(data=df_modified, aes(y=reads, x=materialSampleID, fill=taxonLevel), color="gray") +
     geom_bar(stat="identity",color="gray") + 
-    facet_grid(~locality, scales='free_x', space = "free")+
+    facet_grid(~locationID, scales='free_x', space = "free")+
     theme_minimal() + 
     guides(fill=guide_legend(title=taxonLevel))+
     ggtitle("The ten most common taxa")+
@@ -116,7 +121,7 @@ table_data <- occurrence_site %>%
                 filter(!is.na(!!sym(taxonLevel))) %>% 
                 group_by(phylum, class, !!sym(taxonLevel)) %>% 
                 summarize(samples = paste(unique(materialSampleID), collapse = ","), 
-                        localities = paste(unique(locality), collapse = ","), 
+                        localities = paste(unique(locationID), collapse = ","), 
                         target_gene = paste(unique(target_gene), collapse = ","),
                         reads = sum(organismQuantity))
 
@@ -206,7 +211,7 @@ colnames(tax_table) <- c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus
 taxmat=as.matrix(tax_table, rownames.force = T)
 
 sample_data = occurrence_site %>% 
-  select(materialSampleID, eventRemarks, locality, decimalLongitude, decimalLatitude, sampleSize, higherGeography, locationID, simple_site_name) %>% distinct()
+  select(materialSampleID, eventRemarks, locationID, decimalLongitude, decimalLatitude, sampleSize, higherGeography, locationID, simple_site_name) %>% distinct()
 
 sample_data = as.data.frame(sample_data)
 rownames(sample_data)=sample_data$materialSampleID

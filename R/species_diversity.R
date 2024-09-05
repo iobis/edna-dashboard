@@ -11,7 +11,14 @@ get_alpha_diversity<-function(occurrence, site, taxonLevel, alpha_div_measure, b
  
  occurrence_site <- occurrence %>%
         filter(higherGeography==site) %>%
-        filter(!is.na(locality))
+        filter(!is.na(locationID))
+
+
+#Filter out samples with very low read counts (failed samples)
+reads_site <- occurrence_site %>% group_by(materialSampleID) %>% summarize(read_sum =sum(organismQuantity))
+reads_site <- reads_site %>% filter(read_sum > 50000)
+
+occurrence_site <- occurrence_site %>% filter(materialSampleID %in% reads_site$materialSampleID)
 
 if(taxonLevel == "ASV"){
 
@@ -53,13 +60,14 @@ if(taxonLevel == "ASV"){
     estR$materialSampleID <- rownames(estR)
 
     estR <- estR %>% 
-        left_join(occurrence %>% select(materialSampleID, locality, decimalLatitude, decimalLongitude) %>% distinct())
+        left_join(occurrence %>% select(materialSampleID, locationID, decimalLatitude, decimalLongitude) %>% distinct())
 
-    p1 <- ggplot(estR, aes(x=locality, y=!!sym(alpha_div_measure), fill=locality)) + 
+    p1 <- ggplot(estR, aes(x=locationID, y=!!sym(alpha_div_measure), fill=locationID)) + 
                     geom_boxplot()+ 
                     geom_point() + 
                     theme_classic() +
                     #scale_fill_viridis(discrete=T, option="mako")
+                    theme(axis.text.x = element_blank())+ 
                     scale_fill_brewer(palette = "Blues")
 
     #plots$alpha <- p1
@@ -75,9 +83,9 @@ if(taxonLevel == "ASV"){
     
 
     PCOAaxes <- PCOAaxes %>%
-        left_join(occurrence %>% select(materialSampleID, locality, decimalLatitude, decimalLongitude) %>% distinct())
+        left_join(occurrence %>% select(materialSampleID, locationID, decimalLatitude, decimalLongitude) %>% distinct())
 
-    p2 <- ggplot(PCOAaxes, aes(x=!!sym(val1), y=!!sym(val2), fill=locality, shape=locality))+
+    p2 <- ggplot(PCOAaxes, aes(x=!!sym(val1), y=!!sym(val2), fill=locationID, shape=locationID))+
                     geom_point(size=5)+
                     theme_classic() +
                     scale_shape_manual(values=c(21:26))+
