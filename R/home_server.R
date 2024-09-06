@@ -47,11 +47,11 @@ output$value_box_mammals <- renderText({
 })
 
 output$value_box_sharks <- renderText({
-  ceiling(boxes_data$data$n_fish/3)
+  ceiling(boxes_data$data$n_sharks)
 })
 
 output$value_box_turtles <- renderText({
-  2
+  boxes_data$data$n_turtles
 })
 
 output$value_box_iucn <- renderText({

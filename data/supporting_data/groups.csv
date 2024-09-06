@@ -2,8 +2,8 @@ taxon,rank,group
 Actinopteri,class,fish
 Cladistii,class,fish
 Coelacanthi,class,fish
-Elasmobranchii,class,fish
-Holocephali,class,fish
+Elasmobranchii,class,sharks
+Holocephali,class,sharks
 Myxini,class,fish
 Petromyzonti,class,fish
 Teleostei,class,fish

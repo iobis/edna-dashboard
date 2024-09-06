@@ -36,6 +36,16 @@ n_species <- function(site, occurrence){
         summarise(unique_species = n_distinct(scientificName)) %>% 
         pull(unique_species)
 
+    data$n_turtles <- occurrence_species %>%  
+        filter(order %in% groups[groups$group=="turtles", "taxon"]) %>%
+        summarise(unique_species = n_distinct(scientificName)) %>% 
+        pull(unique_species)
+
+    data$n_sharks <- occurrence_species %>%  
+        filter(class %in% groups[groups$group=="sharks", "taxon"]) %>%
+        summarise(unique_species = n_distinct(scientificName)) %>% 
+        pull(unique_species)
+
     return(data)
 }
 
