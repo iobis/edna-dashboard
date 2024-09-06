@@ -141,29 +141,30 @@ output$tax_bar_plot <- renderPlot({
  make_image_taxonomy(occurrence, input$higherGeography, input$taxonLevelDiversity, input$plotType)}, height=400
 )
 
-taxon_table<- reactive({ 
+taxon_table <- reactive({ 
   make_table_taxonomy(occurrence, input$higherGeography)})
-
   output$rtable <- renderReactable({
    taxon_table()
  })
 
 output$samples_table <- renderReactable({
-  reactable(samples)
+  reactable(samples %>% filter(site == input$higherGeography))
 })
 
 treeplot <- reactive({
-make_taxonomic_tree(occurrence, input$higherGeography) })
+  make_taxonomic_tree(occurrence, input$higherGeography)
+})
 
 output$tree_plot <- renderPlot({
- treeplot()
+  treeplot()
 })
 
 taxplot <- reactive({
-make_venn_diagram_species_primers(occurrence, input$higherGeography, input$taxonLevel) })
+  make_venn_diagram_species_primers(occurrence, input$higherGeography, input$taxonLevel)
+})
 
 output$markers_plot <- renderPlot({
- taxplot()
+  taxplot()
 })
 
 output$dna_statistics <- renderPrint({
