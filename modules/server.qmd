@@ -30,7 +30,7 @@ sites_samples <- sites$samples %>% bind_rows()
 sites_names <- sapply(sites_list, function(x) x$name)
 
 samples <- sites_samples %>% 
-  select(name, blank, status, volume = size, date = event_begin, site = parent_area_name, station)
+  select(site = parent_area_name, name, blank, date = event_begin, station, volume = size)
 samples$concentration <- sapply(sites_samples$dnas, function(x) x$concentration)
 
 localities <- sites_samples %>% 
@@ -146,10 +146,6 @@ taxon_table <- reactive({
    taxon_table()
  })
 
-output$samples_table <- renderReactable({
-  reactable(samples %>% filter(site == input$higherGeography))
-})
-
 treeplot <- reactive({
   make_taxonomic_tree(occurrence, input$higherGeography)
 })
@@ -170,6 +166,18 @@ output$dna_statistics <- renderPrint({
   get_dna_statistics(occurrence, input$higherGeography)
 })
 
+# Samples
+
+output$samples_table <- renderReactable({
+  reactable(samples %>% filter(site == input$higherGeography))
+})
+
+output$concentration_plot <- plotly::renderPlotly({
+  plotly::ggplotly(
+    ggplot() +
+      geom_point(data = samples %>% filter(site == input$higherGeography), aes(x = blank, y = concentration, color = blank))
+  )
+})
 
 # Diversity metrics ----
 
