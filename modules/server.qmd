@@ -25,16 +25,15 @@ occurrence <- read_occurrence_data()
 # TODO: pre-do that
 sites <- jsonlite::read_json("https://raw.githubusercontent.com/iobis/edna-tracker-data/data/generated.json")
 sites_list <- sites$sites
-sites_samples <- sites$samples
+sites_samples <- sites$samples %>% bind_rows()
 
 sites_names <- sapply(sites_list, function(x) x$name)
 
 samples <- sites_samples %>% 
-  bind_rows() %>% 
   select(name, blank, status, volume = size, date = event_begin, site = parent_area_name, station)
+samples$concentration <- sapply(sites_samples$dnas, function(x) x$concentration)
 
 localities <- sites_samples %>% 
-  bind_rows() %>% 
   select(area_name, area_locality, parent_area_name, station, lon = area_longitude, lat = area_latitude) %>%
   group_by(area_name, area_locality, parent_area_name, station, lon, lat) %>%
   distinct(.keep_all = T)
