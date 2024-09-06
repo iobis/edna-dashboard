@@ -169,7 +169,7 @@ output$dna_statistics <- renderPrint({
 # Samples
 
 output$samples_table <- renderReactable({
-  reactable(samples %>% filter(site == input$higherGeography))
+  reactable(samples %>% filter(site == input$higherGeography) %>% select(-site) %>% arrange(name))
 })
 
 output$concentration_plot <- plotly::renderPlotly({
