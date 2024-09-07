@@ -1,12 +1,12 @@
-# Samples {orientation="rows" scrolling="true"}
+# Samples {orientation="columns" scrolling="true"}
 
-## Row {.fill height=10%}
+## Row {width=30%}
 
 ```{r}
 plotly::plotlyOutput("concentration_plot")
 ```
 
-## Row {.fill}
+## Row
 
 ```{r}
 reactable::reactableOutput("samples_table")
