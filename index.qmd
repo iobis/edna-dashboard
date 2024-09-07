@@ -26,4 +26,6 @@ server: shiny
 
 {{< include modules/sample.qmd >}}
 
+{{< include modules/climate.qmd >}}
+
 {{< include modules/server.qmd >}}

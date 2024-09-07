@@ -210,4 +210,6 @@ output$krona_plot <- renderUI({
     f <- f[grepl(sel_loc, f)]
     tags$iframe(src = paste0("www/krona_plots/", f), height=600, width="100%")
   })
+
+source("R/climate_server.R", local = TRUE)
 ```

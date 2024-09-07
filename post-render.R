@@ -15,6 +15,7 @@ content_update <- gsub("Diversity", '<i class="bi bi-boxes"></i> Diversity', con
 content_update <- gsub("Species", '<i class="bi bi-bug"></i> Species', content_update)
 content_update <- gsub("Sample", '<i class="bi bi-droplet"></i> Sample', content_update)
 content_update <- gsub("DNA", '<i class="bi bi-eyedropper"></i> DNA', content_update)
+content_update <- gsub("Climate", '<i class="bi bi-thermometer-high"></i> Climate', content_update)
 
 content[navbar] <- content_update
 
