@@ -222,6 +222,16 @@ li.nav-item {
   display: flex;
 }
 
+#climate-sites-add-control span .html-fill-container {
+  display: block !important;
+  /* Forces the display property to be block */
+}
+
+#climate-sites-add-control span {
+  display: flex;
+}
+
+
 
 /* Top selector home page */
 #top-selector-parent .shiny-input-container:not(.shiny-input-container-inline) {

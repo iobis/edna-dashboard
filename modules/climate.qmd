@@ -18,10 +18,20 @@ shiny::plotOutput("climate_number_species")
 
 ### Column
 
+::: {.card title="Temperature at sites"}
 ```{r}
 #| title: Temperature at sites
-shiny::plotOutput("climate_temperature_sites")
+
+layout_column_wrap(
+  width = 1,
+  heights_equal = "row",
+  div(htmltools::tags$span(
+      bslib::input_switch("spi_clim_anomaly", "Anomaly", FALSE), 
+      bslib::input_switch("spi_clim_surf", "Bottom temperature", FALSE)), id = "climate-sites-add-control"),
+  div(dygraphs::dygraphOutput("climate_temperature_sites"))
+)
 ```
+:::
 
 ## Row
 
