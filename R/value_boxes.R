@@ -9,42 +9,22 @@ n_species <- function(site, occurrence){
 
     #site="Lagoons of New Caledonia: Reef Diversity and Associated Ecosystems"
 
-    occurrence_species <- occurrence %>% 
-    filter(higherGeography==site) %>% 
-    filter(taxonRank=="species")
+    sites_stats <- readRDS("data/supporting_data/sites_stats.rds")
 
-    groups=read.csv("data/supporting_data/groups.csv")
-    redlist <- read.csv("data/supporting_data/redlist.csv")
-    redlist_cat <- redlist %>% filter(category %in% c("EN", "CR", "VU")) 
+    stats_sel <- sites_stats %>% 
+        filter(higherGeography==site)
 
-    data$n_species <- occurrence_species %>%   
-        summarise(unique_species = n_distinct(scientificName)) %>%
-        pull(unique_species)
+    data$n_species <- stats_sel$unique_species
 
-    data$n_fish <- occurrence_species %>%  
-        filter(class %in% groups[groups$group=="fish", "taxon"]) %>%
-        summarise(unique_species = n_distinct(scientificName)) %>% 
-        pull(unique_species)
+    data$n_fish <- stats_sel$unique_fish
     
-    data$n_mammals <- occurrence_species %>%  
-        filter(class %in% groups[groups$group=="mammals", "taxon"]) %>%
-        summarise(unique_species = n_distinct(scientificName)) %>% 
-        pull(unique_species)
+    data$n_mammals <- stats_sel$unique_mammals
     
-    data$n_iucn <- occurrence_species %>%  
-        filter(scientificName %in% redlist_cat$species) %>%
-        summarise(unique_species = n_distinct(scientificName)) %>% 
-        pull(unique_species)
+    data$n_iucn <- stats_sel$unique_iucn
 
-    data$n_turtles <- occurrence_species %>%  
-        filter(order %in% groups[groups$group=="turtles", "taxon"]) %>%
-        summarise(unique_species = n_distinct(scientificName)) %>% 
-        pull(unique_species)
+    data$n_turtles <- stats_sel$unique_turtles
 
-    data$n_sharks <- occurrence_species %>%  
-        filter(class %in% groups[groups$group=="sharks", "taxon"]) %>%
-        summarise(unique_species = n_distinct(scientificName)) %>% 
-        pull(unique_species)
+    data$n_sharks <- stats_sel$unique_sharks
 
     return(data)
 }

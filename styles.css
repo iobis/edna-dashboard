@@ -321,3 +321,7 @@ li.nav-item {
   }
 }
 
+.spinner--1 {
+  border-top: 4px solid #2780e3!important;
+  color: #2780e3 !important;
+}

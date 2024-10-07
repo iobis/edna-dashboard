@@ -6,6 +6,7 @@ library(bslib)
 library(leaflet)
 library(shiny)
 library(dplyr)
+library(arrow)
 source("R/image-gallery.R")
 source("R/occurrence.R")
 source("R/value_boxes.R")
@@ -17,9 +18,13 @@ source("R/get_dna_statistics.R")
 source("extensions/front-gallery.R")
 #source("R/fix_taxonomy.R")
 
+# Small function to debug, when not in use set show=FALSE
+mdebug <- function(status, show = TRUE) {message(status)}
+
 sites_info <- read.table("data/sites_description.txt", header=T)
 occurrence <- read_occurrence_data()
 
+occurrence_ds <- open_dataset("data/output/occurrence.parquet")
 
 # Leaflet map data
 # TODO: pre-do that
@@ -39,6 +44,7 @@ localities <- sites_samples %>%
   distinct(.keep_all = T)
 
 species_context_info <- readRDS("data/fishbase.rds")
+mdebug("server start done")
 ```
 
 <!-- Shiny server component -->
@@ -56,10 +62,21 @@ source("R/species_gallery_modal.R", local = TRUE)
 
 # Species list gallery ----
 species_list <- reactive({
-    generate_ordered_species_list_bySite(input$higherGeography, occurrence, input$group, input$iucn)
+    generate_ordered_species_list_bySite(input$higherGeography, occurrence_ds, input$group, input$iucn)
   })
 
+w <- waiter::Waiter$new(
+  id = "species_gallery",
+  color = "white",
+  html = htmltools::div(
+    "Loading image gallery...",
+    htmltools::br(), htmltools::br(),
+    waiter::spin_1(), style = "color: #2780e3; font-size: 24px; font-weight: 900"
+  )
+)
 output$species_gallery <- renderUI({
+    w$show()
+    on.exit(w$hide())
     generate_gallery(species_list()$scientificName, "data/proc_images.txt", max_image_height = "250px",max_image_width = "200px", image_gap = "0.1em") 
     })
 

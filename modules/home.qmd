@@ -11,6 +11,8 @@ sites_list <- sites$sites
 sites_samples <- sites$samples
 
 sites_names <- sapply(sites_list, function(x) x$name)
+sites_names <- sites_names[sites_names != "Sanganeb Marine National Park and Dungonab Bay – Mukkawar Island Marine National Park"]
+sites_names <- sites_names[order(sites_names)]
 
 localities <- sites_samples %>% bind_rows() %>% select(area_name, area_locality, parent_area_name, station, lon = area_longitude, lat = area_latitude)
 
@@ -37,6 +39,7 @@ iucn_names <- c("all species", "CR", "EN", "VU", "NT", "LC", "DD")
 #| padding: 0px
 #| expandable: false
 htmltools::includeCSS("styles.css")
+waiter::useWaiter()
 
 #leafletOutput("mainMap")
 htmltools::tags$div(
@@ -55,7 +58,15 @@ htmltools::tags$div(
 
 ## {.toolbar}
 
-<span style="color: #f9f9f9">invisible</span>
+``` {r}
+#<span style="color: #f9f9f9">invisible</span>
+htmltools::span(
+  htmltools::span(
+    "World Heritage Site", htmltools::HTML("&nbsp;"), textOutput("whs_front_code"),
+    style = "display: flex; font-weight: bold; font-color: #cccccc;"
+  ), htmltools::HTML("&nbsp;"), "|", htmltools::HTML("&nbsp;"), htmlOutput("whs_front_website"), style = "display: flex;"
+)
+```
 
 ## Row 1 {.flow}
 

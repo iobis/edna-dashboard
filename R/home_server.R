@@ -24,6 +24,19 @@ output$siteDescription <- renderText({
   sel_site$description
 })
 
+output$whs_front_code <- renderText({
+  sel_site <- sites_info[sites_info$name == input$higherGeography,]
+  paste(basename(sel_site$url), " ")
+})
+
+output$whs_front_website <- renderUI({
+  sel_site <- sites_info[sites_info$name == input$higherGeography,]
+  htmltools::a(
+    href = sel_site$url, target = "_blank",
+    paste("  ", sel_site$url), style = "text-decoration: none; font-color: #2761e3 !important;"
+  )
+})
+
 output$eventDate <- renderText({"2024-05-01"})
 output$eventSamples <- renderText({"1000"})
 
@@ -31,7 +44,7 @@ output$eventSamples <- renderText({"1000"})
 boxes_data <- reactiveValues()
 observe({
   sel_site <- sites_info[sites_info$name == input$higherGeography,]
-  boxes_data$data <- n_species(sel_site$name, occurrence)
+  boxes_data$data <- n_species(input$higherGeography, occurrence)
 }) %>% bindEvent(input$higherGeography)
 
 output$value_box_species <- renderText({

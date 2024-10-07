@@ -13,6 +13,7 @@ generate_ordered_species_list_bySite <- function(site, occurrence, selected_grou
   occurrence <- occurrence %>%
     filter(higherGeography == site) %>%
     filter(taxonRank == "species") %>% 
+    collect() %>%
     mutate(group = coalesce(
       group_lookup[paste("class", class, sep = "_")],
       group_lookup[paste("order", order, sep = "_")],
