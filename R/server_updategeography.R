@@ -1,12 +1,12 @@
 # Update inputs across pages and according to map
 observe({
-  updateVarSelectInput(session, "higherGeography", selected = map_info()$parent_area_name[1])
-  updateVarSelectInput(session, "higherGeographyDiversity", selected = map_info()$parent_area_name[1])
-  updateVarSelectInput(session, "higherGeographyDNA", selected = map_info()$parent_area_name[1])
-  updateVarSelectInput(session, "higherGeographySpecies", selected = map_info()$parent_area_name[1])
-  updateVarSelectInput(session, "higherGeographyTaxonomy", selected = map_info()$parent_area_name[1])
+  updateVarSelectInput(session, "higherGeography", selected = map_info$parent_area_name[1])
+  updateVarSelectInput(session, "higherGeographyDiversity", selected = map_info$parent_area_name[1])
+  updateVarSelectInput(session, "higherGeographyDNA", selected = map_info$parent_area_name[1])
+  updateVarSelectInput(session, "higherGeographySpecies", selected = map_info$parent_area_name[1])
+  updateVarSelectInput(session, "higherGeographyTaxonomy", selected = map_info$parent_area_name[1])
 }) %>%
-  bindEvent(map_info())
+  bindEvent(map_info$parent_area_name)
 
 observeEvent(input$higherGeography, {
     updateSelectInput(session, "higherGeographyDiversity", selected = input$higherGeography)

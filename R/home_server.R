@@ -1,14 +1,14 @@
 # HOME server code
 # Main map ----
+sites_shape <- sf::read_sf("https://samples.ednaexpeditions.org/sites.geojson")
 output$mainMap <- renderLeaflet({
-  sites_shape <- sf::read_sf("https://samples.ednaexpeditions.org/sites.geojson")
   sites_shape <- sites_shape[sites_shape$name %in% localities$parent_area_name,]
   leaflet(width = "100%") %>%
    addTiles(urlTemplate = "https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png") %>%
    addPolygons(stroke = TRUE, color = "#efa16e", weight = 1, opacity = 0.6, fill = TRUE,
-    label = ~name, data = sites_shape) %>%
+    label = ~name, data = sites_shape, layerId = ~name) %>%
    addMarkers(~lon, ~lat, popup = ~as.character(area_name), label = ~as.character(area_name),
-              layerId = ~station,
+              layerId = ~as.character(area_name),
               data = localities, clusterOptions = markerClusterOptions()) %>%
    setView(0, 0, zoom = 2)
 })
@@ -66,21 +66,32 @@ output$imageGalleryFront <- renderUI({
 
 # Map changes
 # Map input changes ----
-map_info <- reactive({
+map_info <- reactiveValues(parent_area_name = NULL)
+
+observe({
+  if (!is.null(input$mainMap_shape_click)) {
+    click <- input$mainMap_shape_click
+    if (!is.null(click$id)) {
+      locs <- localities[!is.na(localities$station),]
+      loc_sel <- locs[locs$parent_area_name == click$id, ]
+      map_info$parent_area_name <- loc_sel$parent_area_name[1]
+    }
+  }
+}) %>%
+  bindEvent(input$mainMap_shape_click, ignoreInit = T)
+
+observe({
   if (!is.null(input$mainMap_marker_click)) {
     click <- input$mainMap_marker_click
     if (!is.null(click$id)) {
       locs <- localities[!is.na(localities$station),]
-      loc_sel <- locs[locs$station == click$id, ]
-      loc_sel <- loc_sel[loc_sel$lon == click$lng & loc_sel$lat == click$lat,]
-      loc_sel
-    } else {
-      NULL
+      loc_sel <- locs[locs$area_name == click$id, ]
+      map_info$parent_area_name <- loc_sel$parent_area_name[1]
     }
-  } else {
-    NULL
   }
-})
+}) %>%
+  bindEvent(input$mainMap_marker_click, ignoreInit = T)
+
 
 observe({
   proxy <- leafletProxy("mainMap")
