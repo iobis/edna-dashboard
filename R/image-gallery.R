@@ -39,7 +39,6 @@ generate_gallery <- function(species,
       link_id <- paste0("link_", gsub(" ", "_", image_table_filt$species[i]))
       
       header <- image_table_filt$species[i]
-      #header <- actionLink(link_id, htmltools::tags$i(image_table_filt$species[i]))
       
       cards[[i]] <- imageInput(
         inputId = link_id,
@@ -48,13 +47,6 @@ generate_gallery <- function(species,
         alt_src = image_table_filt$alt_url[i],
         max_image_height = max_image_height
       )
-
-      # cards[[i]] <- card(height = "100%", full_screen = T,
-      #                    #card_header(htmltools::tags$i(image_table_filt$species[i])),
-      #                    card_header(header),
-      #                    card_body(tags$img(src = image_table_filt$image_url[i],
-      #                                       class = "gallery-img"), class= "p-0"), max_height = max_image_height
-      # )
     }
     
     return(layout_column_wrap(

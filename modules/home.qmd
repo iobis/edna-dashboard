@@ -45,7 +45,7 @@ htmltools::tags$div(
     class = "navbar-dropdown-top",
     id = "top-selector-new"
    ),
-  leafletOutput("mainMap"), id = "top-selector-parent"
+  leafletOutput("mainMap", height = 400), id = "top-selector-parent"
 )
 ```
 
@@ -78,6 +78,14 @@ if (parentDiv) {
     // Remove the style attribute from the child div
     childDiv.removeAttribute('style');
   }
+}
+// Select the div with the class you specified
+let div = document.querySelector('.bslib-grid-item.html-fill-item.tab-content.bslib-grid');
+
+// Check if the div exists to avoid errors
+if (div) {
+    // Remove the grid-template-rows style from the inline style
+    div.style.removeProperty('grid-template-rows');
 }
 </script>
 ```

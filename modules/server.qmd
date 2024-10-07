@@ -51,7 +51,8 @@ source("R/home_server.R", local = TRUE)
 # Update inputs across pages and according to map
 source("R/server_updategeography.R", local = TRUE)
 
-# Image galleries --
+# Image galleries
+source("R/species_gallery_modal.R", local = TRUE)
 
 # Species list gallery ----
 species_list <- reactive({
@@ -64,8 +65,7 @@ output$species_gallery <- renderUI({
 
 observe({
   if (!is.null(input$clicked_image_id)) {
-    print(input$clicked_image_id)
-    session$sendCustomMessage(type = "image_gallery_side", message = "toggleVisibility")
+
     species <- gsub("_", " ", gsub("link_", "", input$clicked_image_id))
     species_name <- species
     
@@ -83,21 +83,21 @@ observe({
     
     sp_fb_common_names <- ifelse(nrow(fb_commons) > 0, paste(fb_commons$ComName, collapse = ", "), "not found")
     sp_fb_content <- fb_content$Comments
-    
-    output$species_links <- renderText({paste("<p>", species_link_1, " | ", species_link_2, "</p>")})
-    output$species_fb_common_names <- renderText({paste("Common names:", sp_fb_common_names)})
-    output$species_fb_content <- renderText({sp_fb_content})
-  
-    #species_info <- paste("Information about species", species)
+
     species_info <- get_species_information(species, occurrence, input$higherGeography)
   } else {
     species_name <- "Select a species to start."
     species_info <- ""
   }
-    output$species_name <- renderText({species_name})
-    output$species_info <- reactable::renderReactable({
-      ts <- max(sapply(species_info$DNA_sequence, nchar))
-      reactable::reactable(species_info, defaultPageSize = 7,
+
+  shiny::showModal(
+    species_gallery_modal(species_name, species_link_1, species_link_2, sp_fb_common_names, sp_fb_content)
+  )
+
+  ts <- max(sapply(species_info$DNA_sequence, nchar))
+
+  output$species_info <- reactable::renderReactable({
+    reactable::reactable(species_info, defaultPageSize = 7,
     resizable = TRUE, wrap = FALSE, bordered = TRUE, highlight = TRUE,
     striped = TRUE,
     columns = list(
@@ -123,8 +123,10 @@ observe({
   height = 260, theme = reactableTheme(
     backgroundColor = "rgba(0, 0, 0, 0)" # remove this line if want the table white
     ))
-    })
-})
+  })
+
+}) %>%
+  bindEvent(input$clicked_image_id, ignoreInit = T)
 
 # Taxa images ----
 
