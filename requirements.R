@@ -10,13 +10,24 @@ req_packages <- c(
   "arrow",
   "ggplot2",
   "dplyr",
-  "terra"
+  "terra",
+  "plotly",
+  "dygraphs",
+  "waiter",
+  "reactable",
+  "DT",
+  "eullerr",
+  "data.tree",
+  "viridisLite"
 )
 
+# TODO: ggtree, ggtreeExtra, phyloseq from BioConductor
+
 # Needed packages on GitHub
-git_packages <- c("obistools")
+git_packages <- c("obistools", "psadd")
 git_packages_source <- c(
-  "iobis/obistools"
+  "iobis/obistools",
+  "cpauvert/psadd"
 )
 
 # Create a function to check if is installed
