@@ -6,6 +6,7 @@
 
 # Needed packages on CRAN
 req_packages <- c(
+  "devtools",
   "tidyr",
   "arrow",
   "ggplot2",
