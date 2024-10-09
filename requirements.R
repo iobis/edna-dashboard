@@ -26,9 +26,8 @@ req_packages <- c(
 bioconductor_packages <- c("ggtree", "ggtreeExtra", "phyloseq")
 
 # Needed packages on GitHub
-git_packages <- c("obistools", "psadd")
+git_packages <- c("psadd")
 git_packages_source <- c(
-  "iobis/obistools",
   "cpauvert/psadd"
 )
 
