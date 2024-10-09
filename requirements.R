@@ -17,7 +17,7 @@ req_packages <- c(
   "waiter",
   "reactable",
   "DT",
-  "eullerr",
+  "eulerr",
   "data.tree",
   "viridisLite",
   "BiocManager"
