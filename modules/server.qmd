@@ -188,13 +188,20 @@ output$dna_statistics <- renderPrint({
 # Samples
 
 output$samples_table <- renderReactable({
-  reactable(samples %>% filter(site == input$higherGeography) %>% select(-site) %>% arrange(name))
+  reactable(
+    samples %>% filter(site == input$higherGeography) %>% select(-site) %>% arrange(name),
+    pagination = FALSE,
+    showPagination = FALSE,
+    defaultPageSize = 10000
+  )
 })
 
 output$concentration_plot <- plotly::renderPlotly({
   plotly::ggplotly(
     ggplot() +
-      geom_point(data = samples %>% filter(site == input$higherGeography), aes(x = blank, y = concentration, color = blank))
+      geom_point(data = samples %>% filter(site == input$higherGeography), aes(x = blank, y = concentration, color = blank)) +
+      theme_classic() +
+      scale_color_brewer(palette = "Blues", direction = -1)
   )
 })
 
