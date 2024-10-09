@@ -18,10 +18,11 @@ req_packages <- c(
   "DT",
   "eullerr",
   "data.tree",
-  "viridisLite"
+  "viridisLite",
+  "BiocManager"
 )
 
-# TODO: ggtree, ggtreeExtra, phyloseq from BioConductor
+bioconductor_packages <- c("ggtree", "ggtreeExtra", "phyloseq")
 
 # Needed packages on GitHub
 git_packages <- c("obistools", "psadd")
@@ -46,5 +47,12 @@ for (i in 1:length(req_packages)) {
 for (i in 1:length(git_packages)) {
   if (!is_package_installed(git_packages[i])) {
     devtools::install_github(git_packages_source[i])
+  }
+}
+
+# Check bioconductor packages
+for (i in 1:length(bioconductor_packages)) {
+  if (!is_package_installed(bioconductor_packages[i])) {
+    BiocManager::install(bioconductor_packages[i])
   }
 }
