@@ -248,7 +248,8 @@ li.nav-item {
 }
 
 #top-selector-parent {
-  max-height: 400px !important;
+  height: 500px !important;
+  max-height: 500px !important;
 }
 
 .navbar-dropdown-top {

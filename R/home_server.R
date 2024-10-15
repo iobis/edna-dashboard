@@ -9,7 +9,7 @@ output$mainMap <- renderLeaflet({
     label = ~name, data = sites_shape, layerId = ~name) %>%
    addMarkers(~lon, ~lat, popup = ~as.character(area_name), label = ~as.character(area_name),
               layerId = ~as.character(area_name),
-              data = localities, clusterOptions = markerClusterOptions()) %>%
+              data = localities, clusterOptions = markerClusterOptions(maxClusterRadius = 5)) %>%
    setView(0, 0, zoom = 2)
 })
 

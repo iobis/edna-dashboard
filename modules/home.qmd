@@ -48,7 +48,7 @@ htmltools::tags$div(
     class = "navbar-dropdown-top",
     id = "top-selector-new"
    ),
-  leafletOutput("mainMap", height = 400), id = "top-selector-parent"
+  leafletOutput("mainMap"), id = "top-selector-parent"
 )
 ```
 
