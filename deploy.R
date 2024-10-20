@@ -18,6 +18,7 @@ if (!dir.exists("data/output") || force) {
 # Prepare images database
 if (!dir.exists("images/gallery") || force) {
     cat("Preparing image database ======\n")
+    fs::dir_create("images/gallery")
     source("R/create_images_database.R")
 } else {
     cat("Image database done ======\n")
