@@ -20,4 +20,4 @@ jobs:
         SSH_USER: ${{ secrets.SSH_USER }}
         SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
       run: |
-        sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no "$SSH_USER"@shiny.obis.org 'docker exec shiny touch poc.txt'
+        sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no "$SSH_USER"@shiny.obis.org 'docker exec shiny bash /srv/shiny-server/edna-dashboard/rebuild.sh'
