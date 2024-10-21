@@ -20,7 +20,8 @@ req_packages <- c(
   "eulerr",
   "data.tree",
   "viridisLite",
-  "BiocManager"
+  "BiocManager",
+  "waiter"
 )
 
 bioconductor_packages <- c("ggtree", "ggtreeExtra", "phyloseq")
