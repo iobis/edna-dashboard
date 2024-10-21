@@ -253,8 +253,7 @@ li.nav-item {
 }
 
 .navbar-dropdown-top {
-  height: 68px;
-  max-height: 68px !important;
+  max-height: 55px !important;
   margin: 0px !important;
   padding: 10px;
   padding-left: 15px;
@@ -268,7 +267,9 @@ li.nav-item {
 
 #top-selector-parent .selectize-input {
   border: 1px solid #2b88d0;
-  border-radius: 0px
+  border-radius: 0px;
+  padding-right: 50px;
+  min-width: 250px !important;
 }
 
 #top-selector-parent .selectize-input.full {
@@ -297,8 +298,7 @@ li.nav-item {
 
 @media (max-width: 1270px) {
   .navbar-dropdown-top {
-    height: 95px;
-    max-height: 95px !important;
+    max-height: 55px !important;
     margin: 0px !important;
     padding: 10px;
     padding-left: 15px;

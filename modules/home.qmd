@@ -90,14 +90,20 @@ if (parentDiv) {
     childDiv.removeAttribute('style');
   }
 }
-// Select the div with the class you specified
-let div = document.querySelector('.bslib-grid-item.html-fill-item.tab-content.bslib-grid');
 
-// Check if the div exists to avoid errors
-if (div) {
-    // Remove the grid-template-rows style from the inline style
-    div.style.removeProperty('grid-template-rows');
-}
+// TOP DIV ADJUSTMENT
+// Modification 1: Remove 'dashboard-fill' from the body class
+var body = document.querySelector('body');
+body.classList.remove('dashboard-fill');
+
+// Modification 2: Remove 'bslib-page-fill' and add 'dashboard-scrolling' to the div
+var div2 = document.querySelector('.page-layout-custom.quarto-dashboard-content.bslib-gap-spacing.html-fill-container.bslib-page-fill.quarto-dashboard-pages');
+div2.classList.remove('bslib-page-fill');
+div2.classList.add('dashboard-scrolling');
+
+// Modification 3: Add 'grid-template-rows' to the style of another div
+var div3 = document.querySelector('.bslib-grid-item.html-fill-item.tab-content.bslib-grid');
+div3.style.gridTemplateRows = 'minmax(3em, max-content)';
 </script>
 ```
 
