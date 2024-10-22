@@ -56,3 +56,6 @@ output*
 images/*
 !images/placeholders/
 !images/icons/
+
+www/krona_plots
+
