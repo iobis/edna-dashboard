@@ -1,6 +1,35 @@
 <!-- Orientation can be either columns or rows; each level 2 header becomes a card-->
 # Taxonomy {orientation="columns" scrolling="true"}
 
+<!--
+## {.toolbar}
+
+```{r}
+selectInput("higherGeographyTaxonomy", "Site:", sites_names)
+```
+-->
+
+### Taxonomic composition {orientation="rows" scrolling="true"}
+
+#### Row 1
+::: {.card title="Taxonomic composition across samples"}
+
+This table shows all species that were identified from the site, ordered by abundance. You can search on the different taxonomic levels, species names, samples or locations. For more information on each species check out the species tab!
+
+```{r}
+#| title: All annotated names at the site
+#DT::dataTableOutput("taxon_table")
+reactable::reactableOutput("rtable")
+```
+
+:::
+
+#### Row 2
+```{r}
+htmlOutput("krona_plot")
+```
+
+<!--
 ## Row {.tabset}
 ### Taxonomic composition {orientation="rows" scrolling="true"}
 ####
@@ -21,6 +50,7 @@ reactable::reactableOutput("rtable")
 ```{r}
 htmlOutput("krona_plot")
 ```
+
 
 ### Sources
 
@@ -61,3 +91,4 @@ The most recent record for this region on GBIF is from:
 <span style="font-weight: 900; font-size: 30px; color: #0277d4;">2024</span>
 
 :::
+-->

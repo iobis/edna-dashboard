@@ -16,6 +16,7 @@ make_image_taxonomy <- function(occurrence, site, taxonLevel, plot_type) {
 
   occurrence_site <- occurrence %>%
                           filter(higherGeography==site) %>%
+                          collect() %>%
                           mutate(species = ifelse(taxonRank == 'species', scientificName, NA))
   
   #Filter out samples with very low read counts (failed samples)
@@ -110,6 +111,7 @@ make_table_taxonomy <- function(occurrence, site) {
   
   occurrence_site <- occurrence %>%
                           filter(higherGeography==site) %>%
+                          collect() %>%
                           mutate(species = ifelse(taxonRank == 'species', scientificName, NA))
   
   table_data <- occurrence_site %>% 
@@ -231,6 +233,7 @@ make_krona_plot <- function(occurrence) {
 make_taxonomic_tree <- function(occurrence, site) {
 
   occurrence_site <- occurrence %>% filter(higherGeography == site) %>%
+                          collect() %>%
                           mutate(species = ifelse(taxonRank == 'species', scientificName, NA))
   
   df <- occurrence_site %>%
