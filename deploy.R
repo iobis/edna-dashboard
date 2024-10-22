@@ -19,3 +19,6 @@ if (!dir.exists("data/output") || force) {
 cat("Preparing image database ======\n")
 fs::dir_create("images/gallery")
 source("R/create_images_database.R")
+
+# Update krona plots
+source("R/update_krona_plots.R")
