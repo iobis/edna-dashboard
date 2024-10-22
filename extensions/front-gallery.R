@@ -23,6 +23,7 @@ front_gallery <- function(site, images_table, show_counter = TRUE) {
   
   if (is.character(images_table)) {
     images_table <- data.table::fread(images_table)
+    images_table <- as.data.frame(images_table)
   }
   
   images_table_sel <- images_table[images_table$site == site, ]

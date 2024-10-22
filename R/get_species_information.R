@@ -38,7 +38,8 @@ get_species_information <- function(selected_species, occurrence, site) {
 
     all_info <- occurrence %>%
         filter(higherGeography == site) %>%
-        filter(scientificName == selected_species)
+        filter(scientificName == selected_species) %>%
+        collect()
         
     species_info <- paste("This species was found in", length(unique(all_info$materialSampleID)), "samples. The total number of reads for this species was:", sum(all_info$organismQuantity), "across", length(unique(all_info$DNA_sequence)))
     #return(species_info)

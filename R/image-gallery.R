@@ -50,7 +50,7 @@ generate_gallery <- function(species,
     }
     
     return(layout_column_wrap(
-      width = max_image_width, gap = image_gap,
+      width = max_image_width, gap = image_gap, fixed_width = TRUE,
       heights_equal = "row",
       !!!cards
     ))

@@ -11,7 +11,8 @@ get_alpha_diversity<-function(occurrence, site, taxonLevel, alpha_div_measure, b
  
  occurrence_site <- occurrence %>%
         filter(higherGeography==site) %>%
-        filter(!is.na(locationID))
+        filter(!is.na(locationID)) %>%
+        collect()
 
 
 #Filter out samples with very low read counts (failed samples)
@@ -60,7 +61,7 @@ if(taxonLevel == "ASV"){
     estR$materialSampleID <- rownames(estR)
 
     estR <- estR %>% 
-        left_join(occurrence %>% select(materialSampleID, locationID, decimalLatitude, decimalLongitude) %>% distinct())
+        left_join(occurrence %>% select(materialSampleID, locationID, decimalLatitude, decimalLongitude) %>% distinct() %>% collect())
 
     p1 <- ggplot(estR, aes(x=locationID, y=!!sym(alpha_div_measure), fill=locationID)) + 
                     geom_boxplot()+ 
@@ -83,7 +84,7 @@ if(taxonLevel == "ASV"){
     
 
     PCOAaxes <- PCOAaxes %>%
-        left_join(occurrence %>% select(materialSampleID, locationID, decimalLatitude, decimalLongitude) %>% distinct())
+        left_join(occurrence %>% select(materialSampleID, locationID, decimalLatitude, decimalLongitude) %>% distinct() %>% collect())
 
     p2 <- ggplot(PCOAaxes, aes(x=!!sym(val1), y=!!sym(val2), fill=locationID, shape=locationID))+
                     geom_point(size=5)+

@@ -26,6 +26,13 @@ occurrence <- read_occurrence_data()
 
 occurrence_ds <- open_dataset("data/output/occurrence.parquet")
 
+unique_sp_codes <- occurrence_ds %>%
+  select(scientificName, scientificNameID) %>%
+  group_by(scientificName, scientificNameID) %>%
+  distinct() %>%
+  collect() %>%
+  mutate(scientificNameID = sub(".*:", "", scientificNameID))
+
 # Leaflet map data
 # TODO: pre-do that
 sites <- jsonlite::read_json("https://raw.githubusercontent.com/iobis/edna-tracker-data/data/generated.json")
@@ -74,23 +81,58 @@ w <- waiter::Waiter$new(
     waiter::spin_1(), style = "color: #2780e3; font-size: 24px; font-weight: 900"
   )
 )
+
+wb <- waiter::Waiter$new(
+  id = "species_gallery_b",
+  color = "white",
+  html = htmltools::div(
+    "Loading image gallery...",
+    htmltools::br(), htmltools::br(),
+    waiter::spin_1(), style = "color: #2780e3; font-size: 24px; font-weight: 900"
+  )
+)
+
+sg_limit <- 28
+
 output$species_gallery <- renderUI({
     w$show()
-    on.exit(w$hide())
-    generate_gallery(species_list()$scientificName, "data/proc_images.txt", max_image_height = "250px",max_image_width = "200px", image_gap = "0.1em") 
+    on.exit({
+      w$hide()
+      session$sendCustomMessage("second_gallery", "")
     })
+    if (length(species_list()$scientificName) > sg_limit) {
+      generate_gallery(species_list()$scientificName[1:sg_limit], "data/proc_images.txt", max_image_height = "250px",max_image_width = "200px", image_gap = "0.1em")
+    } else {
+      generate_gallery(species_list()$scientificName, "data/proc_images.txt", max_image_height = "250px",max_image_width = "200px", image_gap = "0.1em")
+    }
+})
+
+output$species_gallery_b <- renderUI({
+  if (length(species_list()$scientificName) <= sg_limit) {
+    htmltools::tags$br()
+  } else {
+    wb$show()
+    on.exit(wb$hide())
+    generate_gallery(species_list()$scientificName[sg_limit:length(species_list()$scientificName)], "data/proc_images.txt", max_image_height = "250px",max_image_width = "200px", image_gap = "0.1em")
+  }
+}) %>%
+  bindEvent(input$secondGallery)
 
 observe({
   if (!is.null(input$clicked_image_id)) {
 
+    shiny::showModal(shiny::modalDialog(
+      htmltools::tags$span("Loading species information...", style = "color: #0277d4; font-size: large;"),
+      footer = NULL, easyClose = FALSE))
+
     species <- gsub("_", " ", gsub("link_", "", input$clicked_image_id))
     species_name <- species
     
-    sel_aphiaid <- occurrence %>%
+    sel_aphiaid <- unique_sp_codes %>%
+      ungroup() %>%
       filter(scientificName == species) %>%
       select(scientificNameID) %>%
-      mutate(scientificNameID = sub(".*:", "", scientificNameID)) %>%
-      slice_head(n = 1) %>% unlist()
+      unlist(use.names = F)
     
     fb_content <- species_context_info$core_info %>% filter(Species == species)
     fb_commons <- species_context_info$common_names %>% filter(Species == species)
@@ -101,12 +143,12 @@ observe({
     sp_fb_common_names <- ifelse(nrow(fb_commons) > 0, paste(fb_commons$ComName, collapse = ", "), "not found")
     sp_fb_content <- fb_content$Comments
 
-    species_info <- get_species_information(species, occurrence, input$higherGeography)
+    species_info <- get_species_information(species, occurrence_ds, input$higherGeography)
   } else {
     species_name <- "Select a species to start."
     species_info <- ""
   }
-
+  shiny::removeModal()
   shiny::showModal(
     species_gallery_modal(species_name, species_link_1, species_link_2, sp_fb_common_names, sp_fb_content)
   )
@@ -145,28 +187,43 @@ observe({
 }) %>%
   bindEvent(input$clicked_image_id, ignoreInit = T)
 
-# Taxa images ----
-
-#taxbarplot <- reactive({
-  
-#  make_image_taxonomy(occurrence, input$higherGeography, input$taxonLevelDiversity, input$plotType)#, #input$showPrimers)
-  
-#  }) 
 
 
-output$tax_bar_plot <- renderPlot({
- #taxbarplot() 
- make_image_taxonomy(occurrence, input$higherGeography, input$taxonLevelDiversity, input$plotType)}, height=400
+# DIVERSITY page -----
+wd <- waiter::Waiter$new(
+  id = c("tax_bar_plot", "alpha_plot", "beta_plot"),
+  color = "white",
+  html = htmltools::div(
+    "Generating site statistics...",
+    htmltools::br(), htmltools::br(),
+    waiter::spin_1(), style = "color: #2780e3; font-size: 24px; font-weight: 900"
+  )
 )
 
-taxon_table <- reactive({ 
-  make_table_taxonomy(occurrence, input$higherGeography)})
-  output$rtable <- renderReactable({
-   taxon_table()
- })
+output$tax_bar_plot <- renderPlot({
+ #taxbarplot()  
+ make_image_taxonomy(occurrence_ds, input$higherGeography, input$taxonLevelDiversity, input$plotType)}, height=400
+)
 
+# Diversity metrics
+divplots <- reactive({
+ wd$show()
+ get_alpha_diversity(occurrence_ds, input$higherGeography, input$taxonLevel, input$alpha_measure, input$beta_measure)
+})
+
+output$alpha_plot <- plotly::renderPlotly({
+  plotly::ggplotly(divplots()[[1]])
+})
+
+output$beta_plot <- plotly::renderPlotly({
+  plotly::ggplotly(divplots()[[2]])
+})
+
+
+
+# DNA page ------
 treeplot <- reactive({
-  make_taxonomic_tree(occurrence, input$higherGeography)
+  make_taxonomic_tree(occurrence_ds, input$higherGeography)
 })
 
 output$tree_plot <- renderPlot({
@@ -174,7 +231,7 @@ output$tree_plot <- renderPlot({
 })
 
 taxplot <- reactive({
-  make_venn_diagram_species_primers(occurrence, input$higherGeography, input$taxonLevel)
+  make_venn_diagram_species_primers(occurrence_ds, input$higherGeography, input$taxonLevel)
 })
 
 output$markers_plot <- renderPlot({
@@ -182,11 +239,17 @@ output$markers_plot <- renderPlot({
 })
 
 output$dna_statistics <- renderPrint({
-  get_dna_statistics(occurrence, input$higherGeography)
+  get_dna_statistics(occurrence_ds, input$higherGeography)
 })
 
-# Samples
 
+
+# TAXONOMY page ----
+source("R/taxonomy_server.R", local = TRUE)
+
+
+
+# SAMPLES page -----
 output$samples_table <- renderReactable({
   reactable(
     samples %>% filter(site == input$higherGeography) %>% select(-site) %>% arrange(name),
@@ -205,37 +268,8 @@ output$concentration_plot <- plotly::renderPlotly({
   )
 })
 
-# Diversity metrics ----
 
-divplots <- reactive({
- get_alpha_diversity(occurrence, input$higherGeography, input$taxonLevel, input$alpha_measure, input$beta_measure)
-})
 
-output$alpha_plot <- plotly::renderPlotly({
-  plotly::ggplotly(divplots()[[1]])
-})
-
-output$beta_plot <- plotly::renderPlotly({
-  plotly::ggplotly(divplots()[[2]])
-})
-
-#input$taxonLevel="phylum"
-#input$alpha_measure="Observed"
-#input$beta_measure="bray"
-#input$plotType="relative abundance"
-#input$showPrimers=FALSE
-#input=list()
-#input$higherGeography=site
-
-# Output Krona plot
-output$krona_plot <- renderUI({
-    # TO BE IMPROVED: would be better to have short names as one of the columns
-    sel_loc <- localities[localities$parent_area_name == input$higherGeography,]
-    sel_loc <- substr(tolower(sel_loc$parent_area_name[1]), 1, 4)
-    f <- list.files("www/krona_plots")
-    f <- f[grepl(sel_loc, f)]
-    tags$iframe(src = paste0("www/krona_plots/", f), height=600, width="100%")
-  })
-
+# CLIMATE page ------
 source("R/climate_server.R", local = TRUE)
 ```
