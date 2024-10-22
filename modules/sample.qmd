@@ -1,0 +1,15 @@
+# Samples {orientation="columns" scrolling="true"}
+
+## Row {width=30%}
+
+<div style="height: 400px;">
+```{r}
+plotly::plotlyOutput("concentration_plot")
+```
+</div>
+
+## Row
+
+```{r}
+reactable::reactableOutput("samples_table")
+```

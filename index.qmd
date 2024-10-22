@@ -1,81 +1,31 @@
 ---
-title: "eDNA"
+title: "eDNA expeditions"
 format: 
   dashboard:
-    css: styles.css
+    expandable: false
 include-in-header:
   - text: |
       <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
 theme:
   - cosmo
-  - custom.scss
+  - www/custom.scss
+mainfont: Mulish
+server: shiny
 ---
 
-<!-- This goes on top of the page after navbar - map-->
-```{r}
-#| padding: 0px
-library(leaflet)
-leaflet(width = "100%") %>%
-  addTiles() %>%
-  setView(0, 0, zoom = 2)
-```
+{{< include modules/home.qmd >}}
 
-<!-- Each level 1 header becomes a page on the dashboard -->    
-# Home
+{{< include modules/species.qmd >}}
 
-Test page 1
+{{< include modules/taxonomy.qmd >}}
 
-<!-- Orientation can be either columns or rows; each level 2 header becomes a card-->
-# Taxonomy {orientation="columns" scrolling="true"}
+{{< include modules/diversity.qmd >}}
 
-## Column
+{{< include modules/sample.qmd >}}
 
-<!-- Content can be either markdown...-->
-Test page 2
+{{< include modules/climate.qmd >}}
 
-## Column 
-
-<!-- Code/output...-->
-```{r}
-plot(x = 1, y = 1)
-```
-
-# Diversity metrics {orientation="columns" scrolling="true"}
-
-## Column
-
-Test page 2
-
-## Column 
-
-<!-- Or a mix of both-->
-Some text
-
-```{r}
-plot(x = 1, y = 1)
-```
-
-# Species {orientation="columns" scrolling="true"}
-
-## Column
-
-Test page 2
-
-## Column 
-
-```{r}
-plot(x = 1, y = 1)
-```
-
-# Sample {orientation="columns" scrolling="true"}
-
-## Column
-
-Test page 2
-
-## Column 
-
-```{r}
-plot(x = 1, y = 1)
-```
-
+{{< include modules/server.qmd >}}

@@ -1,0 +1,328 @@
+/* css styles */
+
+/* Google fonts */
+.material-symbols-outlined {
+  font-variation-settings:
+    'FILL' 0,
+    'wght' 200,
+    'GRAD' 0,
+    'opsz' 24
+}
+
+
+/* Layout adjustments */
+.toolbar.html-fill-container {
+  transform: translateY(-20px);
+  position: relative;
+  z-index: 10;
+}
+
+.quarto-dashboard .toolbar {
+  margin-bottom: 0px;
+  padding: 1em;
+}
+
+.quarto-dashboard .dashboard-toolbar-container:not(.toolbar-toplevel) .toolbar {
+  margin-bottom: 0em !important;
+}
+
+.flow.bslib-grid {
+  height: min-content;
+}
+
+
+/* Toolbar selects */
+.quarto-dashboard .toolbar .shiny-input-select {
+  min-width: 14em;
+}
+
+
+/* Navbar */
+.navbar-title {
+  font-weight: 900;
+}
+
+li.nav-item {
+  font-weight: 700;
+}
+
+
+/* Body styles*/
+.site-title {
+  font-weight: 900;
+  color: #0277d4;
+  font-size: 32px;
+  padding-bottom: 0.5em;
+}
+
+.context-info {
+  font-size: 14px;
+  color: #3D3D3D;
+}
+
+.card-title {
+  font-weight: 900;
+  color: #0277d4;
+}
+
+/* Tabs */
+.card-header.dashboard-card-no-title.bslib-navs-card-title {
+  background: none;
+}
+
+/* General tab link styling */
+.nav-tabs .nav-link {
+  margin-bottom: calc(-1 * var(--bs-nav-tabs-border-width));
+  border: none;
+  /* Remove the default border */
+  position: relative;
+  padding-bottom: 5px;
+  /* Space for the underline */
+  text-align: center;
+  /* Center align the text */
+  font-weight: 500;
+  color: #3D3D3D;
+}
+
+/* Styling for the active (selected) tab link */
+.nav-tabs .nav-link.active {
+  border-bottom: 2px solid #0277d4;
+  /* Bottom border line */
+  padding-bottom: 4px !important;
+  color: #0277d4;
+}
+
+/* Create the small triangle under the selected tab */
+.nav-tabs .nav-link.active::after {
+  content: "";
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid #0277d4;
+  /* Triangle color */
+  position: absolute;
+  bottom: -7px;
+  /* Position it below the bottom border */
+  left: 50%;
+  /* Center it horizontally */
+  transform: translateX(-50%);
+}
+
+/* Hover effect for non-selected tab links */
+.nav-tabs .nav-link:not(.active)::before {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: 0;
+  left: 50%;
+  background-color: #0277d4;
+  transition: width 0.4s ease, left 0.4s ease, box-shadow 0.4s ease;
+}
+
+/* Animation for growing line and slight glow on hover */
+.nav-tabs .nav-link:not(.active):hover::before {
+  width: 100%;
+  left: 0;
+  box-shadow: 0 0 4px #0277d4;
+}
+
+
+/* Image gallery */
+.gallery-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  top: 0;
+  left: 0;
+}
+
+
+/* Value box */
+.quarto-dashboard .bslib-value-box .value-box-area {
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.bslib-value-box .value-box-area {
+  justify-content: center;
+  padding: 0.5rem 0.5rem;
+  font-size: .9rem;
+  font-weight: 500;
+}
+
+.bslib-value-box .value-box-title {
+  font-size: 1rem;
+  margin-top: 0;
+  margin-bottom: .05rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.bslib-value-box .value-box-value {
+  font-size: calc(1.325rem + .9vw);
+  margin-top: 0;
+  margin-bottom: .1rem;
+  font-weight: 900;
+  line-height: 1.2;
+}
+
+.bslib-value-box .value-box-showcase {
+  align-items: center;
+  justify-content: center;
+  margin-top: auto;
+  margin-bottom: auto;
+  padding: 0.1rem;
+}
+
+.bslib-mb-spacing {
+  margin-bottom: 0 !important;
+}
+
+
+
+
+/* Species page */
+
+/* Image gallery context info */
+#species-cont-name {
+  font-size: 32px;
+  font-weight: 900;
+  font-style: italic;
+  color: #0277d4;
+}
+
+#species-cont-links a {
+  font-size: 12px;
+  font-style: normal;
+  text-decoration: none !important;
+  color: #0277d4;
+}
+
+#species-cont-common {
+  font-size: 12px;
+}
+
+#species-cont-content {
+  padding-bottom: 20px;
+}
+
+/* Other controls */
+.form-switch .form-check-input {
+  border-radius: 20px;
+}
+
+#species-add-control span .html-fill-container {
+  display: block !important;
+  /* Forces the display property to be block */
+}
+
+#species-add-control span {
+  display: flex;
+}
+
+#climate-sites-add-control span .html-fill-container {
+  display: block !important;
+  /* Forces the display property to be block */
+}
+
+#climate-sites-add-control span {
+  display: flex;
+}
+
+
+
+/* Top selector home page */
+#top-selector-parent .shiny-input-container:not(.shiny-input-container-inline) {
+  width: 100% !important;
+  max-width: 100%;
+}
+
+#top-selector-new .html-fill-item .html-fill-container {
+  display: inline-block !important;
+}
+
+#top-selector-new .form-group.shiny-input-container.html-fill-item.html-fill-container {
+  display: inline-block;
+}
+
+#top-selector-parent {
+  height: 500px !important;
+  max-height: 500px !important;
+}
+
+.navbar-dropdown-top {
+  max-height: 55px !important;
+  margin: 0px !important;
+  padding: 10px;
+  padding-left: 15px;
+  background-color: #008efc;
+} 
+
+#top-selector-parent .form-group .control-label {
+  color: white;
+  font-weight: 700;
+}
+
+#top-selector-parent .selectize-input {
+  border: 1px solid #2b88d0;
+  border-radius: 0px;
+  padding-right: 50px;
+  min-width: 250px !important;
+}
+
+#top-selector-parent .selectize-input.full {
+  background-color: #48a4eb
+}
+
+#top-selector-parent .selectize-input,#top-selector-parent .selectize-control.single .selectize-input.input-active {
+  background: #fff;
+}
+
+#top-selector-parent .selectize-dropdown,#top-selector-parent .selectize-dropdown.form-control {
+  background: #48a4eb;
+}
+
+#top-selector-parent .selectize-input,#top-selector-parent .selectize-control.single .selectize-input.input-active {
+  background: #48a4eb;
+}
+
+#top-selector-parent .selectize-dropdown,#top-selector-parent .selectize-input,#top-selector-parent .selectize-input input {
+  color: #ffffff;
+}
+
+#top-selector-parent .selectize-control.single .selectize-input:not(.no-arrow):after {
+  border-color: #ffffff transparent transparent transparent
+}
+
+@media (max-width: 1270px) {
+  .navbar-dropdown-top {
+    max-height: 55px !important;
+    margin: 0px !important;
+    padding: 10px;
+    padding-left: 15px;
+    background-color: #008efc;
+  } 
+
+  #top-selector-parent .selectize-input {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    width: 250px !important;
+    padding: 6px 12px; /* Adjust padding if needed */
+    box-sizing: border-box; /* Make sure padding is within the width */
+  }
+  #top-selector-parent .form-group .control-label {
+    text-align: left;
+    position: relative;
+    top: -10px;
+    color: white;
+    font-weight: 700;
+  }
+}
+
+.spinner--1 {
+  border-top: 4px solid #2780e3!important;
+  color: #2780e3 !important;
+}

@@ -1,0 +1,25 @@
+# Species {orientation="columns" scrolling="true"}
+
+## {.toolbar}
+
+```{r}
+selectInput("higherGeographySpecies", "Site:", sites_names)
+
+selectInput("group", "Group:", groups_names)
+
+selectInput("iucn", "IUCN category:", iucn_names)
+
+```
+
+
+## Row
+
+```{r}
+source("extensions/image-sidebar.R")
+layout_column_wrap(
+  width = 1,
+  heights_equal = "row",
+  htmlOutput("species_gallery")
+)
+```
+

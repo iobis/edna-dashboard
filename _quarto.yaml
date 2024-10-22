@@ -2,3 +2,5 @@ project:
   title: "edna-viz"
   post-render: 
     - post-render.R
+  pre-render: 
+    - pre-render.R

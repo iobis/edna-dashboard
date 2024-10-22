@@ -1,0 +1,49 @@
+<!-- Orientation can be either columns or rows; each level 2 header becomes a card-->
+# Climate {orientation="rows" scrolling="true"}
+
+## {.toolbar}
+
+```{r}
+selectInput("taxonLevelClimate", "Rank:", taxonLevels)
+```
+
+## Row {height="350px"}
+
+### Column
+
+```{r}
+#| title: Number of species at climate risk
+shiny::plotOutput("climate_number_species")
+```
+
+### Column
+
+::: {.card title="Temperature at sites"}
+```{r}
+#| title: Temperature at sites
+
+layout_column_wrap(
+  width = 1,
+  heights_equal = "row",
+  div(htmltools::tags$span(
+      bslib::input_switch("spi_clim_anomaly", "Anomaly", FALSE), 
+      bslib::input_switch("spi_clim_surf", "Bottom temperature", FALSE)), id = "climate-sites-add-control"),
+  div(dygraphs::dygraphOutput("climate_temperature_sites"))
+)
+```
+:::
+
+## Row
+
+### Column
+
+::: {.callout-warning}
+## Attention
+The following table indicates species that are potentially at thermal risk on the site, considering its current thermal limit. Note that, because on the recent period we never experience such high temperatures on the sea as predicted for the future, we do not know exactly how tropical species (that are living close to the upper limits) will actually react to those new temperatures.
+:::
+
+```{r}
+#| title: Thermal risk
+
+reactable::reactableOutput("climate_thermal_risk")
+```

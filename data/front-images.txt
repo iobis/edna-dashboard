@@ -1,0 +1,4 @@
+"site" "image_url" "caption"
+"Ningaloo Coast" "images/front_gallery/ningaloo_1.jpg" "Ningaloo - collecting samples"
+"Ningaloo Coast" "images/front_gallery/ningaloo_2.jpg" NA
+"Ningaloo Coast" "images/front_gallery/ningaloo_3.jpg" "Ningaloo - area"
