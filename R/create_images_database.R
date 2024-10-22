@@ -5,6 +5,9 @@ all_sp <- all_sp %>% distinct(scientificName, .keep_all = T) %>%
 
 images <- data.table::fread("data/images.txt")
 
+oldtm <- options("timeout")
+options(timeout = 15)
+
 for (i in 1:nrow(images)) {
     cat("Processing image", i, "out of", nrow(images), "\n")
     tf <- images[i,]
@@ -35,6 +38,7 @@ for (i in 1:nrow(images)) {
     }
 }
 
+options(timeout = oldtm$timeout)
 
 all_images <- list.files("images/gallery")
 

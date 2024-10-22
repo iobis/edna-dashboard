@@ -19,7 +19,8 @@ source("extensions/image-sidebar.R")
 layout_column_wrap(
   width = 1,
   heights_equal = "row",
-  htmlOutput("species_gallery")
+  htmlOutput("species_gallery"),
+  htmlOutput("species_gallery_b")
 )
 ```
 
