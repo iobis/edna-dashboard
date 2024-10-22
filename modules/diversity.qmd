@@ -3,7 +3,7 @@
 ## {.toolbar}
 
 ```{r}
-selectInput("higherGeographyDiversity", "Site:", sites_names)
+#selectInput("higherGeographyDiversity", "Site:", sites_names)
 selectInput("taxonLevelDiversity", "Rank:", taxonLevels[-c(1,2)])
 selectInput("plotType", "Abundance:", plot_type)
 ```

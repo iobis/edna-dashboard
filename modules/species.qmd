@@ -3,7 +3,7 @@
 ## {.toolbar}
 
 ```{r}
-selectInput("higherGeographySpecies", "Site:", sites_names)
+#selectInput("higherGeographySpecies", "Site:", sites_names)
 
 selectInput("group", "Group:", groups_names)
 
