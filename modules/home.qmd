@@ -39,6 +39,7 @@ iucn_names <- c("all species", "CR", "EN", "VU", "NT", "LC", "DD")
 #| padding: 0px
 #| expandable: false
 htmltools::includeCSS("www/styles.css")
+htmltools::includeScript("www/script.js")
 waiter::useWaiter()
 
 #leafletOutput("mainMap")

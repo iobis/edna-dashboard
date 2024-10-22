@@ -5,7 +5,9 @@ library(eulerr)
 get_dna_statistics <- function(occurrence, site){
 
 #site="Aldabra Atoll"
-occurrence_site <- occurrence %>% filter(higherGeography == site)
+occurrence_site <- occurrence %>% 
+  filter(higherGeography == site) %>%
+  collect()
 
 ## Stats for all markers:
 
@@ -50,6 +52,7 @@ cat(card_content)
 make_venn_diagram_species_primers <- function(occurrence, site, taxonLevel){
     
   occurrence_site <- occurrence %>% filter(higherGeography==site) %>% 
+  collect() %>%
   mutate(species = ifelse(taxonRank == 'species', scientificName, NA))
 
 if (taxonLevel=="ASV") {

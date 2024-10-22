@@ -1,12 +1,6 @@
 <!-- Orientation can be either columns or rows; each level 2 header becomes a card-->
 # Taxonomy {orientation="columns" scrolling="true"}
 
-## {.toolbar}
-
-```{r}
-selectInput("higherGeographyTaxonomy", "Site:", sites_names)
-```
-
 ## Row {.tabset}
 ### Taxonomic composition {orientation="rows" scrolling="true"}
 ####
