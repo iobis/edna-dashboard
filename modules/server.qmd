@@ -50,6 +50,12 @@ localities <- sites_samples %>%
   group_by(area_name, area_locality, parent_area_name, station, lon, lat) %>%
   distinct(.keep_all = T)
 
+map_localities <- sites_samples %>% 
+  select(name, area_name, area_locality, parent_area_name, station, lon = area_longitude, lat = area_latitude) %>%
+  group_by(name, area_name, area_locality, parent_area_name, station, lon, lat) %>%
+  distinct(.keep_all = T) %>%
+  mutate(popup_name = paste(name, area_name))
+
 species_context_info <- readRDS("data/fishbase.rds")
 mdebug("server start done")
 ```
