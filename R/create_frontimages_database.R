@@ -18,3 +18,5 @@ for (i in seq_len(nrow(figures_table))) {
 figures_table$caption <- figures_table$site
 
 write.table(figures_table, "data/front-images.txt", row.names = F)
+
+system("aws s3 sync images/front_gallery/ s3://edna-dashboard/images/front_gallery/")

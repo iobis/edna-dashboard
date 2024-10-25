@@ -7,9 +7,9 @@ output$mainMap <- renderLeaflet({
    addTiles(urlTemplate = "https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png") %>%
    addPolygons(stroke = TRUE, color = "#efa16e", weight = 1, opacity = 0.6, fill = TRUE,
     label = ~name, data = sites_shape, layerId = ~name) %>%
-   addMarkers(~lon, ~lat, popup = ~as.character(area_name), label = ~as.character(area_name),
-              layerId = ~as.character(area_name),
-              data = localities, clusterOptions = markerClusterOptions(maxClusterRadius = 5)) %>%
+   addMarkers(~lon, ~lat, popup = ~as.character(popup_name), label = ~as.character(popup_name),
+              layerId = ~as.character(popup_name),
+              data = map_localities, clusterOptions = markerClusterOptions(maxClusterRadius = 5)) %>%
    setView(0, 0, zoom = 2)
 })
 
@@ -37,8 +37,20 @@ output$whs_front_website <- renderUI({
   )
 })
 
-output$eventDate <- renderText({"2024-05-01"})
-output$eventSamples <- renderText({"1000"})
+output$eventDate <- renderText({
+  sa <- samples %>%
+    filter(site == input$higherGeography)
+
+  sa$date <- as.Date(sa$date)
+
+  format(min(sa$date, na.rm = T), "%Y-%m-%d")
+})
+output$eventSamples <- renderText({
+  samples %>%
+    filter(site == input$higherGeography) %>%
+    count() %>%
+    unlist()
+})
 
 # Value boxes ----
 boxes_data <- reactiveValues()
@@ -74,7 +86,49 @@ output$value_box_iucn <- renderText({
 # Front page gallery ----
 output$imageGalleryFront <- renderUI({
   site <- input$higherGeography
-  front_gallery(site, "data/front-images.txt", show_counter = FALSE)
+
+  images_table <- "data/front-images.txt"
+  images_table <- data.table::fread(images_table)
+  images_table <- as.data.frame(images_table)
+
+  images_table_sel <- images_table[images_table$site == site, ]
+
+  if (nrow(images_table_sel) > 4) {
+    images_table_sel <- images_table_sel[1:4,]
+  }
+
+  cards_images <- lapply(seq_len(nrow(images_table_sel)), function(x) {
+    url <- images_table_sel$image_url[x]
+    caption <- images_table_sel$caption[x]
+
+    if (length(unique(images_table_sel$caption)) > 1) {
+      card(
+        height = "100%", full_screen = T,
+        card_header(
+          caption # , style = "font-style: italic;"
+        ),
+        card_body(tags$img(
+          src = url
+        ), class = "p-0")#,
+        #max_height = 300
+      )
+    } else {
+      card(
+        height = "100%", full_screen = T,
+        card_body(tags$img(
+          src = url
+        ), class = "p-0")#,
+        #max_height = 300
+      )
+    }
+  })
+
+  bslib::layout_column_wrap(
+    width = 1/2,
+    heights_equal = "row",
+    !!!cards_images,
+  )
+
 })
 
 # Map changes

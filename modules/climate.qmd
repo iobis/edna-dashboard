@@ -1,12 +1,6 @@
 <!-- Orientation can be either columns or rows; each level 2 header becomes a card-->
 # Climate {orientation="rows" scrolling="true"}
 
-## {.toolbar}
-
-```{r}
-selectInput("taxonLevelClimate", "Rank:", taxonLevels)
-```
-
 ## Row {height="350px"}
 
 ### Column

@@ -124,7 +124,7 @@ make_table_taxonomy <- function(occurrence, site) {
 
   species_def <- colDef(
     minWidth = 200,
-    style = list("font-size" = "0.9em")
+    style = list("font-size" = "0.9em", "font-style" = "italic")
   )
   
   reads_def <- colDef(

@@ -22,3 +22,6 @@ source("R/create_images_database.R")
 
 # Update krona plots
 source("R/update_krona_plots.R")
+
+# Download front gallery images
+system("aws s3 sync --no-sign-request s3://edna-dashboard/images/front_gallery images/front_gallery")
