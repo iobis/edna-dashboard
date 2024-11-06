@@ -101,29 +101,40 @@ wb <- waiter::Waiter$new(
 
 sg_limit <- reactive({
   width <- input$dimension[1]
+  if (is.null(width)) {
+    width <- 1100
+  }
   maxw <- floor(width/200)
   maxw * 5
 })
 
 output$species_gallery <- renderUI({
-    req(!is.null(species_list()$scientificName) || length(species_list()$scientificName) > 0)
+    req(length(species_list()$scientificName) > 0 && length(sg_limit()) > 0)
 
     w$show()
     on.exit({
       w$hide()
-      session$sendCustomMessage("second_gallery", "")
     })
+
     if (length(species_list()$scientificName) > sg_limit()) {
-      last_name <- species_list()$scientificName[(sg_limit()-3)]
-      last_name <- paste0("link_", gsub(" ", "_", last_name))
+      last_name <- "placeholder-tag"
 
       placeholders <- lapply(1:(sg_limit()/5), function(x) {
-        card(height = "100%", full_screen = F,
+        if (x == 1) {
+          card(height = "100%", full_screen = F, id = "placeholder-tag",
                card_header("Loading...", style = "font-style: italic;"),
                card_body(tags$img(src = "images/placeholders/general.webp",
                                   class = "gallery-img"), class= "p-0"),
                max_height = "250px", class = "loading"
                )
+        } else {
+          card(height = "100%", full_screen = F,
+               card_header("Loading...", style = "font-style: italic;"),
+               card_body(tags$img(src = "images/placeholders/general.webp",
+                                  class = "gallery-img"), class= "p-0"),
+               max_height = "250px", class = "loading"
+               )
+        }
       })
 
       htmltools::div(
@@ -160,6 +171,7 @@ $(window).on("scroll.checkElement", { passive: true }, function() {
         )
       )
     } else {
+      session$sendCustomMessage("second_gallery", "")
       generate_gallery(species_list()$scientificName, "data/proc_images.txt", max_image_height = "250px",max_image_width = "200px", image_gap = "0.1em")
     }
 }) %>%
@@ -167,7 +179,7 @@ $(window).on("scroll.checkElement", { passive: true }, function() {
 
 observe({
   if (length(species_list()$scientificName) <= sg_limit()) {
-    htmltools::tags$br()
+    output$species_gallery_b <- renderUI({htmltools::tags$br()})
   } else {
     wb$show()
     on.exit(wb$hide())

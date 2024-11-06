@@ -1,9 +1,9 @@
 // CUSTOM HANDLERS]
 // Add handler for second execution
-/*Shiny.addCustomMessageHandler('second_gallery', function(value) {
+Shiny.addCustomMessageHandler('second_gallery', function(value) {
   var message = {id: "id1", nonce: Math.random()};
   Shiny.onInputChange("secondGallery", message)
-});*/
+});
 
 var dimension = [0, 0];
 $(document).on("shiny:connected", function (e) {
