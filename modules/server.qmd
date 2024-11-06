@@ -93,19 +93,21 @@ wb <- waiter::Waiter$new(
   color = "white",
   html = htmltools::div(
     "Loading more images...",
-    htmltools::br(), htmltools::br(),
-    waiter::spin_1(), style = "color: #2780e3; font-size: 24px; font-weight: 900"
+    # htmltools::br(), htmltools::br(),
+    # waiter::spin_1(),
+    style = "color: #2780e3; font-size: 24px; font-weight: 900"
   )
 )
 
 sg_limit <- reactive({
-  print(input$dimension)
   width <- input$dimension[1]
   maxw <- floor(width/200)
   maxw * 5
 })
 
 output$species_gallery <- renderUI({
+    req(!is.null(species_list()$scientificName) || length(species_list()$scientificName) > 0)
+
     w$show()
     on.exit({
       w$hide()
