@@ -114,7 +114,7 @@ output$species_gallery <- renderUI({
       session$sendCustomMessage("second_gallery", "")
     })
     if (length(species_list()$scientificName) > sg_limit()) {
-      last_name <- species_list()$scientificName[sg_limit()]
+      last_name <- species_list()$scientificName[(sg_limit()-3)]
       last_name <- paste0("link_", gsub(" ", "_", last_name))
 
       placeholders <- lapply(1:(sg_limit()/5), function(x) {
@@ -163,7 +163,7 @@ $(window).on("scroll.checkElement", { passive: true }, function() {
       generate_gallery(species_list()$scientificName, "data/proc_images.txt", max_image_height = "250px",max_image_width = "200px", image_gap = "0.1em")
     }
 }) %>%
-  bindEvent(species_list)
+  bindEvent(species_list()$scientificName)
 
 observe({
   if (length(species_list()$scientificName) <= sg_limit()) {
