@@ -11,8 +11,13 @@ n_species <- function(site, occurrence){
 
     sites_stats <- readRDS("data/supporting_data/sites_stats.rds")
 
-    stats_sel <- sites_stats %>% 
-        filter(higherGeography==site)
+    if (site == "") {
+        stats_sel <- sites_stats %>%
+            summarise(across(2:ncol(.), sum))
+    } else {
+        stats_sel <- sites_stats %>% 
+            filter(higherGeography==site)
+    }
 
     data$n_species <- stats_sel$unique_species
 

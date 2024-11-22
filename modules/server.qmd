@@ -22,7 +22,7 @@ source("extensions/front-gallery.R")
 mdebug <- function(status, show = FALSE) {message(status)}
 
 sites_info <- read.table("data/sites_description.txt", header=T)
-occurrence <- read_occurrence_data()
+#occurrence <- read_occurrence_data()
 
 occurrence_ds <- open_dataset("data/output/occurrence.parquet")
 
@@ -40,6 +40,8 @@ sites_list <- sites$sites
 sites_samples <- sites$samples %>% bind_rows()
 
 sites_names <- sapply(sites_list, function(x) x$name)
+sites_names <- sites_names[sites_names != "Sanganeb Marine National Park and Dungonab Bay – Mukkawar Island Marine National Park"]
+sites_names <- sites_names[order(sites_names)]
 
 samples <- sites_samples %>% 
   select(site = parent_area_name, name, blank, date = event_begin, station, volume = size)
@@ -57,6 +59,12 @@ map_localities <- sites_samples %>%
   mutate(popup_name = paste(name, area_name))
 
 species_context_info <- readRDS("data/fishbase.rds")
+
+general_description <- jsonlite::read_json("data/general_description.json")
+
+sites_shape <- sf::read_sf("https://samples.ednaexpeditions.org/sites.geojson")
+
+climate_species <- open_dataset("data/species_sites_risk_full.parquet")
 mdebug("server start done")
 ```
 
@@ -72,6 +80,17 @@ source("R/server_updategeography.R", local = TRUE)
 
 # Image galleries
 source("R/species_gallery_modal.R", local = TRUE)
+
+# Update first page options when not at Home
+observe({
+  if (!is.null(input$activeTab)) {
+    if (input$activeTab != "Home" && input$higherGeography == ""){
+      updateSelectInput(session, "higherGeography",
+      choices = sites_names, selected = sites_names[1])
+    }
+  }
+}) %>%
+  bindEvent(input$activeTab)
 
 # Species list gallery ----
 species_list <- reactive({
@@ -108,6 +127,20 @@ sg_limit <- reactive({
   maxw * 5
 })
 
+gallery_sp_list <- reactive({
+  image_table <- data.table::fread("data/proc_images.txt")
+
+  print(length(species_list()$scientificName))
+
+  sel_species <- species_list()$scientificName
+  existing_species <- image_table[match(sel_species, image_table$species, nomatch = 0),]
+
+  print(nrow(existing_species))
+
+  existing_species$species
+}) %>%
+  bindEvent(species_list()$scientificName)
+
 output$species_gallery <- renderUI({
     req(length(species_list()$scientificName) > 0 && length(sg_limit()) > 0)
 
@@ -116,7 +149,7 @@ output$species_gallery <- renderUI({
       w$hide()
     })
 
-    if (length(species_list()$scientificName) > sg_limit()) {
+    if (length(gallery_sp_list()) > sg_limit()) {
       last_name <- "placeholder-tag"
 
       placeholders <- lapply(1:(sg_limit()/5), function(x) {
@@ -138,7 +171,7 @@ output$species_gallery <- renderUI({
       })
 
       htmltools::div(
-        generate_gallery(species_list()$scientificName[1:sg_limit()], "data/proc_images.txt", max_image_height = "250px", max_image_width = "200px", image_gap = "0.1em"),
+        generate_gallery(gallery_sp_list()[1:sg_limit()], "data/proc_images.txt", max_image_height = "250px", max_image_width = "200px", image_gap = "0.1em"),
         layout_column_wrap(id = "gallery-placeholder", width = "200px", gap = "0.1em", fixed_width = TRUE, heights_equal = "row",
       !!!placeholders),
         htmltools::tags$script(
@@ -172,18 +205,18 @@ $(window).on("scroll.checkElement", { passive: true }, function() {
       )
     } else {
       session$sendCustomMessage("second_gallery", "")
-      generate_gallery(species_list()$scientificName, "data/proc_images.txt", max_image_height = "250px",max_image_width = "200px", image_gap = "0.1em")
+      generate_gallery(gallery_sp_list(), "data/proc_images.txt", max_image_height = "250px",max_image_width = "200px", image_gap = "0.1em")
     }
 }) %>%
   bindEvent(species_list()$scientificName)
 
 observe({
-  if (length(species_list()$scientificName) <= sg_limit()) {
+  if (length(gallery_sp_list()) <= sg_limit()) {
     output$species_gallery_b <- renderUI({htmltools::tags$br()})
   } else {
     wb$show()
     on.exit(wb$hide())
-    gallery_b <- generate_gallery(species_list()$scientificName[sg_limit():length(species_list()$scientificName)], "data/proc_images.txt", max_image_height = "250px",max_image_width = "200px", image_gap = "0.1em")
+    gallery_b <- generate_gallery(gallery_sp_list()[sg_limit():length(gallery_sp_list())], "data/proc_images.txt", max_image_height = "250px",max_image_width = "200px", image_gap = "0.1em")
 
     output$species_gallery_b <- renderUI({gallery_b})
 

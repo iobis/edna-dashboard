@@ -45,7 +45,7 @@ waiter::useWaiter()
 #leafletOutput("mainMap")
 htmltools::tags$div(
   htmltools::div(
-    selectInput("higherGeography", "Site:", sites_names),
+    selectInput("higherGeography", "Site:", c("Select a site" = "", sites_names)),
     class = "navbar-dropdown-top",
     id = "top-selector-new"
    ),
@@ -63,9 +63,9 @@ htmltools::tags$div(
 #<span style="color: #f9f9f9">invisible</span>
 htmltools::span(
   htmltools::span(
-    "World Heritage Site", htmltools::HTML("&nbsp;"), textOutput("whs_front_code"),
+    textOutput("whs_front_code"),
     style = "display: flex; font-weight: bold; font-color: #cccccc;"
-  ), htmltools::HTML("&nbsp;"), "|", htmltools::HTML("&nbsp;"), htmlOutput("whs_front_website"), style = "display: flex;"
+  ), htmltools::HTML("&nbsp;"), htmlOutput("whs_front_website"), style = "display: flex;"
 )
 ```
 
@@ -110,7 +110,7 @@ div3.style.gridTemplateRows = 'minmax(3em, max-content)';
 
 `r tags$div(class="site-title", textOutput("higherGeography"))`
 
-`r tags$div(class="site-text", textOutput("siteDescription"))`
+`r tags$div(class="site-text", uiOutput("siteDescription"))`
 
 #### Row {.context-info}
 
