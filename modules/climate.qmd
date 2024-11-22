@@ -1,6 +1,17 @@
 <!-- Orientation can be either columns or rows; each level 2 header becomes a card-->
 # Climate {orientation="rows" scrolling="true"}
 
+## Row   {.flow}
+
+###
+#### {.toolbar}
+```{r}
+
+selectInput("groupClimate", "Group:", groups_names)
+selectInput("iucnClimate", "IUCN category:", iucn_names)
+
+```
+
 ## Row {height="350px"}
 
 ### Column
@@ -27,13 +38,13 @@ layout_column_wrap(
 ```
 :::
 
-## Row
+## Row {height="fit-content"}
 
 ### Column
 
 ::: {.callout-warning}
 ## Attention
-The following table indicates species that are potentially at thermal risk on the site, considering its current thermal limit. Note that, because on the recent period we never experience such high temperatures on the sea as predicted for the future, we do not know exactly how tropical species (that are living close to the upper limits) will actually react to those new temperatures.
+The following table indicates species that are potentially at thermal risk on the site, considering its current thermal limit. Note that, because on the recent period we have never experienced such high temperatures on the sea as predicted for the future, we do not know exactly how tropical species (that are living close to the upper limits) will actually react to those new temperatures.
 :::
 
 ```{r}
@@ -41,3 +52,11 @@ The following table indicates species that are potentially at thermal risk on th
 
 reactable::reactableOutput("climate_thermal_risk")
 ```
+
+## Row
+
+### Column
+
+::: {.card title="How this data is extracted?"}
+![](images/climate_data_example.jpg){width=80%}
+:::

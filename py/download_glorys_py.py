@@ -19,8 +19,8 @@ def download_glorys_py(dataset, target_data, sel_date):
 
     Args:
         dataset: a dataset opened through the Copernicus Marine API (copernicusmarine).
-        target_data: the target dataset containing columns `decimalLongitude`, `decimalLatitude`,
-                    `temp_ID`, `depth_surface`, `depth_mid`, `depth_deep`, `depth_min` and `depth_max`.
+        target_data: the target dataset containing columns `decimalLongitude`, `decimalLatitude` 
+        and a column with the site depth (that can be 0, to get surface) named `depth_surface`
         sel_date: selected date
 
     Returns:
@@ -36,69 +36,48 @@ def download_glorys_py(dataset, target_data, sel_date):
     dataset = sort_dimension(dataset, 'latitude')
     dataset = sort_dimension(dataset, 'longitude')
 
-    # Define the depth columns
-    depth_columns = ['depth_surface']
-
-    results = []
+    lons = xr.DataArray(target_data['decimalLongitude'], dims="z")
+    lats = xr.DataArray(target_data['decimalLatitude'], dims="z")
 
     target_date = pd.to_datetime(sel_date)
 
-    # Iterate over each row in the DataFrame
-    for i, row in target_data.iterrows():
-        for depth_col in depth_columns:
-            depth = row[depth_col]
-        
-            selected_data = dataset['thetao'].sel(
-                longitude=row['decimalLongitude'], 
-                latitude=row['decimalLatitude'], 
-                depth=depth, 
-                time=target_date,
-                method='nearest'
+    depth_columns = ['depth_surface']
+    results = []
+
+    for depth_col in depth_columns:
+
+        depth_coord = xr.DataArray(target_data[depth_col], dims="z")
+
+        selected_data = dataset['thetao'].sel( 
+                longitude = lons,
+                latitude = lats,
+                depth = depth_coord, 
+                time = target_date,
+                method = 'nearest'
             )
         
-            # Get the actual depth and time that was used in the selection
-            actual_depth = selected_data['depth'].item()
-            actual_time = pd.to_datetime(selected_data['time'].item())
+        df = selected_data.to_dataframe().rename(columns={'thetao': 'value'}).reset_index()
+        df['depth_type'] = depth_col
+        df['temp_ID'] = target_data['temp_ID']
 
-            sst_value = selected_data.item()
+        results.append(df)
 
-            # Append the results
-            results.append({
-                'temp_ID': int(row['temp_ID']),
-                #'decimalLongitude': row['decimalLongitude'],
-                #'decimalLatitude': row['decimalLatitude'],
-                'requested_depth': depth,
-                'actual_depth': actual_depth,
-                'depth_type': depth_col,
-                'requested_date': target_date,
-                'actual_date': actual_time,
-                'value': sst_value,
-            })
-        
-        # Extract bottom temperature
-        selected_data_bottom = dataset['bottomT'].sel(
-            longitude=row['decimalLongitude'], 
-            latitude=row['decimalLatitude'],
-            time=target_date,
+    # Extract bottom temperature
+    selected_data_bottom = dataset['bottomT'].sel( 
+            longitude = lons,
+            latitude = lats,
+            time = target_date,
             method='nearest'
         )
+    
+    df = selected_data_bottom.to_dataframe().rename(columns={'bottomT': 'value'}).reset_index()
+    df['depth_type'] = 'depth_bottom'
+    df['temp_ID'] = target_data['temp_ID']
 
-        actual_time = pd.to_datetime(selected_data_bottom['time'].item())
-        sst_value = selected_data_bottom.item()
+    results.append(df)
 
-        # Append the results
-        results.append({
-            'temp_ID': int(row['temp_ID']),
-            #'decimalLongitude': row['decimalLongitude'],
-            #'decimalLatitude': row['decimalLatitude'],
-            'requested_depth': None,
-            'actual_depth': None,
-            'depth_type': 'depth_bottom',
-            'requested_date': target_date,
-            'actual_date': actual_time,
-            'value': sst_value,
-        })
+    pd.concat(results, axis=1).reset_index()
 
-    result_df = pd.DataFrame(results)
+    result_df = pd.concat(results, ignore_index=True)
 
     return result_df

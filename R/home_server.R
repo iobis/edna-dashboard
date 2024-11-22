@@ -1,6 +1,6 @@
 # HOME server code
 # Main map ----
-sites_shape <- sf::read_sf("https://samples.ednaexpeditions.org/sites.geojson")
+#sites_shape <- sf::read_sf("https://samples.ednaexpeditions.org/sites.geojson") # transfer to start server
 output$mainMap <- renderLeaflet({
   sites_shape <- sites_shape[sites_shape$name %in% localities$parent_area_name,]
   leaflet(width = "100%") %>%
@@ -15,18 +15,31 @@ output$mainMap <- renderLeaflet({
 
 # Context info ----
 output$higherGeography <- renderText({
-  sel_site <- sites_info[sites_info$name == input$higherGeography,]
-  sel_site$name
+  if (input$higherGeography == "") {
+    general_description$title[[1]]
+  } else {
+    sel_site <- sites_info[sites_info$name == input$higherGeography,]
+    sel_site$name
+  }
 })
 
-output$siteDescription <- renderText({
-  sel_site <- sites_info[sites_info$name == input$higherGeography,]
-  sel_site$description
+output$siteDescription <- renderUI({
+  if (input$higherGeography == "") {
+    htmltools::HTML(general_description$description[[1]])
+  } else {
+    sel_site <- sites_info[sites_info$name == input$higherGeography,]
+    sel_site$description
+  }
 })
 
 output$whs_front_code <- renderText({
-  sel_site <- sites_info[sites_info$name == input$higherGeography,]
-  paste(basename(sel_site$url), " ")
+  if (input$higherGeography == "") {
+    paste(21,#length(sites_names), # To check why not available.
+     "marine World Heritage Sites sampled")
+  } else {
+    sel_site <- sites_info[sites_info$name == input$higherGeography,]
+    paste("World Heritage Site", paste(basename(sel_site$url), " "), " |")
+  }
 })
 
 output$whs_front_website <- renderUI({
@@ -38,24 +51,33 @@ output$whs_front_website <- renderUI({
 })
 
 output$eventDate <- renderText({
-  sa <- samples %>%
-    filter(site == input$higherGeography)
+  if (input$higherGeography == "") {
+    format(as.Date("2022-09-16"), "%Y-%m-%d")
+  } else {
+    sa <- samples %>%
+      filter(site == input$higherGeography)
 
-  sa$date <- as.Date(sa$date)
+    sa$date <- as.Date(sa$date)
 
-  format(min(sa$date, na.rm = T), "%Y-%m-%d")
+    format(min(sa$date, na.rm = T), "%Y-%m-%d")
+  }
 })
 output$eventSamples <- renderText({
-  samples %>%
-    filter(site == input$higherGeography) %>%
-    count() %>%
-    unlist()
+  if (input$higherGeography == "") {
+    samples %>%
+      count() %>%
+      unlist()
+  } else {
+    samples %>%
+      filter(site == input$higherGeography) %>%
+      count() %>%
+      unlist()
+  }
 })
 
 # Value boxes ----
 boxes_data <- reactiveValues()
 observe({
-  sel_site <- sites_info[sites_info$name == input$higherGeography,]
   boxes_data$data <- n_species(input$higherGeography, occurrence)
 }) %>% bindEvent(input$higherGeography)
 
@@ -91,7 +113,12 @@ output$imageGalleryFront <- renderUI({
   images_table <- data.table::fread(images_table)
   images_table <- as.data.frame(images_table)
 
-  images_table_sel <- images_table[images_table$site == site, ]
+  if (site == "") {
+    images_table_sel <- images_table %>%
+      dplyr::slice_sample(n = 4)
+  } else {
+    images_table_sel <- images_table[images_table$site == site, ]
+  }
 
   if (nrow(images_table_sel) > 4) {
     images_table_sel <- images_table_sel[1:4,]
@@ -150,6 +177,7 @@ observe({
 observe({
   if (!is.null(input$mainMap_marker_click)) {
     click <- input$mainMap_marker_click
+    print(click)
     if (!is.null(click$id)) {
       locs <- localities[!is.na(localities$station),]
       loc_sel <- locs[locs$area_name == click$id, ]

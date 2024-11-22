@@ -27,6 +27,17 @@ generate_gallery <- function(species,
 
   image_table_filt <- image_table_filt[!is.na(image_table_filt$species),]
 
+  # Possible correction, if wants to keep even species not available
+  # if (any(!species %in% image_table_filt)) {
+  #   not_av <- species[!species %in% image_table_filt]
+  #   not_av_df <- data.frame(
+  #     species = not_av,
+  #     image_url = "images/placeholders/general.webp",
+  #     alt_url = "images/placeholders/general.webp"
+  #   )
+  #   image_table_filt <- rbind(image_table_filt, not_av_df)
+  # }
+
   if (!"alt_url" %in% colnames(image_table_filt)) {
     image_table_filt$alt_url <- "images/placeholders/general.webp"
   }
