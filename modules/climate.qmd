@@ -52,11 +52,3 @@ The following table indicates species that are potentially at thermal risk on th
 
 reactable::reactableOutput("climate_thermal_risk")
 ```
-
-## Row
-
-### Column
-
-::: {.card title="How this data is extracted?"}
-![](images/climate_data_example.jpg){width=80%}
-:::

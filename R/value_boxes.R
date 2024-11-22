@@ -14,6 +14,15 @@ n_species <- function(site, occurrence){
     if (site == "") {
         stats_sel <- sites_stats %>%
             summarise(across(2:ncol(.), sum))
+        #temporary workaround to avoid cumm sum
+        stats_sel <- data.frame(
+            unique_species = 4436,
+            unique_fish = 1995,
+            unique_mammals = 30,
+            unique_iucn = 128,
+            unique_turtles = 3,
+            unique_sharks = 86
+        )
     } else {
         stats_sel <- sites_stats %>% 
             filter(higherGeography==site)
