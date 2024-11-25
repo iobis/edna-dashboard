@@ -12,9 +12,10 @@ n_species <- function(site, occurrence){
     sites_stats <- readRDS("data/supporting_data/sites_stats.rds")
 
     if (site == "") {
-        stats_sel <- sites_stats %>%
-            summarise(across(2:ncol(.), sum))
-        #temporary workaround to avoid cumm sum
+        # stats_sel <- sites_stats %>%
+        #     summarise(across(2:ncol(.), sum))
+        #temporary workaround
+        # TODO: update sites_stats
         stats_sel <- data.frame(
             unique_species = 4436,
             unique_fish = 1995,

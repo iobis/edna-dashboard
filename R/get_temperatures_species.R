@@ -320,6 +320,8 @@ colnames(deep_sp) <- gsub("_mean", "", gsub("_depthmean", "", colnames(deep_sp))
 sites_species_risk_f <- bind_rows(shallow_sp, deep_sp)
 
 # Save final file to be used in the app
+sites_species_risk_f <- sites_species_risk_f %>%
+    mutate(across(1:ncol(.), unname))
 write_parquet(sites_species_risk_f, file.path("data", "species_sites_risk_full.parquet"))
 
 # Example application
@@ -337,6 +339,9 @@ sites_species_risk %>%
         geom_bar(aes(x = scenario, y = species), stat = "identity")
 
 # Save an example of how the metrics work
+library(showtext)
+font_add_google("Mulish")
+
 example_sp <- grids_ds %>%
     select(species, AphiaID, min_year, cell) %>%
     filter(species == "Trachinotus baillonii") %>%
@@ -360,8 +365,8 @@ colnames(sst)[3] <- "SST"
 p1 <- ggplot() +
     geom_sf(data = wrld, fill = "grey90", color = "grey90") +
     geom_raster(data = sst, aes(x = x, y = y, fill = SST)) +
-    scale_fill_distiller(palette = 4) +
-    geom_sf(data = sf::st_as_sf(example_sp), color = "#003fbe") +
+    scale_fill_distiller(palette = "Blues") +
+    geom_sf(data = sf::st_as_sf(example_sp), color = "#2c313a") +
     ggtitle("Data are extracted from occurrence records",
     "Occurrence data comes from OBIS and GBIF, and SST from Bio-ORACLE") +
     theme_void() +
@@ -373,11 +378,12 @@ example_data$status <- ifelse(example_data$SST < v95, "Within limit", "Out of li
 
 p2 <- ggplot(example_data) +
     geom_jitter(aes(x = SST, y = 0.5, color = status), height = 0.1) +
-    scale_color_manual(values = c("#ff8800", "#0045bc")) +
+    #scale_color_manual(values = c("#ff8800", "#0045bc")) +
+    scale_color_manual(values = c("#c65a28", "#1675ae")) +
     geom_density(aes(x = SST), fill = "grey80", color = "grey80") +
-    geom_text(label = "95% percent of values are here", x = 20, y = 0.35, color = "#0045bc") +
-    geom_text(label = "Thermal limit", x = 29, y = 0.2, color = "#ff8800", angle = 90) +
-    geom_vline(xintercept = v95, color = "#ff8800", linewidth = 2) +
+    geom_text(label = "95% percent of values are here", x = 20, y = 0.35, color = "#1675ae") +
+    geom_text(label = "Thermal limit", x = 29, y = 0.2, color = "#c65a28", angle = 90) +
+    geom_vline(xintercept = v95, color = "#c65a28", linewidth = 2) +
     theme_light() +
     ggtitle("Values are then used to calculate the thermal limit",
     "We consider the thermal limit of the species the 95% quantile") +
@@ -414,7 +420,8 @@ example_data <- vect(example_data, geom = c("x", "y"), crs = "EPSG:4326")
 p3 <- ggplot() +
     geom_sf(data = wrld, fill = "grey90", color = "grey90") +
     geom_sf(data = sf::st_as_sf(example_data), aes(color = Status)) +
-    scale_color_manual(values = rev(c("#ff8800", "#0045bc"))) +
+    scale_color_manual(values = rev(c("#c65a28", "#1675ae"))) +
+    #scale_color_manual(values = rev(c("#ff8800", "#0045bc"))) +
     ggtitle("We then extract the temperature in futures scenarios\n to assess thermal risk",
     "Records with temperatures higher than the thermal limit\n are considered to be at risk") +
     theme_light() +
@@ -428,7 +435,8 @@ design <- "A
            C"
 
 p1/(p2+ theme(plot.margin = unit(c(5,0,5,0), "pt")))/p3 +
-    plot_layout(design = design)
+    plot_layout(design = design) & theme(text = element_text(family = "Mulish"))
 
-ggsave("images/climate_data_example.jpg",
+fs::dir_create("images/examples")
+ggsave("images/examples/climate_data_example.jpg",
 quality = 90, width = 5.5, height = 13)

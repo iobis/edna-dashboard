@@ -165,6 +165,7 @@ map_info <- reactiveValues(parent_area_name = NULL)
 observe({
   if (!is.null(input$mainMap_shape_click)) {
     click <- input$mainMap_shape_click
+    #print(click)
     if (!is.null(click$id)) {
       locs <- localities[!is.na(localities$station),]
       loc_sel <- locs[locs$parent_area_name == click$id, ]
@@ -177,10 +178,10 @@ observe({
 observe({
   if (!is.null(input$mainMap_marker_click)) {
     click <- input$mainMap_marker_click
-    print(click)
+    #print(click)
     if (!is.null(click$id)) {
-      locs <- localities[!is.na(localities$station),]
-      loc_sel <- locs[locs$area_name == click$id, ]
+      locs <- map_localities[!is.na(map_localities$popup_name),]
+      loc_sel <- locs[locs$popup_name == click$id, ]
       map_info$parent_area_name <- loc_sel$parent_area_name[1]
     }
   }

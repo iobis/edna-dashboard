@@ -15,12 +15,14 @@ if (!file.exists("data/climate_historical.txt")) {
 
   sites <- jsonlite::read_json("https://raw.githubusercontent.com/iobis/edna-tracker-data/data/generated.json")
   sites_list <- sites$sites
-  sites_samples <- sites$samples
+  sites_samples <- sites$samples %>% bind_rows()
 
   sites_names <- sapply(sites_list, function(x) x$name)
+  sites_names <- sites_names[sites_names != "Sanganeb Marine National Park and Dungonab Bay – Mukkawar Island Marine National Park"]
+  sites_names <- sites_names[order(sites_names)]
 
-  localities <- sites_samples %>%
-    bind_rows() %>%
+  localities <- sites_samples %>% 
+    filter(!blank) %>%
     select(area_name, area_locality, parent_area_name, station, lon = area_longitude, lat = area_latitude) %>%
     group_by(area_name, area_locality, parent_area_name, station, lon, lat) %>%
     distinct(.keep_all = T)
@@ -33,6 +35,49 @@ if (!file.exists("data/climate_historical.txt")) {
     mutate(depth_surface = 0)
 
   localities_wv <- localities_wv[!is.na(localities_wv$decimalLongitude), ]
+
+  # See if any are on land
+  outf_temp_glorys <- cm$get(
+          dataset_id = "cmems_mod_glo_phy_my_0.083deg_P1M-m",
+          username = .user,
+          password = .pwd,
+          filter = paste0("*", 1993, sprintf("%02d", 01), "*"),
+          output_directory = "",
+          no_directories = T,
+          force_download = T
+  )
+  outf_temp_glorys <- as.character(outf_temp_glorys[[1]])
+
+  to_check <- terra::rast(outf_temp_glorys)
+  to_check <- to_check$`thetao_depth=0.49402499`
+  names(to_check) <- "thetao"
+
+  loc_to_check <- terra::extract(to_check$thetao, localities_wv[,1:2])
+  colnames(loc_to_check)[2] <- "value"
+  
+  na_locs <- localities_wv[is.na(loc_to_check$value),1:2]
+
+  for (i in 1:nrow(na_locs)) {
+    mm <- matrix(nrow = 5, ncol = 5)
+    mm[] <- c(rep(1, 12), 0, rep(1, 12))
+    nc <- terra::adjacent(to_check, terra::cellFromXY(to_check, as.data.frame(na_locs[i,1:2])), directions = mm)
+    ncv <- terra::extract(to_check, as.vector(nc))
+    if (any(!is.na(ncv$thetao))) {
+      if (sum(!is.na(ncv$thetao)) == 1) {
+        na_locs[i,1:2] <- terra::xyFromCell(to_check, 
+                                            as.vector(nc)[!is.na(ncv$thetao)][1])
+      } else {
+        validp <- as.vector(nc)[!is.na(ncv$thetao)]
+        validp <- terra::xyFromCell(to_check, validp)
+        validp <- terra::vect(validp, crs = "EPSG:4326")
+        ne <- terra::nearest(terra::vect(na_locs[i,1:2], crs = "EPSG:4326", geom = c("decimalLongitude", "decimalLatitude")), validp)
+        na_locs[i,1:2] <- data.frame(x = ne$to_x[1], y = ne$to_y[1])
+      }
+    }
+  }
+
+  rm(to_check)
+  fs::file_delete(outf_temp_glorys)
 
   years <- 1993:2024
   months <- 1:12
@@ -75,13 +120,16 @@ if (!file.exists("data/climate_historical.txt")) {
   results_b <- dplyr::bind_rows(results)
 
   results_b <- results_b %>%
-    select(temp_ID, depth_type, value, requested_date) %>%
-    tidyr::pivot_wider(names_from = depth_type, values_from = c(value))
+    select(temp_ID, depth_type, value, time, longitude, latitude) %>%
+    group_by(temp_ID, depth_type, time, longitude, latitude) %>%
+    summarise(value = mean(value, na.rm = T)) %>%
+    ungroup() %>%
+    tidyr::pivot_wider(names_from = depth_type, values_from = value)
 
-  results_b$year <- lubridate::year(results_b$requested_date)
-  results_b$month <- lubridate::month(results_b$requested_date)
+  results_b$year <- lubridate::year(results_b$time)
+  results_b$month <- lubridate::month(results_b$time)
   results_b <- results_b %>%
-    select(-requested_date)
+    select(-time)
 
   results_final <- left_join(results_b, localities)
 

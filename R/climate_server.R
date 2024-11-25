@@ -1,8 +1,10 @@
-climate_data <- readRDS("data/climate.rds")
+#climate_data <- readRDS("data/climate.rds")
 
 climate_vals <- reactiveValues()
 
 observe({
+    req(input$higherGeography != "")
+
     climate_filt <- climate_species %>%
         select(
             Species = scientificName, higherGeography, Depth = habitat, `Upper limit` = sp_limit,
@@ -56,9 +58,9 @@ output$climate_thermal_risk <- reactable::renderReactable({
 
     colfun <- function(value) {
         if (value < 0) {
-            color <- "#7CD59B"
+            color <- "#a3c2de"
         } else if (value > 0) {
-            color <- "#E8AEAE"
+            color <- "#d9905f"
         } else {
             color <- "#777"
         }
@@ -70,7 +72,7 @@ output$climate_thermal_risk <- reactable::renderReactable({
 
     colfun2 <- function(value) {
         if (value == "S") {
-            color <- "#1866b3"
+            color <- "#675292"
         } else if (value == "NS") {
             color <- "#b69354"
         } else {
@@ -80,13 +82,15 @@ output$climate_thermal_risk <- reactable::renderReactable({
     }
 
     reactable(dat, columns = list(
-        Depth = colDef(style = colfun2, width = 60),
-        SSP1 = colDef(style = colfun),
-        SSP2 = colDef(style = colfun),
-        SSP3 = colDef(style = colfun),
-        Current = colDef(style = colfun)
-    ))
-})
+        Species = colDef(style = list(fontStyle = "italic"), searchable = T),
+        Depth = colDef(style = colfun2, minWidth = 70, maxWidth = 80, searchable = T),
+        SSP1 = colDef(style = colfun, minWidth = 70, maxWidth = 80),
+        SSP2 = colDef(style = colfun, minWidth = 70, maxWidth = 80),
+        SSP3 = colDef(style = colfun, minWidth = 70, maxWidth = 80),
+        Current = colDef(style = colfun, minWidth = 80, maxWidth = 90)
+    ), searchable = TRUE)
+}) %>%
+    bindEvent(climate_vals$main)
 
 # require(ggplot2)
 # ggplot(climate_vals$status) +
@@ -104,34 +108,43 @@ output$climate_thermal_risk <- reactable::renderReactable({
 
 output$climate_number_species <- shiny::renderPlot({
     require(ggplot2)
-ggplot(climate_vals$status$data) +
-    geom_bar(aes(x = Scenario, fill = Scenario, y = `Number of species`), stat = "identity") +
-    scale_y_continuous(limits = c(0, climate_vals$status$total)) +
-    scale_fill_manual(values = c("#11b1aa", "#3f45c7", "#ee8114", "#db3c81")) +
-   theme_light() + theme(legend.position = "none")
-})
+    ggplot(climate_vals$status$data) +
+        geom_bar(aes(x = Scenario, fill = Scenario, y = `Number of species`), stat = "identity") +
+        scale_y_continuous(limits = c(0, climate_vals$status$total)) +
+        #scale_fill_manual(values = c("#675292", "#a13c93", "#f47f4e", "#f15e6b")) +
+        scale_fill_manual(values = c("#FDA638", "#459395", "#EB7C69", "#866f85")) +
+        #scale_fill_manual(values = c("#11b1aa", "#3f45c7", "#ee8114", "#db3c81")) +
+    theme_light() + theme(legend.position = "none")
+}) %>%
+    bindEvent(climate_vals$status)
 
 output$climate_temperature_sites <- dygraphs::renderDygraph({
 
-    dat <- data.table::fread("data/climate_historical.txt")
+    req(input$higherGeography != "")
+
+    dat <- suppressWarnings(data.table::fread("data/climate_historical.txt"))
 
     if (input$spi_clim_surf) {
         dat <- dat %>%
-            filter(grepl(tolower(substr(input$higherGeography, 1, 3)), parent_area_name, ignore.case = T)) %>%
+            #filter(grepl(tolower(substr(input$higherGeography, 1, 3)), parent_area_name, ignore.case = T)) %>%
+            filter(parent_area_name == input$higherGeography) %>%
             mutate(date = as.Date(paste0(year, "-", sprintf("%02d", month), "-01"))) %>%
-            group_by(area_name, year) %>%
+            group_by(station, year) %>%
             summarise(depth_surface = mean(depth_bottom))
     } else {
         dat <- dat %>%
-            filter(grepl(tolower(substr(input$higherGeography, 1, 3)), parent_area_name, ignore.case = T)) %>%
+            #filter(grepl(tolower(substr(input$higherGeography, 1, 3)), parent_area_name, ignore.case = T)) %>%
+            filter(parent_area_name == input$higherGeography) %>%
             mutate(date = as.Date(paste0(year, "-", sprintf("%02d", month), "-01"))) %>%
-            group_by(area_name, year) %>%
+            group_by(station, year) %>%
             summarise(depth_surface = mean(depth_surface))
     }
 
+    dat <- dat %>% filter(year < 2024) # Remove this year while not complete
+
     if (input$spi_clim_anomaly) {
         dat <- dat %>%
-            group_by(area_name) %>%
+            group_by(station) %>%
             mutate(depth_surface = depth_surface - mean(depth_surface, na.rm = T))
 
         dat_surface <- dat %>%
@@ -139,7 +152,7 @@ output$climate_temperature_sites <- dygraphs::renderDygraph({
             mutate(date = as.Date(paste0(year, "-01-01"))) %>%
             ungroup() %>%
             select(-year) %>%
-            tidyr::pivot_wider(values_from = depth_surface, names_from = area_name)
+            tidyr::pivot_wider(values_from = depth_surface, names_from = station)
 
         dat_each <- lapply(2:ncol(dat_surface), function(x) {
             xts::xts(x = dat_surface[, x], order.by = dat_surface$date)
@@ -165,7 +178,7 @@ output$climate_temperature_sites <- dygraphs::renderDygraph({
             mutate(date = as.Date(paste0(year, "-01-01"))) %>%
             ungroup() %>%
             select(-year) %>%
-            tidyr::pivot_wider(values_from = depth_surface, names_from = area_name)
+            tidyr::pivot_wider(values_from = depth_surface, names_from = station)
 
         dat_each <- lapply(2:ncol(dat_surface), function(x) {
             xts::xts(x = dat_surface[, x], order.by = dat_surface$date)
@@ -181,4 +194,5 @@ output$climate_temperature_sites <- dygraphs::renderDygraph({
                 name = "x", axisLabelFormatter = "function(d){ return d.getFullYear() }"
             )
     }
-})
+}) %>%
+    bindEvent(input$higherGeography, input$spi_clim_anomaly, input$spi_clim_surf)
