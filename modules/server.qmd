@@ -19,7 +19,7 @@ source("extensions/front-gallery.R")
 #source("R/fix_taxonomy.R")
 
 # Small function to debug, when not in use set show=FALSE
-mdebug <- function(status, show = FALSE) {message(status)}
+mdebug <- function(status, show = FALSE) {if(show) message(status)}
 
 sites_info <- read.table("data/sites_description.txt", header=T)
 #occurrence <- read_occurrence_data()
@@ -130,12 +130,8 @@ sg_limit <- reactive({
 gallery_sp_list <- reactive({
   image_table <- data.table::fread("data/proc_images.txt")
 
-  print(length(species_list()$scientificName))
-
   sel_species <- species_list()$scientificName
   existing_species <- image_table[match(sel_species, image_table$species, nomatch = 0),]
-
-  print(nrow(existing_species))
 
   existing_species$species
 }) %>%
@@ -321,12 +317,14 @@ wd <- waiter::Waiter$new(
 )
 
 output$tax_bar_plot <- renderPlot({
+  req(input$higherGeography != "")
  #taxbarplot()  
  make_image_taxonomy(occurrence_ds, input$higherGeography, input$taxonLevelDiversity, input$plotType)}, height=400
 )
 
 # Diversity metrics
 divplots <- reactive({
+ req(input$higherGeography != "")
  wd$show()
  get_alpha_diversity(occurrence_ds, input$higherGeography, input$taxonLevel, input$alpha_measure, input$beta_measure)
 })
