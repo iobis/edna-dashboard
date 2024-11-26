@@ -1,7 +1,7 @@
 # Get temperatures at sites
 if (!file.exists("data/climate_historical.txt")) {
-  library(reticulate)
-  library(dplyr)
+  suppressPackageStartupMessages(library(reticulate))
+  suppressPackageStartupMessages(library(dplyr))
   reticulate::source_python("py/download_glorys_py.py")
   cm <- import("copernicusmarine")
 

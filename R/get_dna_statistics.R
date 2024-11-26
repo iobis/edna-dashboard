@@ -1,6 +1,5 @@
-
-library(dplyr)
-library(eulerr)
+suppressPackageStartupMessages(library(dplyr))
+suppressPackageStartupMessages(library(eulerr))
 
 get_dna_statistics <- function(occurrence, site){
 

@@ -15,15 +15,15 @@
 
 
 # Load packages -----
-library(arrow)
-library(dplyr)
-library(tidyr)
-library(biooracler)
-library(obissdm)
-library(h3jsr)
-library(terra)
-library(ggplot2)
-library(patchwork)
+suppressPackageStartupMessages(library(arrow))
+suppressPackageStartupMessages(library(dplyr))
+suppressPackageStartupMessages(library(tidyr))
+suppressPackageStartupMessages(library(biooracler))
+suppressPackageStartupMessages(library(obissdm))
+suppressPackageStartupMessages(library(h3jsr))
+suppressPackageStartupMessages(library(terra))
+suppressPackageStartupMessages(library(ggplot2))
+suppressPackageStartupMessages(library(patchwork))
 
 
 

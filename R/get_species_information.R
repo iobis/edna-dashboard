@@ -1,5 +1,5 @@
-library(dplyr)
-library(tidyr)
+suppressPackageStartupMessages(library(dplyr))
+suppressPackageStartupMessages(library(tidyr))
 
 #This is a placeholder for getting the information we want to depict on species in the sidebar (or other location)
 #Should include Title, and vernacular name

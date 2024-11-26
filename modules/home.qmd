@@ -1,9 +1,9 @@
 ```{r include=FALSE}
-library(shiny)
-library(leaflet)
-library(dplyr)
-library(DT)
-library(reactable)
+suppressPackageStartupMessages(library(shiny))
+suppressPackageStartupMessages(library(leaflet))
+suppressPackageStartupMessages(library(dplyr))
+suppressPackageStartupMessages(library(DT))
+suppressPackageStartupMessages(library(reactable))
 
 # Load json
 sites <- jsonlite::read_json("https://raw.githubusercontent.com/iobis/edna-tracker-data/data/generated.json")

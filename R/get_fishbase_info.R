@@ -1,5 +1,5 @@
 # Load species list 
-library(dplyr) 
+suppressPackageStartupMessages(library(dplyr))
 source("R/occurrence.R")
 
 sites_info <- read.table("data/sites_description.txt", header=T)

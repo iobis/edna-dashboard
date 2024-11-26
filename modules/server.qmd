@@ -2,11 +2,11 @@
 ```{r}
 #| context: server-start
 
-library(bslib)
-library(leaflet)
-library(shiny)
-library(dplyr)
-library(arrow)
+suppressPackageStartupMessages(library(bslib))
+suppressPackageStartupMessages(library(leaflet))
+suppressPackageStartupMessages(library(shiny))
+suppressPackageStartupMessages(library(dplyr))
+suppressPackageStartupMessages(library(arrow))
 source("R/image-gallery.R")
 source("R/occurrence.R")
 source("R/value_boxes.R")
