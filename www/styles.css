@@ -337,3 +337,7 @@ li.nav-item {
   0%, 100% { opacity: 0.5; }
   50% { opacity: 1; }
 }
+
+#higherGeography-selectized::placeholder {
+  color: white;  
+}
