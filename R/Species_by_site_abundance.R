@@ -23,7 +23,8 @@ generate_ordered_species_list_bySite <- function(site, occurrence, selected_grou
   species_names <- occurrence %>% 
     group_by(scientificName, group) %>% 
     summarise(abundance=sum(organismQuantity)) %>% 
-    arrange(-abundance) 
+    arrange(-abundance) %>% 
+    ungroup()
 
   redlist <- read.csv("data/supporting_data/redlist.csv")
   colnames(redlist)[1] <- "scientificName"

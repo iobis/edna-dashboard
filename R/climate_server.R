@@ -130,14 +130,16 @@ output$climate_temperature_sites <- dygraphs::renderDygraph({
             filter(parent_area_name == input$higherGeography) %>%
             mutate(date = as.Date(paste0(year, "-", sprintf("%02d", month), "-01"))) %>%
             group_by(station, year) %>%
-            summarise(depth_surface = mean(depth_bottom))
+            summarise(depth_surface = mean(depth_bottom)) %>% 
+            ungroup()
     } else {
         dat <- dat %>%
             #filter(grepl(tolower(substr(input$higherGeography, 1, 3)), parent_area_name, ignore.case = T)) %>%
             filter(parent_area_name == input$higherGeography) %>%
             mutate(date = as.Date(paste0(year, "-", sprintf("%02d", month), "-01"))) %>%
             group_by(station, year) %>%
-            summarise(depth_surface = mean(depth_surface))
+            summarise(depth_surface = mean(depth_surface)) %>% 
+            ungroup()
     }
 
     dat <- dat %>% filter(year < 2024) # Remove this year while not complete
@@ -145,7 +147,8 @@ output$climate_temperature_sites <- dygraphs::renderDygraph({
     if (input$spi_clim_anomaly) {
         dat <- dat %>%
             group_by(station) %>%
-            mutate(depth_surface = depth_surface - mean(depth_surface, na.rm = T))
+            mutate(depth_surface = depth_surface - mean(depth_surface, na.rm = T)) %>% 
+            ungroup()
 
         dat_surface <- dat %>%
             filter(!is.na(depth_surface)) %>%

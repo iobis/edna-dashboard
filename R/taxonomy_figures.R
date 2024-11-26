@@ -43,9 +43,10 @@ make_image_taxonomy <- function(occurrence, site, taxonLevel, plot_type) {
     #occurrence_site = occurrence_site %>% mutate(relative_abundance = organismQuantity/totalSampleSizeValue)
     
     #Relative abundance, calculate based on the remaining reads after removal of contaminants:
-    occurrence_site = occurrence_site %>% 
-                            group_by(materialSampleID) %>% 
-                            mutate(totalSampleSizeValue = sum(organismQuantity))
+    occurrence_site <- occurrence_site %>% 
+      group_by(materialSampleID) %>% 
+      mutate(totalSampleSizeValue = sum(organismQuantity)) %>% 
+      ungroup()
     
     occurrence_site = occurrence_site %>% mutate(relative_abundance = organismQuantity/totalSampleSizeValue)
   

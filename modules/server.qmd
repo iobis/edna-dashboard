@@ -24,6 +24,7 @@ mdebug <- function(status, show = FALSE) {if(show) message(status)}
 sites_info <- read.table("data/sites_description.txt", header=T)
 #occurrence <- read_occurrence_data()
 
+message("Opening occurrence dataset...")
 occurrence_ds <- open_dataset("data/output/occurrence.parquet")
 
 unique_sp_codes <- occurrence_ds %>%
@@ -31,10 +32,12 @@ unique_sp_codes <- occurrence_ds %>%
   group_by(scientificName, scientificNameID) %>%
   distinct() %>%
   collect() %>%
-  mutate(scientificNameID = sub(".*:", "", scientificNameID))
+  mutate(scientificNameID = sub(".*:", "", scientificNameID)) %>% 
+  ungroup()
 
 # Leaflet map data
 # TODO: pre-do that
+message("Fetching sites metadata...")
 sites <- jsonlite::read_json("https://raw.githubusercontent.com/iobis/edna-tracker-data/data/generated.json")
 sites_list <- sites$sites
 sites_samples <- sites$samples %>% bind_rows()
@@ -50,13 +53,15 @@ samples$concentration <- sapply(sites_samples$dnas, function(x) x$concentration)
 localities <- sites_samples %>% 
   select(area_name, area_locality, parent_area_name, station, lon = area_longitude, lat = area_latitude) %>%
   group_by(area_name, area_locality, parent_area_name, station, lon, lat) %>%
-  distinct(.keep_all = T)
+  distinct(.keep_all = T) %>% 
+  ungroup()
 
 map_localities <- sites_samples %>% 
   select(name, area_name, area_locality, parent_area_name, station, lon = area_longitude, lat = area_latitude) %>%
   group_by(name, area_name, area_locality, parent_area_name, station, lon, lat) %>%
   distinct(.keep_all = T) %>%
-  mutate(popup_name = paste(name, area_name))
+  mutate(popup_name = paste(name, area_name)) %>% 
+  ungroup()
 
 species_context_info <- readRDS("data/fishbase.rds")
 
