@@ -121,7 +121,8 @@ make_table_taxonomy <- function(occurrence, site) {
                   summarize(samples = paste(unique(materialSampleID), collapse = ","), 
                           localities = paste(unique(locationID), collapse = ","), 
                           target_gene = paste(unique(target_gene), collapse = ","),
-                          reads = sum(organismQuantity))
+                          reads = sum(organismQuantity)) %>% 
+                  ungroup()
 
   species_def <- colDef(
     minWidth = 200,
@@ -248,6 +249,7 @@ make_taxonomic_tree <- function(occurrence, site) {
     group_by(phylum) %>%
     summarize(species = sum(species)) %>%
     arrange(desc(species)) %>%
+    ungroup() %>% 
     head(10) %>%
     pull(phylum)
   
