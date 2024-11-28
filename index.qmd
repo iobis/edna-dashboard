@@ -64,13 +64,20 @@ leafletOutput("mainMap")
 <!-- Selector block -->
 ::: {id='post-map'}
 ``` {r}
+htmltools::div(
 htmltools::tags$div(
   htmltools::div(
     selectInput("higherGeography", "Site:", c("Select a site" = "", sites_names)),
     class = "navbar-dropdown-top",
     id = "top-selector-new"
    ), id = "top-selector-parent"
-)
+),
+htmltools::span(
+  htmltools::span(
+    textOutput("whs_front_code"),
+    style = "display: flex; font-weight: bold; font-color: #cccccc;"
+  ), htmltools::HTML("&nbsp;"), htmlOutput("whs_front_website"), style = "display: flex; margin-right: 10px;"
+), style = "display: flex; justify-content: space-between; align-items: center;")
 ```
 :::
 

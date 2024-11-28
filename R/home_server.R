@@ -34,8 +34,7 @@ output$siteDescription <- renderUI({
 
 output$whs_front_code <- renderText({
   if (input$higherGeography == "") {
-    paste(21,#length(sites_names), # To check why not available.
-     "marine World Heritage Sites sampled")
+    ""
   } else {
     sel_site <- sites_info[sites_info$name == input$higherGeography,]
     paste("World Heritage Site", paste(basename(sel_site$url), " "), " |")

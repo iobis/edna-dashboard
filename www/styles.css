@@ -210,6 +210,26 @@
   width: 300px;
 }
 
+#top-selector-new .item {
+  padding-right: 15px;
+  /* white-space: nowrap; */
+  /* overflow: auto; */
+  /* text-overflow: clip; */
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+#top-selector-new .selectize-input {
+  display: flex; 
+  align-items: center; 
+  height: auto;
+}
+
+#top-selector-new .selectize-input>* {
+  display: inline;
+  vertical-align: middle; 
+}
 
 .spinner--1 {
   border-top: 4px solid #2780e3!important;
