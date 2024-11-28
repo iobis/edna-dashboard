@@ -143,13 +143,13 @@ htmltools::div(
 
 ::: {.panel-tabset}
 
-## Taxonomy
-
-{{< include modules/taxonomy.qmd >}}
-
 ## Species
 
 {{< include modules/species.qmd >}}
+
+## Taxonomy
+
+{{< include modules/taxonomy.qmd >}}
 
 ## Diversity metrics
 
