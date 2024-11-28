@@ -378,6 +378,7 @@ color: #343a40;                    /* Dark color for value */
   flex-direction: row;
   background-color: #f9f9f9;
   border-radius: 5px;
+  margin-top: 10px;
   margin-bottom: 20px;
 }
 
