@@ -363,3 +363,7 @@ color: #343a40;                    /* Dark color for value */
 #stats-column .card {
   border-width: 0px !important;
 }
+
+.selectize-input .item {
+  padding-right: 15px;
+}
