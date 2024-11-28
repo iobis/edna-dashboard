@@ -86,16 +86,21 @@ source("R/server_updategeography.R", local = TRUE)
 # Image galleries
 source("R/species_gallery_modal.R", local = TRUE)
 
-# Update first page options when not at Home
+# Update column sizes when not on first page
 observe({
-  if (!is.null(input$activeTab)) {
-    if (input$activeTab != "Home" && input$higherGeography == ""){
-      updateSelectInput(session, "higherGeography",
-      choices = sites_names, selected = sites_names[1])
-    }
+  if (input$higherGeography != "") {
+    session$sendCustomMessage("show_overlay", "remove")
+    session$sendCustomMessage("change_col_sizes", "change")
+  } else {
+    session$sendCustomMessage("show_overlay", "show")
   }
 }) %>%
-  bindEvent(input$activeTab)
+  bindEvent(input$higherGeography)
+
+observe({
+  updateSelectInput(inputId = "higherGeography", selected = "")
+}) %>%
+  bindEvent(input$homeTrigger)
 
 # Species list gallery ----
 species_list <- reactive({

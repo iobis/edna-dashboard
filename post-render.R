@@ -4,7 +4,7 @@ file <- "index.html"
 
 content <- readLines(file, warn = F)
 
-navbar <- which(grepl("nav-link-text", content))
+navbar <- which(grepl("nav-item", content))
 
 content_to_change <- content[navbar]
 
@@ -17,6 +17,10 @@ content_update <- gsub("Sample", '<i class="material-symbols-outlined", style="f
     vertical-align: text-top;">labs</i> Sample', content_update)
 content_update <- gsub("DNA", '<i class="bi bi-eyedropper"></i> DNA', content_update)
 content_update <- gsub("Climate", '<i class="bi bi-thermometer-high"></i> Climate', content_update)
+
+content_update <- gsub("Statistics", '<i class="bi bi-graph-up"></i> Statistics', content_update)
+content_update <- gsub("Pictures", '<i class="bi bi-camera-fill"></i> Pictures', content_update)
+#content_update <- gsub('href=""', 'href="javascript:void(0)"', content_update)
 
 content[navbar] <- content_update
 

@@ -10,43 +10,6 @@
 }
 
 
-/* Layout adjustments */
-.toolbar.html-fill-container {
-  transform: translateY(-20px);
-  position: relative;
-  z-index: 10;
-}
-
-.quarto-dashboard .toolbar {
-  margin-bottom: 0px;
-  padding: 1em;
-}
-
-.quarto-dashboard .dashboard-toolbar-container:not(.toolbar-toplevel) .toolbar {
-  margin-bottom: 0em !important;
-}
-
-.flow.bslib-grid {
-  height: min-content;
-}
-
-
-/* Toolbar selects */
-.quarto-dashboard .toolbar .shiny-input-select {
-  min-width: 14em;
-}
-
-
-/* Navbar */
-.navbar-title {
-  font-weight: 900;
-}
-
-li.nav-item {
-  font-weight: 700;
-}
-
-
 /* Body styles*/
 .site-title {
   font-weight: 900;
@@ -66,15 +29,10 @@ li.nav-item {
 }
 
 /* Tabs */
-.card-header.dashboard-card-no-title.bslib-navs-card-title {
-  background: none;
-}
 
 /* General tab link styling */
-.nav-tabs .nav-link {
+#tabset-inside .nav-tabs .nav-link {
   margin-bottom: calc(-1 * var(--bs-nav-tabs-border-width));
-  border: none;
-  /* Remove the default border */
   position: relative;
   padding-bottom: 5px;
   /* Space for the underline */
@@ -85,7 +43,7 @@ li.nav-item {
 }
 
 /* Styling for the active (selected) tab link */
-.nav-tabs .nav-link.active {
+#tabset-inside .nav-tabs .nav-link.active {
   border-bottom: 2px solid #0277d4;
   /* Bottom border line */
   padding-bottom: 4px !important;
@@ -93,7 +51,7 @@ li.nav-item {
 }
 
 /* Create the small triangle under the selected tab */
-.nav-tabs .nav-link.active::after {
+#tabset-inside .nav-tabs .nav-link.active::after {
   content: "";
   width: 0;
   height: 0;
@@ -110,7 +68,7 @@ li.nav-item {
 }
 
 /* Hover effect for non-selected tab links */
-.nav-tabs .nav-link:not(.active)::before {
+#tabset-inside .nav-tabs .nav-link:not(.active)::before {
   content: "";
   position: absolute;
   width: 0;
@@ -122,10 +80,44 @@ li.nav-item {
 }
 
 /* Animation for growing line and slight glow on hover */
-.nav-tabs .nav-link:not(.active):hover::before {
+#tabset-inside .nav-tabs .nav-link:not(.active):hover::before {
   width: 100%;
   left: 0;
   box-shadow: 0 0 4px #0277d4;
+}
+
+#stats-column .nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link {
+  padding-right: 5px !important;
+  padding-left: 5px !important;
+  color: #0277d4;
+  background-color: white;
+  border-width: 0px;
+  /*padding-right: 5px !important;
+  padding-left: 5px !important;
+  color: #0277d4;
+  background-color: white;
+  border-radius: 5px;
+  border-color: #0277d4;
+  border-width: thin;
+  box-sizing: border-box;*/
+}
+
+#stats-column .nav-tabs .nav-link {
+  padding-right: 5px !important;
+  padding-left: 5px !important;
+  color: #8e8e8e;
+  background-color: white;
+  border-width: 0px;
+  /*
+  padding-right: 5px !important;
+  padding-left: 5px !important;
+  color: white;
+  background-color: #0277d4;
+  border-radius: 5px;*/
+}
+
+#stats-column .nav-tabs .nav-item {
+  margin-right: 8px;
 }
 
 
@@ -137,50 +129,6 @@ li.nav-item {
   top: 0;
   left: 0;
 }
-
-
-/* Value box */
-.quarto-dashboard .bslib-value-box .value-box-area {
-  margin-top: auto;
-  margin-bottom: auto;
-}
-
-.bslib-value-box .value-box-area {
-  justify-content: center;
-  padding: 0.5rem 0.5rem;
-  font-size: .9rem;
-  font-weight: 500;
-}
-
-.bslib-value-box .value-box-title {
-  font-size: 1rem;
-  margin-top: 0;
-  margin-bottom: .05rem;
-  font-weight: 700;
-  line-height: 1.2;
-}
-
-.bslib-value-box .value-box-value {
-  font-size: calc(1.325rem + .9vw);
-  margin-top: 0;
-  margin-bottom: .1rem;
-  font-weight: 900;
-  line-height: 1.2;
-}
-
-.bslib-value-box .value-box-showcase {
-  align-items: center;
-  justify-content: center;
-  margin-top: auto;
-  margin-bottom: auto;
-  padding: 0.1rem;
-}
-
-.bslib-mb-spacing {
-  margin-bottom: 0 !important;
-}
-
-
 
 
 /* Species page */
@@ -234,9 +182,15 @@ li.nav-item {
 
 
 /* Top selector home page */
+#top-selector-parent {
+  align-items: right;
+  padding: 20px;
+  font-size: 20px;
+}
+
 #top-selector-parent .shiny-input-container:not(.shiny-input-container-inline) {
   width: 100% !important;
-  max-width: 100%;
+  display: flex !important;
 }
 
 #top-selector-new .html-fill-item .html-fill-container {
@@ -247,80 +201,15 @@ li.nav-item {
   display: inline-block;
 }
 
-#top-selector-parent {
-  height: 500px !important;
-  max-height: 500px !important;
+#top-selector-new .form-label, .shiny-input-container .control-label {
+  margin-bottom: .5rem;
+  width: 50px;
 }
 
-.navbar-dropdown-top {
-  max-height: 55px !important;
-  margin: 0px !important;
-  padding: 10px;
-  padding-left: 15px;
-  background-color: #008efc;
-} 
-
-#top-selector-parent .form-group .control-label {
-  color: white;
-  font-weight: 700;
+#top-selector-new .selectize-control {
+  width: 300px;
 }
 
-#top-selector-parent .selectize-input {
-  border: 1px solid #2b88d0;
-  border-radius: 0px;
-  padding-right: 50px;
-  min-width: 250px !important;
-}
-
-#top-selector-parent .selectize-input.full {
-  background-color: #48a4eb
-}
-
-#top-selector-parent .selectize-input,#top-selector-parent .selectize-control.single .selectize-input.input-active {
-  background: #fff;
-}
-
-#top-selector-parent .selectize-dropdown,#top-selector-parent .selectize-dropdown.form-control {
-  background: #48a4eb;
-}
-
-#top-selector-parent .selectize-input,#top-selector-parent .selectize-control.single .selectize-input.input-active {
-  background: #48a4eb;
-}
-
-#top-selector-parent .selectize-dropdown,#top-selector-parent .selectize-input,#top-selector-parent .selectize-input input {
-  color: #ffffff;
-}
-
-#top-selector-parent .selectize-control.single .selectize-input:not(.no-arrow):after {
-  border-color: #ffffff transparent transparent transparent
-}
-
-@media (max-width: 1270px) {
-  .navbar-dropdown-top {
-    max-height: 55px !important;
-    margin: 0px !important;
-    padding: 10px;
-    padding-left: 15px;
-    background-color: #008efc;
-  } 
-
-  #top-selector-parent .selectize-input {
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
-    width: 250px !important;
-    padding: 6px 12px; /* Adjust padding if needed */
-    box-sizing: border-box; /* Make sure padding is within the width */
-  }
-  #top-selector-parent .form-group .control-label {
-    text-align: left;
-    position: relative;
-    top: -10px;
-    color: white;
-    font-weight: 700;
-  }
-}
 
 .spinner--1 {
   border-top: 4px solid #2780e3!important;
@@ -338,6 +227,130 @@ li.nav-item {
   50% { opacity: 1; }
 }
 
-#higherGeography-selectized::placeholder {
-  color: white;  
+
+/* New */
+#title-header {
+  width: 100%;
+  background-color: #0277d4;
+  color: white;
+  font-weight: 900;
+  height: 50px;
+  font-size: 30px;
+  padding-left: 10px
+}
+
+#title-header a {
+  color: white;
+  font-weight: 900;
+  height: 50px;
+  font-size: 30px;
+  text-decoration: none;
+}
+
+#content {
+  padding-right: 30px;
+  padding-left: 30px;
+}
+
+#post-map {
+  background-color: #f9f9f9;
+}
+
+.tab-content {
+  border-left: #dee2e6 0px solid !important;
+  border-right: #dee2e6 0px solid !important;
+  border-bottom: #dee2e6 0px solid !important;
+}
+
+.nav-tabs {
+  --bs-nav-tabs-border-width: 0px !important;
+}
+
+#tabset-container {
+  background-color: #f9f9f9;
+  width: 100%;
+  padding: 30px;
+}
+
+#tabset-inside {
+  background-color: white;
+  border: #dee2e6 1px solid;
+  padding: 5px;
+  position: relative;
+  /*border-radius: 10px;*/
+}
+
+.results-title {
+  font-size: 30px;
+  font-weight: 700;
+  color: #0277d4;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+#footer-tab {
+  background-color: #efefef;
+  width: 100%;
+  height: 80px;
+  padding: 30px;
+  position: absolute;
+}
+
+
+
+/* Styling for the value box */
+.value-box {
+display: flex;                     /* Use flexbox to align the columns */
+align-items: center;               /* Vertically center the items */
+padding: 20px;                     /* Add some padding */
+border-radius: 8px;                /* Rounded corners */
+margin: 5px;
+}
+
+.icon-column {
+flex-shrink: 0;                    /* Prevent shrinking */
+font-size: 36px;                   /* Icon size */
+margin-right: 15px;                /* Spacing between icon and text */
+color: #007bff;                    /* Color of the icon */
+}
+
+.vb-text-column {
+display: flex;
+flex-direction: column;            /* Stack the title and value vertically */
+}
+
+.vb-title {
+font-size: 14px;                   /* Small text for title */
+color: #6c757d;                    /* Gray color for title */
+margin-bottom: 5px;                /* Space between title and value */
+}
+
+.vb-value {
+font-size: 24px;                   /* Larger text for value */
+font-weight: bold;                 /* Make the value text bold */
+color: #343a40;                    /* Dark color for value */
+}
+
+#stats-column {
+  padding-top: 30px;
+  padding: 10px;
+  grid-column: auto / span 4
+}
+
+#text-column {
+  grid-column: auto / span 8;
+}
+
+@media screen and (max-width: 600px) {
+  #stats-column {
+      padding-top: 30px;
+      padding: 10px;
+      grid-column: auto / span 12;
+  }
+  
+  #text-column {
+      grid-column: auto / span 12;
+  }
 }
