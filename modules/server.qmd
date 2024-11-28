@@ -128,14 +128,43 @@ wb <- waiter::Waiter$new(
   )
 )
 
+images_size <- reactive({
+  width <- input$dimension[1]
+  if (is.null(width)) {
+    width <- 1100
+  }
+
+  container_width <- width - 115
+  min_width <- 150
+  max_width <- 230
+
+  gap_width <- 0.1 * 16 
+
+  min_images <- floor(container_width / (max_width + gap_width))
+  max_images <- floor(container_width / (min_width + gap_width))
+
+  best_size <- 0
+
+  for (n in max_images:min_images) {
+    image_width <- round(container_width / n)
+    if (image_width >= min_width && image_width <= max_width) {
+      best_size <- image_width
+      break
+    }
+  }
+
+  best_size - 2
+})
+
 sg_limit <- reactive({
   width <- input$dimension[1]
   if (is.null(width)) {
     width <- 1100
   }
-  maxw <- floor(width/180)
+  width <- width - 115
+  maxw <- floor(width/images_size())
   maxw * 5
-})
+}) %>% bindEvent(images_size())
 
 gallery_sp_list <- reactive({
   image_table <- data.table::fread("data/proc_images.txt")
@@ -177,8 +206,8 @@ output$species_gallery <- renderUI({
       })
 
       htmltools::div(
-        generate_gallery(gallery_sp_list()[1:sg_limit()], "data/proc_images.txt", max_image_height = "250px", max_image_width = "180px", image_gap = "0.1em"),
-        layout_column_wrap(id = "gallery-placeholder", width = "200px", gap = "0.1em", fixed_width = TRUE, heights_equal = "row",
+        generate_gallery(gallery_sp_list()[1:sg_limit()], "data/proc_images.txt", max_image_height = "250px", max_image_width = paste0(images_size(), "px"), image_gap = "0.1em"),
+        layout_column_wrap(id = "gallery-placeholder", width = paste0(images_size(), "px"), gap = "0.1em", fixed_width = TRUE, heights_equal = "row",
       !!!placeholders),
         htmltools::tags$script(
           htmltools::HTML(
@@ -211,7 +240,7 @@ $(window).on("scroll.checkElement", { passive: true }, function() {
       )
     } else {
       session$sendCustomMessage("second_gallery", "")
-      generate_gallery(gallery_sp_list(), "data/proc_images.txt", max_image_height = "250px",max_image_width = "200px", image_gap = "0.1em")
+      generate_gallery(gallery_sp_list(), "data/proc_images.txt", max_image_height = "250px",max_image_width = paste0(images_size(), "px"), image_gap = "0.1em")
     }
 }) %>%
   bindEvent(species_list()$scientificName)
@@ -222,7 +251,7 @@ observe({
   } else {
     wb$show()
     on.exit(wb$hide())
-    gallery_b <- generate_gallery(gallery_sp_list()[sg_limit():length(gallery_sp_list())], "data/proc_images.txt", max_image_height = "250px",max_image_width = "200px", image_gap = "0.1em")
+    gallery_b <- generate_gallery(gallery_sp_list()[sg_limit():length(gallery_sp_list())], "data/proc_images.txt", max_image_height = "250px",max_image_width = paste0(images_size(), "px"), image_gap = "0.1em")
 
     output$species_gallery_b <- renderUI({gallery_b})
 
