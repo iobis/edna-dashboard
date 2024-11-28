@@ -173,12 +173,12 @@ htmltools::div(
 
 <div id="footer-tab">
 <div class="grid">
-<div class="g-col-6" id="logos">
-<img src="www/logos/flanders.png" />
+<div class="g-col-5" id="logos">
 <img src="www/logos/ioc.png" />
+<img src="www/logos/flanders.png" />
 </div>
-<div class="g-col-6">
-<p>Environmental DNA Expeditions is a global, citizen science initiative that will help measure marine biodiversity, and the impacts climate change might have on the distribution patterns of marine life, across UNESCO World Heritage marine sites.</p>
+<div class="g-col-7">
+<p>Environmental DNA Expeditions is a global, citizen science initiative that will help measure marine biodiversity, and the impacts climate change might have on the distribution patterns of marine life, across UNESCO World Heritage marine sites. eDNA Expeditions is a three year project funded by the Flanders Government, through the Flanders UNESCO Trust Fund (FUST) for the support of UNESCO's activities in the field of Science</p>
 </div>
 </div>
 </div>
