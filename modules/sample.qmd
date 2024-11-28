@@ -1,6 +1,6 @@
-# Samples {orientation="columns" scrolling="true"}
+::: {.grid}
 
-## Row {width=30%}
+::: {.g-col-1 .g-col-md-6}
 
 <div style="height: 400px;">
 ```{r}
@@ -8,8 +8,14 @@ plotly::plotlyOutput("concentration_plot")
 ```
 </div>
 
-## Row
+:::
+
+::: {.g-col-1 .g-col-md-6}
 
 ```{r}
 reactable::reactableOutput("samples_table")
 ```
+
+:::
+
+:::

@@ -15,7 +15,7 @@
   font-weight: 900;
   color: #0277d4;
   font-size: 32px;
-  padding-bottom: 0.5em;
+  margin-bottom: -0.3em;
 }
 
 .context-info {
@@ -46,7 +46,7 @@
 #tabset-inside .nav-tabs .nav-link.active {
   border-bottom: 2px solid #0277d4;
   /* Bottom border line */
-  padding-bottom: 4px !important;
+  padding-bottom: 3px !important;
   color: #0277d4;
 }
 
