@@ -93,6 +93,7 @@ observe({
     session$sendCustomMessage("change_col_sizes", "change")
   } else {
     session$sendCustomMessage("show_overlay", "show")
+    session$sendCustomMessage("change_col_sizes", "main")
   }
 }) %>%
   bindEvent(input$higherGeography)
