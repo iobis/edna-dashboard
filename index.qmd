@@ -1,8 +1,12 @@
 ---
-title: "eDNA expeditions"
+title: ""
 format: 
-  dashboard:
-    expandable: false
+  html:
+    theme: cosmo
+    scss: www/custom.scss
+    css:
+      - www/styles.css
+    page-layout: custom
 include-in-header:
   - text: |
       <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
@@ -10,23 +14,171 @@ include-in-header:
       <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
       <link href="https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
       <link rel="shortcut icon" href="www/favicon.ico"/>
-theme:
-  - cosmo
-  - www/custom.scss
 mainfont: Mulish
 server: shiny
 ---
 
-{{< include modules/home.qmd >}}
+<!-- Header block -->
+<div id="title-header"><img class="me-3" src="www/logos/ioc_white_small.png" /><a href="#" id="home-link">eDNA Expeditions</a></div>
+
+``` {r include=FALSE}
+suppressPackageStartupMessages(library(shiny))
+suppressPackageStartupMessages(library(leaflet))
+suppressPackageStartupMessages(library(dplyr))
+suppressPackageStartupMessages(library(DT))
+suppressPackageStartupMessages(library(reactable))
+suppressPackageStartupMessages(library(bslib))
+
+# Load json
+sites <- jsonlite::read_json("https://raw.githubusercontent.com/iobis/edna-tracker-data/data/generated.json")
+sites_list <- sites$sites
+sites_samples <- sites$samples
+
+sites_names <- sapply(sites_list, function(x) x$name)
+sites_names <- sites_names[sites_names != "Sanganeb Marine National Park and Dungonab Bay – Mukkawar Island Marine National Park"]
+sites_names <- sites_names[order(sites_names)]
+
+localities <- sites_samples %>% bind_rows() %>% select(area_name, area_locality, parent_area_name, station, lon = area_longitude, lat = area_latitude)
+
+groups <- read.csv("data/supporting_data/groups.csv")
+groups_names <- c("all species", unique(groups$group))
+
+taxonLevels <- c("ASV","kingdom","phylum","order","class","family","genus", "species")
+
+alpha_measure <- c("Observed", "Chao1", "Shannon", "Simpson")
+
+beta_measure <- c("bray", "jaccard")
+
+plot_type<-c("relative abundance", "reads")
+
+iucn_names <- c("all species", "CR", "EN", "VU", "NT", "LC", "DD")
+```
+
+``` {r}
+#| height: 200px
+htmltools::includeScript("www/script.js")
+waiter::useWaiter()
+leafletOutput("mainMap")
+```
+
+<!-- Selector block -->
+::: {id='post-map'}
+``` {r}
+htmltools::div(
+htmltools::tags$div(
+  htmltools::div(
+    selectInput("higherGeography", "Site:", c("Select a site" = "", sites_names)),
+    class = "navbar-dropdown-top",
+    id = "top-selector-new"
+   ), id = "top-selector-parent"
+),
+htmltools::span(
+  htmltools::span(
+    textOutput("whs_front_code"),
+    style = "display: flex; font-weight: bold; font-color: #cccccc;"
+  ), htmltools::HTML("&nbsp;"), htmlOutput("whs_front_website"), style = "display: flex; margin-right: 10px;"
+), style = "display: flex; justify-content: space-between; align-items: center;")
+```
+:::
+
+<!-- Start of content -->
+::: {id='content'}
+
+`r tags$div(class="site-title", textOutput("higherGeography"))`
+
+<!-- Start of top grid -->
+::: {.grid}
+
+<!-- Text column -->
+::: {id='text-column'}
+
+`r tags$div(class="site-text", uiOutput("siteDescription"))`
+
+<br>
+
+`r tags$div(HTML(paste0('<span><i class="fa fa-calendar" style = "color:#3D3D3D;"></i> Event date: ', textOutput("eventDate", inline = T), '</span>')))`
+
+`r tags$div(HTML(paste0('<span><i class="fa fa-dna" style = "color:#3D3D3D;"></i> Number of samples: ', textOutput("eventSamples", inline = T), '</span>')))`
+
+<br>
+
+:::
+
+<!-- Stats column -->
+::: {id='stats-column'}
+
+::: {.panel-tabset}
+
+## Statistics
+
+``` {r}
+source("R/value_box_gen.R")
+
+htmltools::div(
+  uiOutput("valueBoxes", style = "width: 100%;"),
+  style = "display: flex; flex-direction: column;  align-items: center; width: 100%; "
+)
+
+```
+
+## Pictures
+
+`r htmlOutput("imageGalleryFront")`
+
+:::
+
+:::
+
+:::
+
+<!-- End of content-->
+:::
+
+<!-- Start of tabset -->
+::: {id='tabset-container'} 
+
+<span class='results-title'>Explore the results</span>
+
+::: {id='tabset-inside'}
+
+::: {.panel-tabset}
+
+## Species
 
 {{< include modules/species.qmd >}}
 
+## Taxonomy
+
 {{< include modules/taxonomy.qmd >}}
+
+## Diversity metrics
 
 {{< include modules/diversity.qmd >}}
 
+## Samples
+
 {{< include modules/sample.qmd >}}
+
+## Climate
 
 {{< include modules/climate.qmd >}}
 
+:::
+
+:::
+
+:::
+
 {{< include modules/server.qmd >}}
+
+<div id="footer-tab">
+<div class="grid">
+<div class="g-col-5" id="logos">
+<img src="www/logos/ioc.png" />
+<img src="www/logos/flanders.png" />
+</div>
+<div class="g-col-7">
+<p>Environmental DNA Expeditions is a global, citizen science initiative that will help measure marine biodiversity, and the impacts climate change might have on the distribution patterns of marine life, across UNESCO World Heritage marine sites. eDNA Expeditions is a three year project funded by the Flanders Government, through the Flanders UNESCO Trust Fund (FUST) for the support of UNESCO's activities in the field of Science</p>
+</div>
+</div>
+</div>

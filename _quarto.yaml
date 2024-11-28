@@ -1,4 +1,7 @@
 project:
+  preview:
+    port: 7777
+    browser: true
   title: "edna-viz"
   post-render: 
     - post-render.R

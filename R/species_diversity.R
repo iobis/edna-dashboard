@@ -1,6 +1,6 @@
-library(vegan)
-library(dplyr)
-library(ape)
+suppressPackageStartupMessages(library(vegan))
+suppressPackageStartupMessages(library(dplyr))
+suppressPackageStartupMessages(library(ape))
 
 #This script calculates and plots different diversity measures.
 #In the future, calculate and plot separately, so the calculation is only done once? 

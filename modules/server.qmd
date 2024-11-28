@@ -2,11 +2,11 @@
 ```{r}
 #| context: server-start
 
-library(bslib)
-library(leaflet)
-library(shiny)
-library(dplyr)
-library(arrow)
+suppressPackageStartupMessages(library(bslib))
+suppressPackageStartupMessages(library(leaflet))
+suppressPackageStartupMessages(library(shiny))
+suppressPackageStartupMessages(library(dplyr))
+suppressPackageStartupMessages(library(arrow))
 source("R/image-gallery.R")
 source("R/occurrence.R")
 source("R/value_boxes.R")
@@ -24,6 +24,7 @@ mdebug <- function(status, show = FALSE) {if(show) message(status)}
 sites_info <- read.table("data/sites_description.txt", header=T)
 #occurrence <- read_occurrence_data()
 
+message("Opening occurrence dataset...")
 occurrence_ds <- open_dataset("data/output/occurrence.parquet")
 
 unique_sp_codes <- occurrence_ds %>%
@@ -31,10 +32,12 @@ unique_sp_codes <- occurrence_ds %>%
   group_by(scientificName, scientificNameID) %>%
   distinct() %>%
   collect() %>%
-  mutate(scientificNameID = sub(".*:", "", scientificNameID))
+  mutate(scientificNameID = sub(".*:", "", scientificNameID)) %>% 
+  ungroup()
 
 # Leaflet map data
 # TODO: pre-do that
+message("Fetching sites metadata...")
 sites <- jsonlite::read_json("https://raw.githubusercontent.com/iobis/edna-tracker-data/data/generated.json")
 sites_list <- sites$sites
 sites_samples <- sites$samples %>% bind_rows()
@@ -50,13 +53,15 @@ samples$concentration <- sapply(sites_samples$dnas, function(x) x$concentration)
 localities <- sites_samples %>% 
   select(area_name, area_locality, parent_area_name, station, lon = area_longitude, lat = area_latitude) %>%
   group_by(area_name, area_locality, parent_area_name, station, lon, lat) %>%
-  distinct(.keep_all = T)
+  distinct(.keep_all = T) %>% 
+  ungroup()
 
 map_localities <- sites_samples %>% 
   select(name, area_name, area_locality, parent_area_name, station, lon = area_longitude, lat = area_latitude) %>%
   group_by(name, area_name, area_locality, parent_area_name, station, lon, lat) %>%
   distinct(.keep_all = T) %>%
-  mutate(popup_name = paste(name, area_name))
+  mutate(popup_name = paste(name, area_name)) %>% 
+  ungroup()
 
 species_context_info <- readRDS("data/fishbase.rds")
 
@@ -81,16 +86,22 @@ source("R/server_updategeography.R", local = TRUE)
 # Image galleries
 source("R/species_gallery_modal.R", local = TRUE)
 
-# Update first page options when not at Home
+# Update column sizes when not on first page
 observe({
-  if (!is.null(input$activeTab)) {
-    if (input$activeTab != "Home" && input$higherGeography == ""){
-      updateSelectInput(session, "higherGeography",
-      choices = sites_names, selected = sites_names[1])
-    }
+  if (input$higherGeography != "") {
+    session$sendCustomMessage("show_overlay", "remove")
+    session$sendCustomMessage("change_col_sizes", "change")
+  } else {
+    session$sendCustomMessage("show_overlay", "show")
+    session$sendCustomMessage("change_col_sizes", "main")
   }
 }) %>%
-  bindEvent(input$activeTab)
+  bindEvent(input$higherGeography)
+
+observe({
+  updateSelectInput(inputId = "higherGeography", selected = "")
+}) %>%
+  bindEvent(input$homeTrigger)
 
 # Species list gallery ----
 species_list <- reactive({
@@ -118,14 +129,43 @@ wb <- waiter::Waiter$new(
   )
 )
 
+images_size <- reactive({
+  width <- input$dimension[1]
+  if (is.null(width)) {
+    width <- 1100
+  }
+
+  container_width <- width - 115
+  min_width <- 150
+  max_width <- 230
+
+  gap_width <- 0.1 * 16 
+
+  min_images <- floor(container_width / (max_width + gap_width))
+  max_images <- floor(container_width / (min_width + gap_width))
+
+  best_size <- 0
+
+  for (n in max_images:min_images) {
+    image_width <- round(container_width / n)
+    if (image_width >= min_width && image_width <= max_width) {
+      best_size <- image_width
+      break
+    }
+  }
+
+  best_size - 2
+})
+
 sg_limit <- reactive({
   width <- input$dimension[1]
   if (is.null(width)) {
     width <- 1100
   }
-  maxw <- floor(width/200)
+  width <- width - 115
+  maxw <- floor(width/images_size())
   maxw * 5
-})
+}) %>% bindEvent(images_size())
 
 gallery_sp_list <- reactive({
   image_table <- data.table::fread("data/proc_images.txt")
@@ -167,8 +207,8 @@ output$species_gallery <- renderUI({
       })
 
       htmltools::div(
-        generate_gallery(gallery_sp_list()[1:sg_limit()], "data/proc_images.txt", max_image_height = "250px", max_image_width = "200px", image_gap = "0.1em"),
-        layout_column_wrap(id = "gallery-placeholder", width = "200px", gap = "0.1em", fixed_width = TRUE, heights_equal = "row",
+        generate_gallery(gallery_sp_list()[1:sg_limit()], "data/proc_images.txt", max_image_height = "250px", max_image_width = paste0(images_size(), "px"), image_gap = "0.1em"),
+        layout_column_wrap(id = "gallery-placeholder", width = paste0(images_size(), "px"), gap = "0.1em", fixed_width = TRUE, heights_equal = "row",
       !!!placeholders),
         htmltools::tags$script(
           htmltools::HTML(
@@ -201,7 +241,7 @@ $(window).on("scroll.checkElement", { passive: true }, function() {
       )
     } else {
       session$sendCustomMessage("second_gallery", "")
-      generate_gallery(gallery_sp_list(), "data/proc_images.txt", max_image_height = "250px",max_image_width = "200px", image_gap = "0.1em")
+      generate_gallery(gallery_sp_list(), "data/proc_images.txt", max_image_height = "250px",max_image_width = paste0(images_size(), "px"), image_gap = "0.1em")
     }
 }) %>%
   bindEvent(species_list()$scientificName)
@@ -212,7 +252,7 @@ observe({
   } else {
     wb$show()
     on.exit(wb$hide())
-    gallery_b <- generate_gallery(gallery_sp_list()[sg_limit():length(gallery_sp_list())], "data/proc_images.txt", max_image_height = "250px",max_image_width = "200px", image_gap = "0.1em")
+    gallery_b <- generate_gallery(gallery_sp_list()[sg_limit():length(gallery_sp_list())], "data/proc_images.txt", max_image_height = "250px",max_image_width = paste0(images_size(), "px"), image_gap = "0.1em")
 
     output$species_gallery_b <- renderUI({gallery_b})
 

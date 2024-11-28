@@ -34,8 +34,7 @@ output$siteDescription <- renderUI({
 
 output$whs_front_code <- renderText({
   if (input$higherGeography == "") {
-    paste(21,#length(sites_names), # To check why not available.
-     "marine World Heritage Sites sampled")
+    ""
   } else {
     sel_site <- sites_info[sites_info$name == input$higherGeography,]
     paste("World Heritage Site", paste(basename(sel_site$url), " "), " |")
@@ -76,6 +75,92 @@ output$eventSamples <- renderText({
 })
 
 # Value boxes ----
+
+### NEW
+source("R/value_box_gen.R")
+output$valueBoxes <- renderUI({
+  if (input$higherGeography == "") {
+    htmltools::div(
+      value_box(
+        title = "Number of species", value = "value_box_species",
+        icon = "shrimp", icon_source = "fa", icon_color = "#2b88d0", width = "100%"
+      ),
+      htmltools::span("Number of species by groups",
+        style = "padding-left: 20px; padding-top: 30px; color: #8c8c8c; font-size: 14px; font-weight: 600;"
+      ),
+      htmltools::div(
+        value_box(
+          title = "Fishes", value = "value_box_fish", icon = "shrimp",
+          icon_source = "fa", width = "50%", direction = "v", icon_color = "#6f42c1"
+        ),
+        value_box(
+          title = "Mammals", value = "value_box_mammals", icon = "otter",
+          icon_source = "fa", width = "50%", direction = "v", icon_color = "#6f42c1"
+        ),
+        style = "display: flex; flex-direction: row; justify-content: space-between; width: 100%;"
+      ),
+      htmltools::div(
+        value_box(
+          title = "Sharks", value = "value_box_sharks", icon = "images/icons/shark.svg",
+          icon_source = "other", width = "50%", direction = "v", icon_color = "#6f42c1"
+        ),
+        value_box(
+          title = "Turtles", value = "value_box_turtles", icon = "images/icons/turtle.svg",
+          icon_source = "other", width = "50%", direction = "v", icon_color = "#6f42c1"
+        ),
+        style = "display: flex; flex-direction: row; justify-content: space-between; width: 100%;"
+      ),
+      htmltools::span("IUCN Red List",
+        style = "padding-left: 20px; padding-top: 30px; color: #8c8c8c; font-size: 14px; font-weight: 600;"
+      ),
+      value_box(
+        title = "Threatened species", value = "value_box_iucn",
+        icon = "circle-exclamation", icon_source = "fa", icon_color = "#2b88d0", width = "100%"
+      ), style = "width: 100%;"
+    )
+  } else {
+    htmltools::div(
+      htmltools::div(
+        value_box(
+          title = "Number of species", value = "value_box_species",
+          icon = "shrimp", icon_source = "fa", icon_color = "#2b88d0", width = "50%"
+        ),
+        value_box(
+          title = "Threatened species", value = "value_box_iucn",
+          icon = "circle-exclamation", icon_source = "fa", icon_color = "#2b88d0", width = "50%"
+        ),
+        style = "display: flex; flex-direction: row; justify-content: space-between; width: 100%;"
+      ),
+      htmltools::span("Number of species by groups",
+        style = "padding-left: 20px; padding-top: 30px; color: #8c8c8c; font-size: 14px; font-weight: 600;"
+      ),
+      htmltools::div(
+        value_box(
+          title = "Fishes", value = "value_box_fish", icon = "shrimp",
+          icon_source = "fa", width = "25%", direction = "v", icon_color = "#6f42c1"
+        ),
+        value_box(
+          title = "Mammals", value = "value_box_mammals", icon = "otter",
+          icon_source = "fa", width = "25%", direction = "v", icon_color = "#6f42c1"
+        ),
+        value_box(
+          title = "Sharks", value = "value_box_sharks", icon = "images/icons/shark.svg",
+          icon_source = "other", width = "25%", direction = "v", icon_color = "#6f42c1"
+        ),
+        value_box(
+          title = "Turtles", value = "value_box_turtles", icon = "images/icons/turtle.svg",
+          icon_source = "other", width = "25%", direction = "v", icon_color = "#6f42c1"
+        ),
+        style = "display: flex; flex-direction: row; justify-content: space-between; width: 100%;"
+      ), style = "width: 100%;"
+    )
+  }
+})
+
+####
+
+
+
 boxes_data <- reactiveValues()
 observe({
   boxes_data$data <- n_species(input$higherGeography, occurrence)
@@ -115,20 +200,20 @@ output$imageGalleryFront <- renderUI({
 
   if (site == "") {
     images_table_sel <- images_table %>%
-      dplyr::slice_sample(n = 4)
+      dplyr::slice_sample(n = 6)
   } else {
     images_table_sel <- images_table[images_table$site == site, ]
   }
 
-  if (nrow(images_table_sel) > 4) {
-    images_table_sel <- images_table_sel[1:4,]
-  }
+  # if (nrow(images_table_sel) > 4) {
+  #   images_table_sel <- images_table_sel[1:4,]
+  # }
 
   cards_images <- lapply(seq_len(nrow(images_table_sel)), function(x) {
     url <- images_table_sel$image_url[x]
     caption <- images_table_sel$caption[x]
 
-    if (length(unique(images_table_sel$caption)) > 1) {
+    if (length(unique(images_table_sel$caption)) > 1 && site != "") {
       card(
         height = "100%", full_screen = T,
         card_header(
@@ -191,13 +276,43 @@ observe({
 
 observe({
   proxy <- leafletProxy("mainMap")
+
+  # sel_loc <- localities[localities$parent_area_name == input$higherGeography,]
+  # sel_loc <- sel_loc[!is.na(sel_loc$lon) & !is.na(sel_loc$lat),]
+  # lng1 <- min(sel_loc$lon)
+  # lat1 <- min(sel_loc$lat)
+  # lng2 <- max(sel_loc$lon)
+  # lat2 <- max(sel_loc$lat)
+  # print(c(lng1, lng2, lat1, lat2))
+  # if (nrow(sel_loc) > 0) {
+  #   proxy %>% flyToBounds(lng1 = lng1, lat1 = lat1,
+  #                         lng2 = lng2, lat2 = lat2,
+  #                         options = list(duration = 0.95))
+  # }
+
+  feature_data <- sites_shape[sites_shape$name == input$higherGeography, ]
+  bbox <- sf::st_bbox(feature_data)
+  
+  lng1 <- unname(bbox["xmin"])
+  lat1 <- unname(bbox["ymin"])
+  lng2 <- unname(bbox["xmax"])
+  lat2 <- unname(bbox["ymax"])
+
+  proxy %>% flyToBounds(lng1 = lng1, lat1 = lat1,
+                        lng2 = lng2, lat2 = lat2,
+                        options = list(duration = 0.95))
+  
+}) %>%
+  bindEvent(input$higherGeography, ignoreInit = T)
+
+observe({
+  proxy <- leafletProxy("mainMap")
   
   sel_loc <- localities[localities$parent_area_name == input$higherGeography,]
   sel_loc <- sel_loc[!is.na(sel_loc$lon) & !is.na(sel_loc$lat),]
   
   if (nrow(sel_loc) > 0) {
-    proxy %>% flyToBounds(lng1 = min(sel_loc$lon), lat1 = min(sel_loc$lat),
-                          lng2 = max(sel_loc$lon), lat2 = max(sel_loc$lat))
+    proxy %>% setView(0, 0, zoom = 2)
   }
 }) %>%
-  bindEvent(input$higherGeography, ignoreInit = T)
+  bindEvent(input$homeTrigger, ignoreInit = T)

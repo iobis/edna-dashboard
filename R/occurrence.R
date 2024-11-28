@@ -1,10 +1,11 @@
-library(dplyr)
-library(stringr)
-library(purrr)
-library(arrow)
+suppressPackageStartupMessages(library(dplyr))
+suppressPackageStartupMessages(library(stringr))
+suppressPackageStartupMessages(library(purrr))
+suppressPackageStartupMessages(library(arrow))
 
 #' Reads the full occurrence dataset from TSV.
 read_occurrence_tsv <- function() {
+  message("Reading occurrence data from TSV...")
   occurrence_files <- list.files("data/output", "*Occurrence*", full.names = TRUE)
   
   dna_files <- list.files("data/output", "*DNADerivedData*", full.names = TRUE)
@@ -31,6 +32,7 @@ convert_occurrence_data <- function() {
 
 #' Reads the full occurrence dataset from parquet, converts TSV to parquet if the parquet file does not exist.
 read_occurrence_data <- function() {
+  message("Reading occurrence data from parquet...")
   if (!file.exists("data/output/occurrence.parquet")) {
     occurrence <- convert_occurrence_data()  
   } else {

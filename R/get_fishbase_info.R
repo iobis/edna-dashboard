@@ -1,5 +1,5 @@
 # Load species list 
-library(dplyr) 
+suppressPackageStartupMessages(library(dplyr))
 source("R/occurrence.R")
 
 sites_info <- read.table("data/sites_description.txt", header=T)
@@ -32,7 +32,8 @@ fish_base_commons <- bind_rows(fish_base_commons, sealife_base_commons)
 
 fish_base_commons <- fish_base_commons %>%
   group_by(Species) %>%
-  slice_head(n = 3)
+  slice_head(n = 3) %>% 
+  ungroup()
 
 fish_base_commons <- fish_base_commons[!is.na(fish_base_commons$ComName), ]
 

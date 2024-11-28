@@ -1,18 +1,7 @@
-<!-- Orientation can be either columns or rows; each level 2 header becomes a card-->
-# Taxonomy {orientation="columns" scrolling="true"}
 
-<!--
-## {.toolbar}
+### Taxonomic composition
 
-```{r}
-selectInput("higherGeographyTaxonomy", "Site:", sites_names)
-```
--->
-
-### Taxonomic composition {orientation="rows" scrolling="true"}
-
-#### Row 1
-::: {.card title="Taxonomic composition across samples"}
+#### Taxonomic composition across samples
 
 This table shows all species that were identified from the site, ordered by abundance. You can search on the different taxonomic levels, species names, samples or locations. For more information on each species check out the species tab!
 
@@ -22,9 +11,7 @@ This table shows all species that were identified from the site, ordered by abun
 reactable::reactableOutput("rtable")
 ```
 
-:::
 
-#### Row 2
 ```{r}
 htmlOutput("krona_plot")
 ```

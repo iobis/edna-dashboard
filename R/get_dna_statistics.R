@@ -1,6 +1,5 @@
-
-library(dplyr)
-library(eulerr)
+suppressPackageStartupMessages(library(dplyr))
+suppressPackageStartupMessages(library(eulerr))
 
 get_dna_statistics <- function(occurrence, site){
 
@@ -13,7 +12,10 @@ occurrence_site <- occurrence %>%
 
 total_sequences  <- sum(occurrence_site$organismQuantity)
 
-n_sequence_sample <- occurrence_site %>% group_by(materialSampleID) %>% summarize( reads= sum(organismQuantity))
+n_sequence_sample <- occurrence_site %>%
+  group_by(materialSampleID) %>%
+  summarize( reads= sum(organismQuantity)) %>% 
+  ungroup()
 avg_sequences_per_sample <- mean(n_sequence_sample$reads)
 sd_sequences_per_sample <- sd(n_sequence_sample$reads)
 

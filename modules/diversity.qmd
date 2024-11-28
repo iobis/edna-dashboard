@@ -1,6 +1,5 @@
-# Diversity metrics {orientation="columns" scrolling="true"}
 
-## {.toolbar}
+::: {.toolbar}
 
 ```{r}
 #selectInput("higherGeographyDiversity", "Site:", sites_names)
@@ -8,10 +7,9 @@ selectInput("taxonLevelDiversity", "Rank:", taxonLevels[-c(1,2)])
 selectInput("plotType", "Abundance:", plot_type)
 ```
 
+:::
 
-## Row
-
-::: {.card title="Taxonomic composition across samples"}
+#### Taxonomic composition across samples
 
 This figure shows the number of sequences (also called reads) in each sample after filtering for quality control, both as absolute numbers as well in relative abundance of the total reads. All sequences that received names are colored, the grey area therefore shows reads that were not assigned a taxonomy. You can toggle the taxonomic level that is shown. At each taxonomic level the 10 most common names receive a distinct color. Clear contaminations from humans, bacteria (and other prokaryotes), fungi and domestic animals have been removed prior to the analysis, and the calculation of relative abundance.  
 
@@ -21,13 +19,9 @@ This figure shows the number of sequences (also called reads) in each sample aft
 plotOutput("tax_bar_plot")
 ```
 
-:::
+------
 
-## Row   {.flow}
-
-<!-- Or a mix of both-->
-
-### {.toolbar}
+::: {.toolbar}
 ```{r}
 
  selectInput("taxonLevel", "Taxonomic rank:", choices = taxonLevels)
@@ -36,11 +30,13 @@ plotOutput("tax_bar_plot")
 
 ```
 
-## Row
+:::
 
-### Column 
+::: {.grid}
 
-::: {.card title="Alpha diversity: How diverse are the samples in relation to each other?"}
+::: {.g-col-1 .g-col-md-6}
+
+#### Alpha diversity: How diverse are the samples in relation to each other?
 
 In this figure we show the alpha diversity of every sample, grouped by location name (samples from the same location are considered replicates). The most simple measure of alpha diversity is the number of species/sequences found in each sample. You can check the alpha diversity measure at all different taxonomic levels, or considering all sequences (also unnamed ones). Other measures of alpha diversity take into account also the abundance of different species/sequences.
 
@@ -52,11 +48,9 @@ plotly::plotlyOutput("alpha_plot")
 
 :::
 
+::: {.g-col-1 .g-col-md-6}
 
-### Column 
-
-
-::: {.card title="Beta diversity: How does the diversity compare across samples?"}
+#### Beta diversity: How does the diversity compare across samples?
 
 Beta-diversity measures, show how close to each other the samples are in terms of species composition. A distance matrix is calculated for each sample, and the distances are plotted. The further the points are from each other, the more different the samples are from each other. Here, you may be able to see that samples from the same location cluster together.
 
@@ -65,5 +59,7 @@ Beta-diversity measures, show how close to each other the samples are in terms o
 plotly::plotlyOutput("beta_plot")
 
 ```
+
+:::
 
 :::

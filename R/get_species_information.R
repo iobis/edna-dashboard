@@ -1,5 +1,5 @@
-library(dplyr)
-library(tidyr)
+suppressPackageStartupMessages(library(dplyr))
+suppressPackageStartupMessages(library(tidyr))
 
 #This is a placeholder for getting the information we want to depict on species in the sidebar (or other location)
 #Should include Title, and vernacular name
@@ -58,7 +58,8 @@ get_species_information <- function(selected_species, occurrence, site) {
                     reads = sum(organismQuantity),
                     rdp_confidences=paste(unique(Confidence), collapse = ","),
                     vsearch_identity = if_else(all(is.na(Identity)), NA, paste(Identity, collapse = ",")),
-                    NCBI_ID = paste(unique(ID), collapse = ",")) %>%
+                    NCBI_ID = paste(unique(ID), collapse = ",")) %>% 
+        ungroup() %>%
         relocate(DNA_sequence, .after = last_col())
     
     return(species_table)

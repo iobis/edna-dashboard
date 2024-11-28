@@ -1,14 +1,14 @@
-library(ggplot2)
-library(viridis)
-library(eulerr)
-library(reactable)
-library(dplyr)
-library(tidyr)
-library(data.tree)
-library(ggtree)
-library(ggtreeExtra)
-library(phyloseq)
-library(psadd)
+suppressPackageStartupMessages(library(ggplot2))
+suppressPackageStartupMessages(library(viridis))
+suppressPackageStartupMessages(library(eulerr))
+suppressPackageStartupMessages(library(reactable))
+suppressPackageStartupMessages(library(dplyr))
+suppressPackageStartupMessages(library(tidyr))
+suppressPackageStartupMessages(library(data.tree))
+suppressPackageStartupMessages(library(ggtree))
+suppressPackageStartupMessages(library(ggtreeExtra))
+suppressPackageStartupMessages(library(phyloseq))
+suppressPackageStartupMessages(library(psadd))
 
 #site="The Sundarbans"
 
@@ -43,9 +43,10 @@ make_image_taxonomy <- function(occurrence, site, taxonLevel, plot_type) {
     #occurrence_site = occurrence_site %>% mutate(relative_abundance = organismQuantity/totalSampleSizeValue)
     
     #Relative abundance, calculate based on the remaining reads after removal of contaminants:
-    occurrence_site = occurrence_site %>% 
-                            group_by(materialSampleID) %>% 
-                            mutate(totalSampleSizeValue = sum(organismQuantity))
+    occurrence_site <- occurrence_site %>% 
+      group_by(materialSampleID) %>% 
+      mutate(totalSampleSizeValue = sum(organismQuantity)) %>% 
+      ungroup()
     
     occurrence_site = occurrence_site %>% mutate(relative_abundance = organismQuantity/totalSampleSizeValue)
   
@@ -120,7 +121,8 @@ make_table_taxonomy <- function(occurrence, site) {
                   summarize(samples = paste(unique(materialSampleID), collapse = ","), 
                           localities = paste(unique(locationID), collapse = ","), 
                           target_gene = paste(unique(target_gene), collapse = ","),
-                          reads = sum(organismQuantity))
+                          reads = sum(organismQuantity)) %>% 
+                  ungroup()
 
   species_def <- colDef(
     minWidth = 200,
@@ -247,6 +249,7 @@ make_taxonomic_tree <- function(occurrence, site) {
     group_by(phylum) %>%
     summarize(species = sum(species)) %>%
     arrange(desc(species)) %>%
+    ungroup() %>% 
     head(10) %>%
     pull(phylum)
   
