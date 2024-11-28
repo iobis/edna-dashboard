@@ -166,9 +166,14 @@ htmltools::div(
 
 {{< include modules/server.qmd >}}
 
-::: {id='footer-tab'}
-<div id="logos">
+<div id="footer-tab">
+<div class="grid">
+<div class="g-col-6" id="logos">
 <img src="www/logos/flanders.png" />
 <img src="www/logos/ioc.png" />
 </div>
-:::
+<div class="g-col-6">
+<p>Environmental DNA Expeditions is a global, citizen science initiative that will help measure marine biodiversity, and the impacts climate change might have on the distribution patterns of marine life, across UNESCO World Heritage marine sites.</p>
+</div>
+</div>
+</div>
