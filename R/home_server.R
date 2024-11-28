@@ -277,15 +277,29 @@ observe({
 
 observe({
   proxy <- leafletProxy("mainMap")
-  
+
   sel_loc <- localities[localities$parent_area_name == input$higherGeography,]
   sel_loc <- sel_loc[!is.na(sel_loc$lon) & !is.na(sel_loc$lat),]
-  
+  lng1 <- min(sel_loc$lon)
+  lat1 <- min(sel_loc$lat)
+  lng2 <- max(sel_loc$lon)
+  lat2 <- max(sel_loc$lat)
   if (nrow(sel_loc) > 0) {
-    proxy %>% flyToBounds(lng1 = min(sel_loc$lon), lat1 = min(sel_loc$lat),
-                          lng2 = max(sel_loc$lon), lat2 = max(sel_loc$lat),
+    proxy %>% flyToBounds(lng1 = lng1, lat1 = lat1,
+                          lng2 = lng2, lat2 = lat2,
                           options = list(duration = 0.95))
   }
+
+  # feature_data <- sites_shape[sites_shape$name == input$higherGeography, ]
+  # bbox <- sf::st_bbox(feature_data)
+  # lng1 <- bbox["xmin"]
+  # lat1 <- bbox["ymin"]
+  # lng2 <- bbox["xmax"]
+  # lat2 <- bbox["ymax"]
+  # proxy %>% flyToBounds(lng1 = lng1, lat1 = lat1,
+  #                       lng2 = lng2, lat2 = lat2,
+  #                       options = list(duration = 0.95))
+  
 }) %>%
   bindEvent(input$higherGeography, ignoreInit = T)
 
