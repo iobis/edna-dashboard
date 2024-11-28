@@ -293,12 +293,14 @@
 #footer-tab {
   background-color: #efefef;
   width: 100%;
-  height: 80px;
   padding: 30px;
   position: absolute;
 }
 
-
+#logos img {
+  height: 100px;
+  margin-right: 10px;
+}
 
 /* Styling for the value box */
 .value-box {

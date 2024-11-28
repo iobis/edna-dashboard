@@ -167,5 +167,8 @@ htmltools::div(
 {{< include modules/server.qmd >}}
 
 ::: {id='footer-tab'}
-Here goes the footer content
+<div id="logos">
+<img src="www/logos/flanders.png" />
+<img src="www/logos/ioc.png" />
+</div>
 :::
