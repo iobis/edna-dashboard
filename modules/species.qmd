@@ -1,6 +1,4 @@
-# Species {orientation="columns" scrolling="true"}
-
-## {.toolbar}
+::: {.toolbar}
 
 ```{r}
 #selectInput("higherGeographySpecies", "Site:", sites_names)
@@ -11,8 +9,9 @@ selectInput("iucn", "IUCN category:", iucn_names)
 
 ```
 
+:::
 
-## Row
+::: {id='image-galleries'}
 
 ```{r}
 source("extensions/image-sidebar.R")
@@ -24,3 +23,4 @@ layout_column_wrap(
 )
 ```
 
+:::
