@@ -356,3 +356,7 @@ color: #343a40;                    /* Dark color for value */
       grid-column: auto / span 12;
   }
 }
+
+#stats-column .card {
+  border-width: 0px !important;
+}

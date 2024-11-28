@@ -201,14 +201,14 @@ output$imageGalleryFront <- renderUI({
 
   if (site == "") {
     images_table_sel <- images_table %>%
-      dplyr::slice_sample(n = 4)
+      dplyr::slice_sample(n = 6)
   } else {
     images_table_sel <- images_table[images_table$site == site, ]
   }
 
-  if (nrow(images_table_sel) > 4) {
-    images_table_sel <- images_table_sel[1:4,]
-  }
+  # if (nrow(images_table_sel) > 4) {
+  #   images_table_sel <- images_table_sel[1:4,]
+  # }
 
   cards_images <- lapply(seq_len(nrow(images_table_sel)), function(x) {
     url <- images_table_sel$image_url[x]
