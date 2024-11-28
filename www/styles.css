@@ -367,3 +367,46 @@ color: #343a40;                    /* Dark color for value */
 .selectize-input .item {
   padding-right: 15px;
 }
+
+#image-galleries .card {
+  border-width: 0px !important;
+}
+
+.toolbar {
+  padding: 10px;
+  display: flex;
+  flex-direction: row;
+  background-color: #f9f9f9;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+.toolbar .cell {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+.toolbar .shiny-input-container:not(.shiny-input-container-inline) {
+  width: 100% !important;
+  display: flex !important;
+}
+
+.toolbar .html-fill-item .html-fill-container {
+  display: inline-block !important;
+}
+
+.toolbar .form-group.shiny-input-container.html-fill-item.html-fill-container {
+  display: inline-block;
+}
+
+.toolbar .form-label, .shiny-input-container .control-label {
+  margin-bottom: .5rem;
+  width: min-content;
+  white-space: nowrap;
+  margin-right: 10px;
+}
+
+.toolbar .selectize-control {
+  margin-right: 25px;
+}

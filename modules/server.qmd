@@ -133,7 +133,7 @@ sg_limit <- reactive({
   if (is.null(width)) {
     width <- 1100
   }
-  maxw <- floor(width/200)
+  maxw <- floor(width/180)
   maxw * 5
 })
 
@@ -177,7 +177,7 @@ output$species_gallery <- renderUI({
       })
 
       htmltools::div(
-        generate_gallery(gallery_sp_list()[1:sg_limit()], "data/proc_images.txt", max_image_height = "250px", max_image_width = "200px", image_gap = "0.1em"),
+        generate_gallery(gallery_sp_list()[1:sg_limit()], "data/proc_images.txt", max_image_height = "250px", max_image_width = "180px", image_gap = "0.1em"),
         layout_column_wrap(id = "gallery-placeholder", width = "200px", gap = "0.1em", fixed_width = TRUE, heights_equal = "row",
       !!!placeholders),
         htmltools::tags$script(
