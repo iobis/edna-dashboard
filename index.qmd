@@ -17,11 +17,9 @@ include-in-header:
 mainfont: Mulish
 server: shiny
 ---
-<!-- Header block -->
-::: {id="title-header"}
-<a href="#" id="home-link">eDNA expeditions</a>
 
-:::
+<!-- Header block -->
+<div id="title-header"><img class="me-3" src="www/logos/ioc_white_small.png" /><a href="#" id="home-link">eDNA Expeditions</a></div>
 
 ``` {r include=FALSE}
 suppressPackageStartupMessages(library(shiny))
