@@ -72,7 +72,7 @@ species_context_info <- readRDS("data/fishbase.rds")
 
 general_description <- jsonlite::read_json("data/general_description.json")
 
-sites_shape <- sf::read_sf("https://samples.ednaexpeditions.org/sites.geojson")
+sites_shape <- sf::read_sf("data/supporting_data/sites.geojson")
 
 climate_species <- open_dataset("data/species_sites_risk_full.parquet")
 mdebug("server start done")
