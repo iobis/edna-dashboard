@@ -364,11 +364,47 @@ wd <- waiter::Waiter$new(
   )
 )
 
-output$tax_bar_plot <- renderPlot({
+output$tax_bar_plot <- renderUI({
   req(input$higherGeography != "")
- #taxbarplot()  
- make_image_taxonomy(occurrence_ds, input$higherGeography, input$taxonLevelDiversity, input$plotType)}, height=400
-)
+  itax <- make_image_taxonomy(occurrence_ds, input$higherGeography, input$taxonLevelDiversity, input$plotType)
+
+  width <- input$dimension[1]
+  if (is.null(width)) {
+    width <- 1100
+  }
+
+  if (width < 768) {
+    page_card <- bslib::card(
+      height = 500, full_screen = T,
+      bslib::card_body(
+        htmltools::span("Best viewed in landscape mode", style = "font-size: small; color: #949494"),
+        plotOutput("tax_bar_plot_internal"),
+        class = "p-0"
+      )
+    )
+    output$tax_bar_plot_internal <- renderPlot({itax}, height = "auto")
+  } else {
+    itax <- plotly::ggplotly(
+      itax + theme(axis.text.x = element_text(angle = 90))
+    ) %>%
+      plotly::layout(legend=list(x=0, 
+                                 xanchor='left',
+                                 yanchor='bottom',
+                                 ypad = 0,
+                                 y = -0.5,
+                                 orientation='h'))
+    page_card <- plotly::plotlyOutput("tax_bar_plot_internal", height = "500px")
+    output$tax_bar_plot_internal <- plotly::renderPlotly({itax})
+  }
+  
+  page_card
+})
+
+# output$tax_bar_plot <- renderPlot({
+#   req(input$higherGeography != "")
+#  #taxbarplot()  
+#  make_image_taxonomy(occurrence_ds, input$higherGeography, input$taxonLevelDiversity, input$plotType)}, height=400
+# )
 
 # Diversity metrics
 divplots <- reactive({
