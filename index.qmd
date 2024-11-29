@@ -178,7 +178,7 @@ htmltools::div(
 <img src="www/logos/flanders.png" />
 </div>
 <div class="g-col-7">
-<p>Environmental DNA Expeditions is a global, citizen science initiative that will help measure marine biodiversity, and the impacts climate change might have on the distribution patterns of marine life, across UNESCO World Heritage marine sites. eDNA Expeditions is a three year project funded by the Flanders Government, through the Flanders UNESCO Trust Fund (FUST) for the support of UNESCO's activities in the field of Science</p>
+<p>eDNA Expeditions is a global, citizen science initiative that will help measure marine biodiversity, and the impacts climate change might have on the distribution patterns of marine life, across UNESCO World Heritage marine sites. The UNESCO eDNA Expeditions is a three year project (2022-2024) funded by the Flanders Government, through the Flanders UNESCO Science Trust Fund (FUST) and the General Trust Fund (FUT).</p>
 </div>
 </div>
 </div>
