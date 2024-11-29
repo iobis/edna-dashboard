@@ -275,7 +275,7 @@ colnames(redlist)[1] <- "scientificName"
 
 occurrence <- occurrence %>% left_join(redlist)
 occurrence <- occurrence %>%
-    select(scientificName, group, category)
+    select(scientificName, phylum, class, group, category)
 
 sites_species_risk_f <- left_join(sites_species_risk, occurrence)
 
@@ -307,7 +307,7 @@ sites_species_risk_f$habitat[is.na(sites_species_risk_f$habitat)] <- "Not availa
 
 shallow_sp <- sites_species_risk_f %>%
     filter(habitat %in% c("Shallow", "Not available")) %>%
-    select(scientificName, higherGeography, contains("depthsurf"), sp_limit = limit_dsurf,
+    select(scientificName, phylum, class, higherGeography, contains("depthsurf"), sp_limit = limit_dsurf,
            group, category, habitat)
 colnames(shallow_sp) <- gsub("_mean", "", gsub("_depthsurf", "", colnames(shallow_sp)))
 

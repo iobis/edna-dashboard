@@ -7,11 +7,13 @@ observe({
 
     climate_filt <- climate_species %>%
         select(
-            Species = scientificName, higherGeography, Depth = habitat, `Upper limit` = sp_limit,
+            Species = scientificName, higherGeography, Phylum = phylum, Class = class,
+            Depth = habitat, `Upper limit` = sp_limit,
             Current = baseline, SSP1 = ssp126_dec100,
             SSP2 = ssp245_dec100, SSP3 = ssp370_dec100, group, category
         ) %>%
         filter(higherGeography == input$higherGeography) %>%
+        select(-higherGeography) %>%
         collect() %>% ungroup() %>%
         filter(!is.na(Current))
 
@@ -83,12 +85,13 @@ output$climate_thermal_risk <- reactable::renderReactable({
 
     reactable(dat, columns = list(
         Species = colDef(style = list(fontStyle = "italic"), searchable = T),
+        `Upper limit` = colDef(minWidth = 95, maxWidth = 105),
         Depth = colDef(style = colfun2, minWidth = 70, maxWidth = 80, searchable = T),
         SSP1 = colDef(style = colfun, minWidth = 70, maxWidth = 80),
         SSP2 = colDef(style = colfun, minWidth = 70, maxWidth = 80),
         SSP3 = colDef(style = colfun, minWidth = 70, maxWidth = 80),
         Current = colDef(style = colfun, minWidth = 80, maxWidth = 90)
-    ), searchable = TRUE)
+    ), filterable = TRUE)
 }) %>%
     bindEvent(climate_vals$main)
 
