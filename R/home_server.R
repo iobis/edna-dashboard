@@ -4,7 +4,7 @@
 output$mainMap <- renderLeaflet({
   sites_shape <- sites_shape[sites_shape$name %in% localities$parent_area_name,]
   leaflet(width = "100%") %>%
-   addTiles(urlTemplate = "https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png") %>%
+   addTiles(urlTemplate = "https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png") %>%
    addPolygons(stroke = TRUE, color = "#efa16e", weight = 1, opacity = 0.6, fill = TRUE,
     label = ~name, data = sites_shape, layerId = ~name) %>%
    addMarkers(~lon, ~lat, popup = ~as.character(popup_name), label = ~as.character(popup_name),
