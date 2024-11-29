@@ -308,11 +308,6 @@ observe({
 observe({
   proxy <- leafletProxy("mainMap")
   
-  sel_loc <- localities[localities$parent_area_name == input$higherGeography,]
-  sel_loc <- sel_loc[!is.na(sel_loc$lon) & !is.na(sel_loc$lat),]
-  
-  if (nrow(sel_loc) > 0) {
-    proxy %>% setView(0, 0, zoom = 2)
-  }
+  proxy %>% setView(0, 0, zoom = 2)
 }) %>%
   bindEvent(input$homeTrigger, ignoreInit = T)
