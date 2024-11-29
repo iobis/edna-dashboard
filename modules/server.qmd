@@ -1,3 +1,8 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
 <!-- Done just when the server start, shared across users-->
 ```{r}
 #| context: server-start
@@ -416,16 +421,44 @@ output$samples_table <- renderReactable({
     samples %>% filter(site == input$higherGeography) %>% select(-site) %>% arrange(name),
     pagination = FALSE,
     showPagination = FALSE,
-    defaultPageSize = 10000
+    defaultPageSize = 10000,
+    columns = list(
+      name = colDef(name = "identifier", width = 100),
+      volume = colDef(name = "volume (mL)", width = 120),
+      concentration = colDef(name = "concentration (ng/\u00b5l)"),
+      date = colDef(
+        name = "date",
+        width = 140,
+        cell = function(value) {
+          substr(value, 1, 10)
+        }
+      ),
+      blank = colDef(
+        name = "blank?",
+        width = 80,
+        cell = function(value) {
+          if (value) {
+            "\u2713"
+          } else {
+            ""
+          }
+        },
+        align = "center"
+      )
+    )
   )
 })
 
 output$concentration_plot <- plotly::renderPlotly({
   plotly::ggplotly(
     ggplot() +
-      geom_point(data = samples %>% filter(site == input$higherGeography), aes(x = blank, y = concentration, color = blank)) +
+      geom_point(data = samples %>% filter(site == input$higherGeography), aes(x = blank, y = concentration, color = blank), shape = 21, size = 3) +
       theme_classic() +
-      scale_color_brewer(palette = "Blues", direction = -1)
+      theme(legend.position = "none") +
+      scale_color_brewer(palette = "Dark2", direction = 1) +
+      scale_x_discrete(labels = c("FALSE" = "sample", "TRUE" = "blank")) +
+      ylab("DNA concentration (ng/\u00b5l)") +
+      xlab(FALSE)
   )
 })
 
