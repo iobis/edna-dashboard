@@ -94,7 +94,7 @@ make_image_taxonomy <- function(occurrence, site, taxonLevel, plot_type) {
     ungroup()
   
   ggplot(data = df_modified, aes(y = reads, x = materialSampleID, fill = taxonLevel), color = "gray") +
-      geom_bar(stat = "identity", color = "gray") + 
+      geom_bar(stat = "identity", color = "gray", linewidth = 0.2) + 
       facet_grid(~locationID, scales = 'free_x', space = "free")+
       theme_minimal() + 
       guides(fill = guide_legend(title=taxonLevel))+
