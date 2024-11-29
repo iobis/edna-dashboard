@@ -3,7 +3,7 @@
 ```{r}
 
 selectInput("groupClimate", "Group:", groups_names)
-selectInput("iucnClimate", "IUCN category:", iucn_names)
+selectInput("iucnClimate", "IUCN Red List Category:", iucn_names)
 
 ```
 

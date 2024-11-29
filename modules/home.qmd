@@ -4,6 +4,7 @@ suppressPackageStartupMessages(library(leaflet))
 suppressPackageStartupMessages(library(dplyr))
 suppressPackageStartupMessages(library(DT))
 suppressPackageStartupMessages(library(reactable))
+source("R/iucn.R")
 
 # Load json
 sites <- jsonlite::read_json("https://raw.githubusercontent.com/iobis/edna-tracker-data/data/generated.json")
@@ -26,12 +27,6 @@ alpha_measure <- c("Observed", "Chao1", "Shannon", "Simpson")
 beta_measure <- c("bray", "jaccard")
 
 plot_type<-c("relative abundance", "reads")
-
-#iucn <- read.csv("data/supporting_data/redlist.csv")
-#iucn_names <- c("all species", unique(iucn$category))
-iucn_names <- c("all species", "CR", "EN", "VU", "NT", "LC", "DD")
-#show_primers<-c(FALSE, TRUE)
-
 ```
 
 <!-- This goes on top of the page after navbar - map-->

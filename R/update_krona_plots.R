@@ -1,4 +1,7 @@
 source("R/taxonomy_figures.R")
 source("R/occurrence.R")
 
-read_occurrence_data() |> make_krona_plot()
+message("Updating Krona plots...")
+
+read_occurrence_data() |>
+  make_krona_plot()
