@@ -44,6 +44,7 @@ $(document).ready(function () {
         overlay.style.justifyContent = 'center'; 
         overlay.style.color = 'black'; 
         overlay.style.fontSize = '24px'; 
+        overlay.style.textAlign = 'center';
 
         // Add content to the overlay
         overlay.innerHTML = '<br><br>Select a site to start at the top of this page.';

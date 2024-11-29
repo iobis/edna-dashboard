@@ -34,7 +34,7 @@ plotOutput("tax_bar_plot")
 
 ::: {.grid}
 
-::: {.g-col-1 .g-col-md-6}
+::: {.g-col-12 .g-col-md-6}
 
 #### Alpha diversity: How diverse are the samples in relation to each other?
 
@@ -48,7 +48,7 @@ plotly::plotlyOutput("alpha_plot")
 
 :::
 
-::: {.g-col-1 .g-col-md-6}
+::: {.g-col-12 .g-col-md-6}
 
 #### Beta diversity: How does the diversity compare across samples?
 

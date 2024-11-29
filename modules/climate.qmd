@@ -11,7 +11,7 @@ selectInput("iucnClimate", "IUCN Red List Category:", iucn_names)
 
 ::: {.grid}
 
-::: {.g-col-1 .g-col-md-6}
+::: {.g-col-12 .g-col-md-6}
 
 #### Number of species in thermal risk
 
@@ -22,7 +22,7 @@ shiny::plotOutput("climate_number_species")
 
 :::
 
-::: {.g-col-1 .g-col-md-6}
+::: {.g-col-12 .g-col-md-6}
 
 #### Temperature at sites
 
@@ -33,8 +33,7 @@ layout_column_wrap(
   width = 1,
   heights_equal = "row",
   div(htmltools::tags$span(
-      bslib::input_switch("spi_clim_anomaly", "Anomaly", FALSE), 
-      bslib::input_switch("spi_clim_surf", "Bottom temperature", FALSE)), id = "climate-sites-add-control"),
+      bslib::input_switch("spi_clim_anomaly", "Anomaly", FALSE)), id = "climate-sites-add-control"),
   div(dygraphs::dygraphOutput("climate_temperature_sites"))
 )
 ```
