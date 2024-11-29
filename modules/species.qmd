@@ -5,7 +5,7 @@
 
 selectInput("group", "Group:", groups_names)
 
-selectInput("iucn", "IUCN category:", iucn_names)
+selectInput("iucn", "IUCN Red List Category:", iucn_names)
 
 ```
 

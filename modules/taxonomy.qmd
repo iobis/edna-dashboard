@@ -3,7 +3,7 @@
 
 #### Taxonomic composition across samples
 
-This table shows all species that were identified from the site, ordered by abundance. You can search on the different taxonomic levels, species names, samples or locations. For more information on each species check out the species tab!
+This table shows all species that were identified from the site across all samples, ordered by number of **reads**. You can search on the different taxonomic levels, species names, samples, **locations, target gene and reads**. For more information on each species check out the species tab!
 
 ```{r}
 #| title: All annotated names at the site

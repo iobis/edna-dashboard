@@ -5,6 +5,8 @@ library(glue)
 # Order species names based on abundance
 generate_ordered_species_list_bySite <- function(site, occurrence, selected_group, selected_iucn) {
 
+  selected_iucn <- sub(":.*$", "", selected_iucn)
+  
   # Add categories for further filtering
   groups=read.csv("data/supporting_data/groups.csv")
   group_lookup <- setNames(groups$group, paste(groups$rank, groups$taxon, sep = "_"))

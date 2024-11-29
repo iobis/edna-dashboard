@@ -9,9 +9,9 @@ selectInput("plotType", "Abundance:", plot_type)
 
 :::
 
-#### Taxonomic composition across samples
+#### Diversity metrics
 
-This figure shows the number of sequences (also called reads) in each sample after filtering for quality control, both as absolute numbers as well in relative abundance of the total reads. All sequences that received names are colored, the grey area therefore shows reads that were not assigned a taxonomy. You can toggle the taxonomic level that is shown. At each taxonomic level the 10 most common names receive a distinct color. Clear contaminations from humans, bacteria (and other prokaryotes), fungi and domestic animals have been removed prior to the analysis, and the calculation of relative abundance.  
+This figure shows the number of sequences (also called reads) in each sample after filtering for quality control, both as absolute numbers as well in relative abundance of the total reads. All sequences that received names are colored, the grey area therefore shows reads that could not be resolved to a taxonomic name. You can toggle the taxonomic level that is shown. At each taxonomic level the top 10 most observed taxa receive a distinct color. Note that contaminations from humans, bacteria (and other prokaryotes), fungi and domestic animals have been removed prior to the analysis.  
 
 ```{r}
 #| title: Taxonomic composition of all samples across the site

@@ -32,5 +32,5 @@ species_gallery_modal <- function(species_name, species_link_1, species_link_2,
     )
 
     shiny::modalDialog(grid, size = "xl",
-        easyClose = T, footer = shiny::modalButton("Close"))
+        easyClose = FALSE, footer = shiny::modalButton("Close"))
 }
