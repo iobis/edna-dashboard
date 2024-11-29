@@ -30,6 +30,7 @@ sites_info <- read.table("data/sites_description.txt", header=T)
 #occurrence <- read_occurrence_data()
 
 message("Opening occurrence dataset...")
+verify_occurrence()
 occurrence_ds <- open_dataset("data/output/occurrence.parquet")
 
 unique_sp_codes <- occurrence_ds %>%
