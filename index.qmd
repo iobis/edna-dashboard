@@ -75,8 +75,8 @@ htmltools::span(
   htmltools::span(
     textOutput("whs_front_code"),
     style = "display: flex; font-weight: bold; font-color: #cccccc;"
-  ), htmltools::HTML("&nbsp;"), htmlOutput("whs_front_website"), style = "display: flex; margin-right: 10px;"
-), style = "display: flex; justify-content: space-between; align-items: center;")
+  ), htmltools::HTML("&nbsp;"), htmlOutput("whs_front_website"),  class = "tab-post-map-add"
+), class = "tab-post-map")
 ```
 :::
 
@@ -172,11 +172,11 @@ htmltools::div(
 
 <div id="footer-tab">
 <div class="grid">
-<div class="g-col-5" id="logos">
+<div class="g-col-12 g-col-md-5" id="logos">
 <img src="www/logos/ioc.png" />
 <img src="www/logos/flanders.png" />
 </div>
-<div class="g-col-7">
+<div class="g-col-12 g-col-md-7">
 <p>eDNA Expeditions is a global, citizen science initiative that will help measure marine biodiversity, and the impacts climate change might have on the distribution patterns of marine life, across UNESCO World Heritage marine sites. The UNESCO eDNA Expeditions is a three year project (2022-2024) funded by the Flanders Government, through the Flanders UNESCO Science Trust Fund (FUST) and the General Trust Fund (FUT).</p>
 </div>
 </div>
