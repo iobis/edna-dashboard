@@ -46,7 +46,7 @@ $(document).ready(function () {
         overlay.style.fontSize = '24px'; 
 
         // Add content to the overlay
-        overlay.innerHTML = '<br><br>Select a site to start.';
+        overlay.innerHTML = '<br><br>Select a site to start at the top of this page.';
 
         // Append the overlay to the parent div
         document.getElementById('tabset-inside').appendChild(overlay);
