@@ -11,9 +11,11 @@ selectInput("iucnClimate", "IUCN Red List Category:", iucn_names)
 
 ::: {.grid}
 
-::: {.g-col-1 .g-col-md-6}
+::: {.g-col-12 .g-col-md-6}
 
 #### Number of species in thermal risk
+
+The graph shows the number of species at thermal risk for this site under current conditions and three future SSP (shared socio-economic pathways) climate scenarios for 2100. Thermal risk occurs when the site's temperature exceeds a species' thermal limit, defined as the 95th percentile of temperatures where the species has been recorded. Some species, especially in tropical areas, may already exceed this limit. While not indicating local extinction, thermal risk indicates stressful conditions to the organism that may affect its survival.
 
 ```{r}
 #| title: Number of species at climate risk
@@ -22,9 +24,12 @@ shiny::plotOutput("climate_number_species")
 
 :::
 
-::: {.g-col-1 .g-col-md-6}
+::: {.g-col-12 .g-col-md-6}
 
 #### Temperature at sites
+
+The graph shows monthly sea temperature trends for different sites, with an option to display data as anomalies compared to a baseline. Each line represents a site, showing seasonal changes and differences between locations. When using anomalies, the graph highlights periods that are warmer or cooler than usual. This helps to understand temperature patterns and possible climate impacts at each site. 
+<br><br>
 
 ```{r}
 #| title: Temperature at sites
@@ -33,8 +38,13 @@ layout_column_wrap(
   width = 1,
   heights_equal = "row",
   div(htmltools::tags$span(
-      bslib::input_switch("spi_clim_anomaly", "Anomaly", FALSE), 
-      bslib::input_switch("spi_clim_surf", "Bottom temperature", FALSE)), id = "climate-sites-add-control"),
+      bslib::input_switch("spi_clim_anomaly", 
+      htmltools::span(
+        "Show anomaly ",
+        bslib::tooltip(bsicons::bs_icon("info-circle"),
+  "Anomaly is the difference of temperature between that particular point in time and the average across the whole period.")
+      )
+      , FALSE)), id = "climate-sites-add-control"),
   div(dygraphs::dygraphOutput("climate_temperature_sites"))
 )
 ```
@@ -42,10 +52,12 @@ layout_column_wrap(
 :::
 :::
 
+-----
+
 #### Species thermal risk
 
 ::: {.callout-note appearance="simple" title="Attention" icon=false}
-The following table indicates species that are potentially at thermal risk on the site, considering its current thermal limit. Note that, because on the recent period we have never experienced such high temperatures on the sea as predicted for the future, we do not know exactly how tropical species (that are living close to the upper limits) will actually react to those new temperatures.
+The following table highlights species that may face thermal risk at the site, based on their current thermal limits. It is important to note that, since sea temperatures in the recent past have not reached the high levels projected for the future, there is uncertainty about how tropical species—already living near their upper thermal limits—will respond to these new conditions.
 :::
 
 ```{r}
@@ -54,6 +66,8 @@ The following table indicates species that are potentially at thermal risk on th
 reactable::reactableOutput("climate_thermal_risk")
 ```
 
-Values on the current and SSP columns is the difference between the site temperature and the species thermal limit. Cells in <span style="color: #d9905f; font-weight: bold;">orange</span> (positive values) are above the thermal limit (thus, at risk), while those in <span style="color: #a3c2de; font-weight: bold;">blue</span> (negative values) are below the thermal limit.
+<br>
 
-_Depth_ refers to the primary depth zone where the species reside. <span style="color: #675292; font-weight: bold;">S</span> stands for "sea surface" and applies to depths of up to 200m. <span style="color: #b69354; font-weight: bold;">NS</span>  means "not limited to surface" and refers to species that can inhabit areas deeper than 200m. In this case, the sea temperature at the bottom is used to infer the species' thermal limits. <span style="color: #868686; font-weight: bold;">NA</span> indicates "information not available," meaning there is no database information specifying the depth where the species reside. In such cases, the sea surface temperature is used.
+The values in the "Current" and "SSP" columns represent the difference between the site temperature and the species' thermal limit (in degrees celsius). Cells highlighted in <span style="color: #d9905f; font-weight: bold;">orange</span> (positive values) indicate that site temperatures are above the thermal limit (indicating risk), while cells in <span style="color: #a3c2de; font-weight: bold;">blue</span> (negative values) represent site temperatures below the thermal limit for that species.
+
+_Depth_ refers to the primary depth zone where the species are found. <span style="color: #675292; font-weight: bold;">S</span> stands for "sea surface" and applies to depths up to 200m. <span style="color: #b69354; font-weight: bold;">NS</span> means "not limited to surface" and refers to species that can inhabit areas deeper than 200m. In such cases, the global sea temperature at the bottom is used to assess the species' thermal limits. <span style="color: #868686; font-weight: bold;">NA</span> indicates "information not available," meaning there is no database information specifying the species' depth range. For these cases, the sea surface temperature is used.

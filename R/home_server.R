@@ -1,8 +1,8 @@
 # HOME server code
 # Main map ----
-#sites_shape <- sf::read_sf("https://samples.ednaexpeditions.org/sites.geojson") # transfer to start server
 output$mainMap <- renderLeaflet({
   sites_shape <- sites_shape[sites_shape$name %in% localities$parent_area_name,]
+  browser()
   leaflet(width = "100%") %>%
    addTiles(urlTemplate = "https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png") %>%
    addPolygons(stroke = TRUE, color = "#efa16e", weight = 1, opacity = 0.6, fill = TRUE,

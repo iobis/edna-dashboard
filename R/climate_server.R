@@ -58,9 +58,9 @@ output$climate_thermal_risk <- reactable::renderReactable({
 
     colfun <- function(value) {
         if (value < 0) {
-            color <- "#a3c2de"
+            color <- "#c5ddf2"
         } else if (value > 0) {
-            color <- "#d9905f"
+            color <- "#e8c9b4"
         } else {
             color <- "#777"
         }
@@ -124,23 +124,30 @@ output$climate_temperature_sites <- dygraphs::renderDygraph({
 
     dat <- suppressWarnings(data.table::fread("data/climate_historical.txt"))
 
-    if (input$spi_clim_surf) {
-        dat <- dat %>%
-            #filter(grepl(tolower(substr(input$higherGeography, 1, 3)), parent_area_name, ignore.case = T)) %>%
-            filter(parent_area_name == input$higherGeography) %>%
-            mutate(date = as.Date(paste0(year, "-", sprintf("%02d", month), "-01"))) %>%
-            group_by(station, year) %>%
-            summarise(depth_surface = mean(depth_bottom)) %>% 
-            ungroup()
-    } else {
-        dat <- dat %>%
+    # if (input$spi_clim_surf) {
+    #     dat <- dat %>%
+    #         #filter(grepl(tolower(substr(input$higherGeography, 1, 3)), parent_area_name, ignore.case = T)) %>%
+    #         filter(parent_area_name == input$higherGeography) %>%
+    #         mutate(date = as.Date(paste0(year, "-", sprintf("%02d", month), "-01"))) %>%
+    #         group_by(station, year) %>%
+    #         summarise(depth_surface = mean(depth_bottom)) %>% 
+    #         ungroup()
+    # } else {
+    #     dat <- dat %>%
+    #         #filter(grepl(tolower(substr(input$higherGeography, 1, 3)), parent_area_name, ignore.case = T)) %>%
+    #         filter(parent_area_name == input$higherGeography) %>%
+    #         mutate(date = as.Date(paste0(year, "-", sprintf("%02d", month), "-01"))) %>%
+    #         group_by(station, year) %>%
+    #         summarise(depth_surface = mean(depth_surface)) %>% 
+    #         ungroup()
+    # }
+    dat <- dat %>%
             #filter(grepl(tolower(substr(input$higherGeography, 1, 3)), parent_area_name, ignore.case = T)) %>%
             filter(parent_area_name == input$higherGeography) %>%
             mutate(date = as.Date(paste0(year, "-", sprintf("%02d", month), "-01"))) %>%
             group_by(station, year) %>%
             summarise(depth_surface = mean(depth_surface)) %>% 
             ungroup()
-    }
 
     dat <- dat %>% filter(year < 2024) # Remove this year while not complete
 
@@ -194,8 +201,10 @@ output$climate_temperature_sites <- dygraphs::renderDygraph({
             dygraphs::dyOptions(colors = RColorBrewer::brewer.pal(ncol(dat_each), "Set2")) %>%
             dygraphs::dyLegend(width = 500) %>%
             dygraphs::dyAxis(
-                name = "x", axisLabelFormatter = "function(d){ return d.getFullYear() }"
-            )
+                name = "x", axisLabelFormatter = "function(d){ return d.getFullYear() }",
+                label = "Time (monthly)"
+            ) %>%
+            dygraphs::dyAxis(name = "y", label = "Temperature (°C)")
     }
 }) %>%
     bindEvent(input$higherGeography, input$spi_clim_anomaly, input$spi_clim_surf)

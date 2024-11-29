@@ -183,13 +183,23 @@
 
 /* Top selector home page */
 #top-selector-parent {
-  align-items: right;
+  align-content: space-between;
   padding: 20px;
   font-size: 20px;
+  width: auto;
+}
+
+@media (max-width: 768px) { 
+  #top-selector-parent {
+    width: 95%;
+  }
+  #top-selector-new .selectize-control {
+    width: 210px !important;
+}
 }
 
 #top-selector-parent .shiny-input-container:not(.shiny-input-container-inline) {
-  width: 100% !important;
+  width: auto !important;
   display: flex !important;
 }
 
@@ -208,12 +218,6 @@
 
 #top-selector-new .selectize-control {
   width: 300px;
-}
-
-@media (max-width: 768px) { 
-  #top-selector-new .selectize-control {
-    width: 97%;
-  }
 }
 
 #top-selector-new .item {
@@ -255,6 +259,9 @@
   }
   .tab-post-map-add {
     flex-direction: column;
+    width: auto !important;
+    align-items: center;
+    padding-bottom: 20px;
   }
 }
 
@@ -322,6 +329,14 @@
   padding: 30px;
 }
 
+@media (max-width: 768px) {
+  #tabset-container {
+    background-color: #f9f9f9;
+    width: auto;
+    padding: 30px;
+  }
+}
+
 #tabset-inside {
   background-color: white;
   border: #dee2e6 1px solid;
@@ -377,6 +392,12 @@ flex-direction: column;            /* Stack the title and value vertically */
 font-size: 14px;                   /* Small text for title */
 color: #6c757d;                    /* Gray color for title */
 margin-bottom: 5px;                /* Space between title and value */
+}
+
+@media screen and (max-width: 400px) {
+  .vb-title {
+    font-size: 9px;
+  }
 }
 
 .vb-value {
@@ -441,6 +462,12 @@ color: #343a40;                    /* Dark color for value */
 .toolbar .shiny-input-container:not(.shiny-input-container-inline) {
   width: 100% !important;
   display: flex !important;
+}
+
+@media screen and (max-width: 400px) {
+  .toolbar .shiny-input-container:not(.shiny-input-container-inline) {
+    display: block !important;
+}
 }
 
 .toolbar .html-fill-item .html-fill-container {
