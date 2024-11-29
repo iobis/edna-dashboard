@@ -1,21 +1,21 @@
+#### Samples
+
+This is an overview of all samples collected from the sites as well as any negative controls (blanks). Blanks are used to ensure the reliability of the results. They confirm that any detected DNA signal is genuinely from the environmental sample, and help identify potential sources of contamination. Ideally, DNA concentrations in blanks are very low.
+
 ::: {.grid}
 
-::: {.g-col-1 .g-col-md-6}
+::: {.g-col-1 .g-col-md-9}
+```{r}
+reactable::reactableOutput("samples_table")
+```
+:::
 
+::: {.g-col-1 .g-col-md-3}
 <div style="height: 400px;">
 ```{r}
 plotly::plotlyOutput("concentration_plot")
 ```
 </div>
-
-:::
-
-::: {.g-col-1 .g-col-md-6}
-
-```{r}
-reactable::reactableOutput("samples_table")
-```
-
 :::
 
 :::
