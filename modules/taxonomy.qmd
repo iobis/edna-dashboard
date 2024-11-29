@@ -1,8 +1,6 @@
 
 ### Taxonomic composition
 
-#### Taxonomic composition across samples
-
 This table shows all species that were identified from the site across all samples, ordered by number of **reads**. You can search on the different taxonomic levels, species names, samples, **locations, target gene and reads**. For more information on each species check out the species tab!
 
 ```{r}
@@ -11,6 +9,9 @@ This table shows all species that were identified from the site across all sampl
 reactable::reactableOutput("rtable")
 ```
 
+### Taxonomic piechart 
+
+This image shows the taxonomic composition of the DNA sample as a piechart. You can see which portion of the DNA sequences were identified. By clicking on the image you can browse all different taxonomic groups and levels, to see how prevalent they were in the sample, including higher taxonomic levels. 
 
 ```{r}
 htmlOutput("krona_plot")
