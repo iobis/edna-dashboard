@@ -58,9 +58,9 @@ output$climate_thermal_risk <- reactable::renderReactable({
 
     colfun <- function(value) {
         if (value < 0) {
-            color <- "#a3c2de"
+            color <- "#c5ddf2"
         } else if (value > 0) {
-            color <- "#d9905f"
+            color <- "#e8c9b4"
         } else {
             color <- "#777"
         }
@@ -201,8 +201,10 @@ output$climate_temperature_sites <- dygraphs::renderDygraph({
             dygraphs::dyOptions(colors = RColorBrewer::brewer.pal(ncol(dat_each), "Set2")) %>%
             dygraphs::dyLegend(width = 500) %>%
             dygraphs::dyAxis(
-                name = "x", axisLabelFormatter = "function(d){ return d.getFullYear() }"
-            )
+                name = "x", axisLabelFormatter = "function(d){ return d.getFullYear() }",
+                label = "Time (monthly)"
+            ) %>%
+            dygraphs::dyAxis(name = "y", label = "Temperature (°C)")
     }
 }) %>%
     bindEvent(input$higherGeography, input$spi_clim_anomaly, input$spi_clim_surf)

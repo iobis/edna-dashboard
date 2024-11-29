@@ -11,6 +11,7 @@ options(timeout = 15)
 for (i in 1:nrow(images)) {
     cat("Processing image", i, "out of", nrow(images), "\n")
     tf <- images[i,]
+    if (tf$image_url == "") next
     if (tools::file_ext(tf$image_url) %in% c("jpeg", "jpg", "png")) {
         tf_out <- paste0(gsub(" ", "_", tolower(tf$species)), ".webp")
     } else {
@@ -26,7 +27,7 @@ for (i in 1:nrow(images)) {
                 } else {
                     img <- png::readPNG(timg)
                 }
-                conv <- try(webp::write_webp(img, file.path("images/gallery", tf_out)))
+                conv <- try(webp::write_webp(img, file.path("images/gallery", tf_out)), silent = T)
                 if (inherits(conv, "try-error")) {
                     file.copy(timg, gsub("webp", tools::file_ext(tf$image_url), file.path("images/gallery", tf_out)))
                 }

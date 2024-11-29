@@ -16,7 +16,7 @@ This figure shows the number of sequences (also called reads) in each sample aft
 ```{r}
 #| title: Taxonomic composition of all samples across the site
 
-plotOutput("tax_bar_plot")
+uiOutput("tax_bar_plot", style = "height: 500px;")
 ```
 
 ------
