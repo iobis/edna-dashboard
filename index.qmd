@@ -28,6 +28,7 @@ suppressPackageStartupMessages(library(dplyr))
 suppressPackageStartupMessages(library(DT))
 suppressPackageStartupMessages(library(reactable))
 suppressPackageStartupMessages(library(bslib))
+source("R/iucn.R")
 
 # Load json
 sites <- jsonlite::read_json("https://raw.githubusercontent.com/iobis/edna-tracker-data/data/generated.json")
@@ -50,8 +51,6 @@ alpha_measure <- c("Observed", "Chao1", "Shannon", "Simpson")
 beta_measure <- c("bray", "jaccard")
 
 plot_type<-c("relative abundance", "reads")
-
-iucn_names <- c("all species", "CR", "EN", "VU", "NT", "LC", "DD")
 ```
 
 ``` {r}
