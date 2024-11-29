@@ -153,6 +153,9 @@ images_size <- reactive({
       break
     }
   }
+  if (best_size == 0) {
+    best_size <- 230
+  }
 
   best_size - 2
 })

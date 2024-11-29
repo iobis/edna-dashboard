@@ -124,23 +124,30 @@ output$climate_temperature_sites <- dygraphs::renderDygraph({
 
     dat <- suppressWarnings(data.table::fread("data/climate_historical.txt"))
 
-    if (input$spi_clim_surf) {
-        dat <- dat %>%
-            #filter(grepl(tolower(substr(input$higherGeography, 1, 3)), parent_area_name, ignore.case = T)) %>%
-            filter(parent_area_name == input$higherGeography) %>%
-            mutate(date = as.Date(paste0(year, "-", sprintf("%02d", month), "-01"))) %>%
-            group_by(station, year) %>%
-            summarise(depth_surface = mean(depth_bottom)) %>% 
-            ungroup()
-    } else {
-        dat <- dat %>%
+    # if (input$spi_clim_surf) {
+    #     dat <- dat %>%
+    #         #filter(grepl(tolower(substr(input$higherGeography, 1, 3)), parent_area_name, ignore.case = T)) %>%
+    #         filter(parent_area_name == input$higherGeography) %>%
+    #         mutate(date = as.Date(paste0(year, "-", sprintf("%02d", month), "-01"))) %>%
+    #         group_by(station, year) %>%
+    #         summarise(depth_surface = mean(depth_bottom)) %>% 
+    #         ungroup()
+    # } else {
+    #     dat <- dat %>%
+    #         #filter(grepl(tolower(substr(input$higherGeography, 1, 3)), parent_area_name, ignore.case = T)) %>%
+    #         filter(parent_area_name == input$higherGeography) %>%
+    #         mutate(date = as.Date(paste0(year, "-", sprintf("%02d", month), "-01"))) %>%
+    #         group_by(station, year) %>%
+    #         summarise(depth_surface = mean(depth_surface)) %>% 
+    #         ungroup()
+    # }
+    dat <- dat %>%
             #filter(grepl(tolower(substr(input$higherGeography, 1, 3)), parent_area_name, ignore.case = T)) %>%
             filter(parent_area_name == input$higherGeography) %>%
             mutate(date = as.Date(paste0(year, "-", sprintf("%02d", month), "-01"))) %>%
             group_by(station, year) %>%
             summarise(depth_surface = mean(depth_surface)) %>% 
             ungroup()
-    }
 
     dat <- dat %>% filter(year < 2024) # Remove this year while not complete
 

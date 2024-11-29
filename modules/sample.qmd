@@ -1,6 +1,6 @@
 ::: {.grid}
 
-::: {.g-col-1 .g-col-md-6}
+::: {.g-col-12 .g-col-md-6}
 
 <div style="height: 400px;">
 ```{r}
@@ -10,7 +10,7 @@ plotly::plotlyOutput("concentration_plot")
 
 :::
 
-::: {.g-col-1 .g-col-md-6}
+::: {.g-col-12 .g-col-md-6}
 
 ```{r}
 reactable::reactableOutput("samples_table")
