@@ -30,13 +30,16 @@ convert_occurrence_data <- function() {
   return(occurrence)
 }
 
+verify_occurrence <- function() {
+  if (!file.exists("data/output/occurrence.parquet")) {
+    convert_occurrence_data()  
+  }
+}
+
 #' Reads the full occurrence dataset from parquet, converts TSV to parquet if the parquet file does not exist.
 read_occurrence_data <- function() {
   message("Reading occurrence data from parquet...")
-  if (!file.exists("data/output/occurrence.parquet")) {
-    occurrence <- convert_occurrence_data()  
-  } else {
-    occurrence <- read_parquet("data/output/occurrence.parquet")
-  }
+  verify_occurrence()
+  occurrence <- read_parquet("data/output/occurrence.parquet")
   return(occurrence)
 }
