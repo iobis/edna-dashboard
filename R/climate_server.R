@@ -55,6 +55,8 @@ observe({
 })
 
 output$climate_thermal_risk <- reactable::renderReactable({
+    req(input$higherGeography != "")
+
     dat <- climate_vals$main
     dat[, c("Current", "SSP1", "SSP2", "SSP3")] <- round(dat[, c("Current", "SSP1", "SSP2", "SSP3")], 2)
 
@@ -110,6 +112,8 @@ output$climate_thermal_risk <- reactable::renderReactable({
 #     theme_light() + theme(legend.position = "none")
 
 output$climate_number_species <- shiny::renderPlot({
+    req(input$higherGeography != "")
+    
     require(ggplot2)
     ggplot(climate_vals$status$data) +
         geom_bar(aes(x = Scenario, fill = Scenario, y = `Number of species`), stat = "identity") +

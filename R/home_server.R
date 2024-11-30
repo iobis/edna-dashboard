@@ -275,6 +275,8 @@ observe({
 
 
 observe({
+  req(input$higherGeography != "")
+  
   proxy <- leafletProxy("mainMap")
 
   # sel_loc <- localities[localities$parent_area_name == input$higherGeography,]
