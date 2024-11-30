@@ -1,6 +1,10 @@
 # Taxonomy tab server component
 taxon_table <- reactive({ 
-  make_table_taxonomy(occurrence_ds, input$higherGeography)
+  if (input$higherGeography == "") {
+    data.frame(matrix(ncol = 2, nrow = 0))
+  } else {
+    make_table_taxonomy(occurrence_ds, input$higherGeography)
+  }
 })
 
 output$rtable <- renderReactable({

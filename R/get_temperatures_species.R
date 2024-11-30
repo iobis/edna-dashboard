@@ -201,7 +201,7 @@ write_parquet(results_batch, file.path(datafolder, "species_thermal_lims.parquet
 # Get temperature on sites on all scenarios ------
 # sites <- jsonlite::read_json("https://raw.githubusercontent.com/iobis/edna-tracker-data/data/generated.json")
 # sites_samples <- sites$samples %>% bind_rows()
-sites_shape <- sf::read_sf("https://samples.ednaexpeditions.org/sites.geojson")
+sites_shape <- sf::read_sf("data/supporting_data/sites.geojson")
 sites_shape <- terra::vect(sites_shape)
 
 sites_values <- terra::extract(c(surface, bottom), sites_shape, fun = mean, na.rm = T)
@@ -275,7 +275,7 @@ colnames(redlist)[1] <- "scientificName"
 
 occurrence <- occurrence %>% left_join(redlist)
 occurrence <- occurrence %>%
-    select(scientificName, group, category)
+    select(scientificName, phylum, class, group, category)
 
 sites_species_risk_f <- left_join(sites_species_risk, occurrence)
 
@@ -307,7 +307,7 @@ sites_species_risk_f$habitat[is.na(sites_species_risk_f$habitat)] <- "Not availa
 
 shallow_sp <- sites_species_risk_f %>%
     filter(habitat %in% c("Shallow", "Not available")) %>%
-    select(scientificName, higherGeography, contains("depthsurf"), sp_limit = limit_dsurf,
+    select(scientificName, phylum, class, higherGeography, contains("depthsurf"), sp_limit = limit_dsurf,
            group, category, habitat)
 colnames(shallow_sp) <- gsub("_mean", "", gsub("_depthsurf", "", colnames(shallow_sp)))
 

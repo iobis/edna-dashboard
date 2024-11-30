@@ -13,7 +13,7 @@ selectInput("iucnClimate", "IUCN Red List Category:", iucn_names)
 
 ::: {.g-col-12 .g-col-md-6}
 
-#### Number of species in thermal risk
+#### Number of species at thermal risk
 
 The graph shows the number of species at thermal risk for this site under current conditions and three future SSP (shared socio-economic pathways) climate scenarios for 2100. Thermal risk occurs when the site's temperature exceeds a species' thermal limit, defined as the 95th percentile of temperatures where the species has been recorded. Some species, especially in tropical areas, may already exceed this limit. While not indicating local extinction, thermal risk indicates stressful conditions to the organism that may affect its survival.
 
@@ -26,7 +26,7 @@ shiny::plotOutput("climate_number_species")
 
 ::: {.g-col-12 .g-col-md-6}
 
-#### Temperature at sites
+#### Monthly temperature (degrees Celsius) at the site
 
 The graph shows monthly sea temperature trends for different sites, with an option to display data as anomalies compared to a baseline. Each line represents a site, showing seasonal changes and differences between locations. When using anomalies, the graph highlights periods that are warmer or cooler than usual. This helps to understand temperature patterns and possible climate impacts at each site. 
 <br><br>
@@ -57,7 +57,7 @@ layout_column_wrap(
 #### Species thermal risk
 
 ::: {.callout-note appearance="simple" title="Attention" icon=false}
-The following table highlights species that may face thermal risk at the site, based on their current thermal limits. It is important to note that, since sea temperatures in the recent past have not reached the high levels projected for the future, there is uncertainty about how tropical species—already living near their upper thermal limits—will respond to these new conditions.
+The following table highlights species that are potentially at thermal risk at this site, based on its current thermal limits. It is important to note that, since the region has not yet experienced the extreme sea temperatures predicted for the future, there is uncertainty about how tropical species—already living near their upper thermal limits—will respond to these unprecedented conditions.
 :::
 
 ```{r}
@@ -68,6 +68,16 @@ reactable::reactableOutput("climate_thermal_risk")
 
 <br>
 
-The values in the "Current" and "SSP" columns represent the difference between the site temperature and the species' thermal limit (in degrees celsius). Cells highlighted in <span style="color: #d9905f; font-weight: bold;">orange</span> (positive values) indicate that site temperatures are above the thermal limit (indicating risk), while cells in <span style="color: #a3c2de; font-weight: bold;">blue</span> (negative values) represent site temperatures below the thermal limit for that species.
+The values in the _Current_ and _SSP_ columns represent the temperature difference (in degrees Celsius) between the site temperature and the species' thermal limit. Cells highlighted in <span style="color: #d9905f; font-weight: bold;">orange</span> (positive values) indicate temperatures exceeding the species' thermal limit, placing them at risk. Cells in <span style="color: #a3c2de; font-weight: bold;">blue</span> (negative values) show temperatures below the thermal limit, indicating no immediate thermal risk.
 
-_Depth_ refers to the primary depth zone where the species are found. <span style="color: #675292; font-weight: bold;">S</span> stands for "sea surface" and applies to depths up to 200m. <span style="color: #b69354; font-weight: bold;">NS</span> means "not limited to surface" and refers to species that can inhabit areas deeper than 200m. In such cases, the global sea temperature at the bottom is used to assess the species' thermal limits. <span style="color: #868686; font-weight: bold;">NA</span> indicates "information not available," meaning there is no database information specifying the species' depth range. For these cases, the sea surface temperature is used.
+_Depth_ refers to the primary depth zone where the species reside:
+
+- <span style="color: #675292; font-weight: bold;">S</span> (Sea Surface): Includes depths up to 200 m.  
+- <span style="color: #b69354; font-weight: bold;">NS</span> (Not limited to Surface): Refers to species capable of inhabiting depths greater than 200 m. For these species, bottom sea temperature is used to evaluate thermal limits.  
+- <span style="color: #868686; font-weight: bold;">NA</span> (Not Available): Indicates a lack of database information about the species' depth preference. In such cases, sea surface temperature is used as a proxy.  
+
+The Shared Socioeconomic Pathways (SSPs) describe possible future scenarios based on greenhouse gas emissions and societal development.
+
+- SSP1 (2.6): A "sustainable development" pathway with low emissions, strong international cooperation, and rapid adoption of green technologies. Lower global warming.  
+- SSP2 (4.5): A "middle-of-the-road" scenario with moderate emissions. Society follows current trends, with gradual technological improvements and mixed success in climate policies.  
+- SSP3 (7.0): A "regional rivalry" pathway with high emissions. Countries prioritize self-interest, leading to limited climate action. Higher global warming.  

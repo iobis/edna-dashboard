@@ -7,11 +7,11 @@ $(document).ready(function () {
     function updateGridColumn() {
       if (!mediaQuery.matches) { // Check if the screen size does not match the media query
         if (value == 'main') {
-          console.log(value)
+          //console.log(value)
           document.getElementById("text-column").style.gridColumn = "auto / span 7";
           document.getElementById("stats-column").style.gridColumn = "auto / span 5";
         } else {
-          console.log(value)
+          //console.log(value)
           document.getElementById("text-column").style.gridColumn = "auto / span 6";
           document.getElementById("stats-column").style.gridColumn = "auto / span 6";
         };
@@ -24,9 +24,21 @@ $(document).ready(function () {
 
   // not ready
   $(document).on('shiny:connected', function() {
-    // Check if the input value is 'site'
+    // Activate overlay
     Shiny.addCustomMessageHandler('show_overlay', function(message) {
       if (message == 'show') {
+        // Go back to first tab
+        function activateTab(tabId) {
+          var tabElement = document.getElementById(tabId);
+          
+          if (tabElement) {
+              var tab = new bootstrap.Tab(tabElement);
+              tab.show();
+          }
+        }
+
+        activateTab('tabset-2-1-tab');
+
         // Create the overlay element
         const overlay = document.createElement('div');
         overlay.id = 'tabset-overlay';
