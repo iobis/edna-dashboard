@@ -186,70 +186,78 @@ gallery_sp_list <- reactive({
   bindEvent(species_list()$scientificName)
 
 output$species_gallery <- renderUI({
-    req(length(species_list()$scientificName) > 0 && length(sg_limit()) > 0)
+    #req(length(species_list()$scientificName) > 0 && length(sg_limit()) > 0)
 
-    w$show()
-    on.exit({
-      w$hide()
-    })
-
-    if (length(gallery_sp_list()) > sg_limit()) {
-      last_name <- "placeholder-tag"
-
-      placeholders <- lapply(1:(sg_limit()/5), function(x) {
-        if (x == 1) {
-          card(height = "100%", full_screen = F, id = "placeholder-tag",
-               card_header("Loading...", style = "font-style: italic;"),
-               card_body(tags$img(src = "images/placeholders/general.webp",
-                                  class = "gallery-img"), class= "p-0"),
-               max_height = "250px", class = "loading"
-               )
-        } else {
-          card(height = "100%", full_screen = F,
-               card_header("Loading...", style = "font-style: italic;"),
-               card_body(tags$img(src = "images/placeholders/general.webp",
-                                  class = "gallery-img"), class= "p-0"),
-               max_height = "250px", class = "loading"
-               )
-        }
+    if (input$higherGeography == "") {
+      session$sendCustomMessage("second_gallery", "")
+      htmltools::tags$br()
+    } else if (length(species_list()$scientificName) > 0 && length(sg_limit()) > 0) {
+      w$show()
+      on.exit({
+        w$hide()
       })
 
-      htmltools::div(
-        generate_gallery(gallery_sp_list()[1:sg_limit()], "data/proc_images.txt", max_image_height = "250px", max_image_width = paste0(images_size(), "px"), image_gap = "0.1em"),
-        layout_column_wrap(id = "gallery-placeholder", width = paste0(images_size(), "px"), gap = "0.1em", fixed_width = TRUE, heights_equal = "row",
-      !!!placeholders),
-        htmltools::tags$script(
-          htmltools::HTML(
-            glue::glue(
-              '
-$(window).on("scroll.checkElement", { passive: true }, function() {
-  const element = $("#[last_name]");
+      if (length(gallery_sp_list()) > sg_limit()) {
+        last_name <- "placeholder-tag"
 
-  if (element.length) {
-    const elementTop = element.offset().top;
-    const elementBottom = elementTop + element.outerHeight();
-    const viewportTop = $(window).scrollTop();
-    const viewportBottom = viewportTop + $(window).height();
+        placeholders <- lapply(1:(sg_limit()/5), function(x) {
+          if (x == 1) {
+            card(height = "100%", full_screen = F, id = "placeholder-tag",
+                card_header("Loading...", style = "font-style: italic;"),
+                card_body(tags$img(src = "images/placeholders/general.webp",
+                                    class = "gallery-img"), class= "p-0"),
+                max_height = "250px", class = "loading"
+                )
+          } else {
+            card(height = "100%", full_screen = F,
+                card_header("Loading...", style = "font-style: italic;"),
+                card_body(tags$img(src = "images/placeholders/general.webp",
+                                    class = "gallery-img"), class= "p-0"),
+                max_height = "250px", class = "loading"
+                )
+          }
+        })
 
-    if (elementBottom > viewportTop && elementTop < viewportBottom) {
-      console.log("#your-element-id is in view!");
-      
-      var message = {id: "id1", nonce: Math.random()};
-      Shiny.onInputChange("secondGallery", message);
-      
-      $(window).off("scroll.checkElement");
+        htmltools::div(
+          generate_gallery(gallery_sp_list()[1:sg_limit()], "data/proc_images.txt", max_image_height = "250px", max_image_width = paste0(images_size(), "px"), image_gap = "0.1em"),
+          layout_column_wrap(id = "gallery-placeholder", width = paste0(images_size(), "px"), gap = "0.1em", fixed_width = TRUE, heights_equal = "row",
+        !!!placeholders),
+          htmltools::tags$script(
+            htmltools::HTML(
+              glue::glue(
+                '
+  $(window).on("scroll.checkElement", { passive: true }, function() {
+    const element = $("#[last_name]");
+
+    if (element.length) {
+      const elementTop = element.offset().top;
+      const elementBottom = elementTop + element.outerHeight();
+      const viewportTop = $(window).scrollTop();
+      const viewportBottom = viewportTop + $(window).height();
+
+      if (elementBottom > viewportTop && elementTop < viewportBottom) {
+        console.log("#your-element-id is in view!");
+        
+        var message = {id: "id1", nonce: Math.random()};
+        Shiny.onInputChange("secondGallery", message);
+        
+        $(window).off("scroll.checkElement");
+      }
     }
-  }
-});
-            '
-              , .open = "[", .close = "]"
+  });
+              '
+                , .open = "[", .close = "]"
+              )
             )
           )
         )
-      )
+      } else {
+        session$sendCustomMessage("second_gallery", "")
+        generate_gallery(gallery_sp_list(), "data/proc_images.txt", max_image_height = "250px",max_image_width = paste0(images_size(), "px"), image_gap = "0.1em")
+      }
     } else {
       session$sendCustomMessage("second_gallery", "")
-      generate_gallery(gallery_sp_list(), "data/proc_images.txt", max_image_height = "250px",max_image_width = paste0(images_size(), "px"), image_gap = "0.1em")
+      htmltools::tags$br()
     }
 }) %>%
   bindEvent(species_list()$scientificName)
