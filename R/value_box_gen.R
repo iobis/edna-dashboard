@@ -1,6 +1,6 @@
 value_box <- function(title, valueId, icon,
                       background = "#f8f9fa", icon_source = "bi", icon_color = NULL,
-                      width = 250, height = NULL, direction = "h") {
+                      width = 250, height = NULL, direction = "h", icon_width = "65px", icon_height = "35px") {
 
     if (icon_source == "bi") {
         icon_obj <- bsicons::bs_icon(icon)
@@ -8,7 +8,7 @@ value_box <- function(title, valueId, icon,
         icon_obj <- shiny::icon(icon)
     } else {
         icon_obj <- htmltools::img(src = icon,
-        width = "65px", height = "35px", opacity = 0.3)
+        width = icon_width, height = icon_height, opacity = 0.3)
     }
 
     if (is.character(width)) {
