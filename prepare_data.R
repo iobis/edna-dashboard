@@ -7,7 +7,7 @@ source("R/images.R")
 source("R/get_temperatures_climate.R")
 source("R/get_fishbase_info.R")
 
-download_site_descriptions(force = TRUE)
+download_site_descriptions(force = FALSE)
 download_occurrence_data(force = TRUE)
 calculate_site_stats(force = TRUE)
 generate_image_list(force = FALSE)
