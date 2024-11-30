@@ -3,6 +3,23 @@ suppressPackageStartupMessages(library(stringr))
 suppressPackageStartupMessages(library(purrr))
 suppressPackageStartupMessages(library(arrow))
 
+#' Downloads the occurrence data from AWS
+download_occurrence_data <- function(force = FALSE) {
+  if (!dir.exists("data/output") || force) {
+    message("Downloading occurrence data...")
+    options(timeout = 600)
+    system("rm -r output output.zip")
+    download.file(
+      "https://obis-edna-results.s3.amazonaws.com/output.zip",
+      "output.zip"
+    )
+    unzip("output.zip", exdir = "data/")
+    file.remove("output.zip")
+  } else {
+    message("Occurrence data already downloaded")
+  }
+}
+
 #' Reads the full occurrence dataset from TSV.
 read_occurrence_tsv <- function() {
   message("Reading occurrence data from TSV...")

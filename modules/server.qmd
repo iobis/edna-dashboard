@@ -71,7 +71,7 @@ map_localities <- sites_samples %>%
 
 species_context_info <- readRDS("data/fishbase.rds")
 
-general_description <- jsonlite::read_json("data/general_description.json")
+general_description <- jsonlite::read_json("data/supporting_data/general_description.json")
 
 sites_shape <- sf::read_sf("data/supporting_data/sites.geojson")
 

@@ -4,4 +4,4 @@ git pull
 quarto render index.qmd
 chmod -R 755 index_files
 ls -al index_files
-Rscript deploy.R
+Rscript prepare_data.R
