@@ -1,5 +1,5 @@
-library(rredlist)
-library(dplyr)
+suppressPackageStartupMessages(library(rredlist))
+suppressPackageStartupMessages(library(dplyr))
 
 redlist <- data.frame()
 
