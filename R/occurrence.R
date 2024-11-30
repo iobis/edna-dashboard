@@ -3,7 +3,7 @@ suppressPackageStartupMessages(library(stringr))
 suppressPackageStartupMessages(library(purrr))
 suppressPackageStartupMessages(library(arrow))
 
-#' Downloads the occurrence data from AWS
+#' Downloads the occurrence data from AWS and converts to parquet
 download_occurrence_data <- function(force = FALSE) {
   if (!dir.exists("data/output") || force) {
     message("Downloading occurrence data...")
@@ -15,6 +15,7 @@ download_occurrence_data <- function(force = FALSE) {
     )
     unzip("output.zip", exdir = "data/")
     file.remove("output.zip")
+    verify_occurrence_parquet()
   } else {
     message("Occurrence data already downloaded")
   }
@@ -44,10 +45,10 @@ convert_occurrence_data <- function() {
   message("Converting TSV to parquet...")
   occurrence <- read_occurrence_tsv()
   write_parquet(occurrence, "data/output/occurrence.parquet")
-  return(occurrence)
 }
 
-verify_occurrence <- function() {
+#' Check if pqrquet is present and convert if not
+verify_occurrence_parquet <- function() {
   if (!file.exists("data/output/occurrence.parquet")) {
     convert_occurrence_data()  
   }
@@ -56,7 +57,6 @@ verify_occurrence <- function() {
 #' Reads the full occurrence dataset from parquet, converts TSV to parquet if the parquet file does not exist.
 read_occurrence_data <- function() {
   message("Reading occurrence data from parquet...")
-  verify_occurrence()
   occurrence <- read_parquet("data/output/occurrence.parquet")
   return(occurrence)
 }
