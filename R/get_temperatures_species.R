@@ -201,7 +201,7 @@ write_parquet(results_batch, file.path(datafolder, "species_thermal_lims.parquet
 # Get temperature on sites on all scenarios ------
 # sites <- jsonlite::read_json("https://raw.githubusercontent.com/iobis/edna-tracker-data/data/generated.json")
 # sites_samples <- sites$samples %>% bind_rows()
-sites_shape <- sf::read_sf("https://samples.ednaexpeditions.org/sites.geojson")
+sites_shape <- sf::read_sf("data/supporting_data/sites.geojson")
 sites_shape <- terra::vect(sites_shape)
 
 sites_values <- terra::extract(c(surface, bottom), sites_shape, fun = mean, na.rm = T)
