@@ -1,16 +1,17 @@
 # Download additional information from WHC sites and save as txt
 download_site_descriptions <- function(outfile = "data/sites_description.txt", force = FALSE) {
 
-  if (force) {
-    download <- TRUE
-  } else if (file.exists(outfile)) {
-    mod <- as.Date(file.info(outfile)$mtime)
-    if (mod == Sys.Date()) download <- FALSE else download <- TRUE
-  } else {
-    download <- TRUE
-  }
+  # TODO: disabled temporarily as WHC is down
+  # if (force) {
+  #   download <- TRUE
+  # } else if (file.exists(outfile)) {
+  #   mod <- as.Date(file.info(outfile)$mtime)
+  #   if (mod == Sys.Date()) download <- FALSE else download <- TRUE
+  # } else {
+  #   download <- TRUE
+  # }
   
-  if (download) {
+  if (!file.exists(outfile) || force) {
     message("Downloading sites descriptions")
     
     sites <- jsonlite::read_json("https://raw.githubusercontent.com/iobis/edna-tracker-data/data/generated.json")
