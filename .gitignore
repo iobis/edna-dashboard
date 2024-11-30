@@ -63,3 +63,5 @@ tests/
 www/krona_plots
 
 climate_temp/
+
+data/proc_images.txt
