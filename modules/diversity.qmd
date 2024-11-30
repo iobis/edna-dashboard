@@ -36,9 +36,9 @@ uiOutput("tax_bar_plot", style = "height: 500px;")
 
 ::: {.g-col-12 .g-col-md-6}
 
-#### Alpha diversity: How diverse are the samples in relation to each other?
+#### Alpha Diversity: How diverse is each sample individually?
 
-In this figure we show the alpha diversity of every sample, grouped by location name (samples from the same location are considered replicates). The most simple measure of alpha diversity is the number of species/sequences found in each sample. You can check the alpha diversity measure at all different taxonomic levels, or considering all sequences (also unnamed ones). Other measures of alpha diversity take into account also the abundance of different species/sequences.
+This figure presents the alpha diversity of each sample, grouped by location (where samples from the same location are considered replicates). The simplest measure of alpha diversity is the count of species or ASV (Amplicon Sequence Variant) sequences found within a sample. Alpha diversity can also be explored across various taxonomic levels or by including all sequences, even those that are not taxonomically resolved. Additionally, other indices, such as Chao, Shannon, or Simpson, provide more nuanced assessments by incorporating the relative abundance of different taxa or ASV sequences. These measures offer deeper insights into the richness and evenness of species within each sample.
 
 ```{r}
 
@@ -50,9 +50,9 @@ plotly::plotlyOutput("alpha_plot")
 
 ::: {.g-col-12 .g-col-md-6}
 
-#### Beta diversity: How does the diversity compare across samples?
+#### Beta diversity: How does species composition vary between samples?
 
-Beta-diversity measures, show how close to each other the samples are in terms of species composition. A distance matrix is calculated for each sample, and the distances are plotted. The further the points are from each other, the more different the samples are from each other. Here, you may be able to see that samples from the same location cluster together.
+Beta diversity measures indicate how similar or different samples are in terms of species composition. To assess this, a distance matrix is generated for all samples, which is then visualised by plotting the distances. In the resulting plot, points that are farther apart represent samples with greater differences in species composition, while points closer together indicate more similar samples. In this context, you may observe that samples collected from the same location tend to cluster together, reflecting their shared characteristics.
 
 ```{r}
 

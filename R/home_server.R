@@ -83,19 +83,20 @@ output$valueBoxes <- renderUI({
     htmltools::div(
       value_box(
         title = "Number of species", value = "value_box_species",
-        icon = "shrimp", icon_source = "fa", icon_color = "#2b88d0", width = "100%"
+        icon = "images/icons/lobster.svg", icon_source = "other", icon_color = "#2b88d0", width = "100%",
+        icon_height = "55px"
       ),
       htmltools::span("Number of species by groups",
         style = "padding-left: 20px; padding-top: 30px; color: #8c8c8c; font-size: 14px; font-weight: 600;"
       ),
       htmltools::div(
         value_box(
-          title = "Fishes", value = "value_box_fish", icon = "shrimp",
-          icon_source = "fa", width = "50%", direction = "v", icon_color = "#6f42c1"
+          title = "Fishes", value = "value_box_fish", icon = "images/icons/scombridae.svg",
+          icon_source = "other", width = "50%", direction = "v", icon_color = "#6f42c1"
         ),
         value_box(
-          title = "Mammals", value = "value_box_mammals", icon = "otter",
-          icon_source = "fa", width = "50%", direction = "v", icon_color = "#6f42c1"
+          title = "Mammals", value = "value_box_mammals", icon = "images/icons/dolphin.svg",
+          icon_source = "other", width = "50%", direction = "v", icon_color = "#6f42c1"
         ),
         style = "display: flex; flex-direction: row; justify-content: space-between; width: 100%;"
       ),
@@ -123,7 +124,8 @@ output$valueBoxes <- renderUI({
       htmltools::div(
         value_box(
           title = "Number of species", value = "value_box_species",
-          icon = "shrimp", icon_source = "fa", icon_color = "#2b88d0", width = "50%"
+          icon = "images/icons/lobster.svg", icon_source = "other", icon_color = "#2b88d0", width = "50%",
+          icon_height = "55px"
         ),
         value_box(
           title = "Threatened species", value = "value_box_iucn",
@@ -136,12 +138,12 @@ output$valueBoxes <- renderUI({
       ),
       htmltools::div(
         value_box(
-          title = "Fishes", value = "value_box_fish", icon = "shrimp",
-          icon_source = "fa", width = "25%", direction = "v", icon_color = "#6f42c1"
+          title = "Fishes", value = "value_box_fish", icon = "images/icons/scombridae.svg",
+          icon_source = "other", width = "25%", direction = "v", icon_color = "#6f42c1"
         ),
         value_box(
-          title = "Mammals", value = "value_box_mammals", icon = "otter",
-          icon_source = "fa", width = "25%", direction = "v", icon_color = "#6f42c1"
+          title = "Mammals", value = "value_box_mammals", icon = "images/icons/dolphin.svg",
+          icon_source = "other", width = "25%", direction = "v", icon_color = "#6f42c1"
         ),
         value_box(
           title = "Sharks", value = "value_box_sharks", icon = "images/icons/shark.svg",
