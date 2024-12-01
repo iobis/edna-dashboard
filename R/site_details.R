@@ -1,3 +1,5 @@
+site_stats <- readRDS("data/supporting_data/sites_stats.rds")
+
 # Download additional information from WHC sites and save as txt
 download_site_descriptions <- function(outfile = "data/sites_description.txt", force = FALSE) {
 
@@ -44,16 +46,20 @@ download_site_descriptions <- function(outfile = "data/sites_description.txt", f
 calculate_site_stats <- function(force = FALSE) {
 
   if (!file.exists("data/supporting_data/sites_stats.rds") || force) {
+
     message("Creating `data/supporting_data/sites_stats.rds` for front page stats")
     source("R/occurrence.R")
+
     occurrence <- read_occurrence_data()
     groups <- read.csv("data/supporting_data/groups.csv")
     redlist <- read.csv("data/supporting_data/redlist.csv")
     redlist_cat <- redlist %>% filter(category %in% c("EN", "CR", "VU")) 
     
     occurrence_species <- occurrence %>% 
-      filter(taxonRank=="species")
+      filter(taxonRank == "species")
     
+    # by site
+
     n_species <- occurrence_species %>%
       group_by(higherGeography) %>% 
       summarise(unique_species = n_distinct(scientificName)) %>% 
@@ -61,25 +67,25 @@ calculate_site_stats <- function(force = FALSE) {
     
     n_fish_species <- occurrence_species %>%
       group_by(higherGeography) %>% 
-      filter(class %in% groups[groups$group=="fish", "taxon"]) %>%
+      filter(class %in% groups[groups$group %in% c("fish", "sharks"), "taxon"]) %>%
       summarise(unique_fish = n_distinct(scientificName)) %>% 
       ungroup()
     
     n_mammals_species <- occurrence_species %>%
       group_by(higherGeography) %>% 
-      filter(class %in% groups[groups$group=="mammals", "taxon"]) %>%
+      filter(class %in% groups[groups$group == "mammals", "taxon"]) %>%
       summarise(unique_mammals = n_distinct(scientificName)) %>% 
       ungroup()
     
     n_turtles_species <- occurrence_species %>%
       group_by(higherGeography) %>% 
-      filter(order %in% groups[groups$group=="turtles", "taxon"]) %>%
+      filter(order %in% groups[groups$group == "turtles", "taxon"]) %>%
       summarise(unique_turtles = n_distinct(scientificName)) %>% 
       ungroup()
     
     n_sharks_species <- occurrence_species %>%
       group_by(higherGeography) %>% 
-      filter(class %in% groups[groups$group=="sharks", "taxon"]) %>%
+      filter(class %in% groups[groups$group == "sharks", "taxon"]) %>%
       summarise(unique_sharks = n_distinct(scientificName)) %>% 
       ungroup()
     
@@ -96,6 +102,51 @@ calculate_site_stats <- function(force = FALSE) {
       left_join(n_sharks_species) %>%
       left_join(n_iucn_species)
     
+    # overall (TODO: refactor)
+
+    n_species <- occurrence_species %>%
+      summarise(unique_species = n_distinct(scientificName)) %>% 
+      ungroup()
+    
+    n_fish_species <- occurrence_species %>%
+      filter(class %in% groups[groups$group %in% c("fish", "sharks"), "taxon"]) %>%
+      summarise(unique_fish = n_distinct(scientificName)) %>% 
+      ungroup()
+    
+    n_mammals_species <- occurrence_species %>%
+      filter(class %in% groups[groups$group == "mammals", "taxon"]) %>%
+      summarise(unique_mammals = n_distinct(scientificName)) %>% 
+      ungroup()
+    
+    n_turtles_species <- occurrence_species %>%
+      filter(order %in% groups[groups$group == "turtles", "taxon"]) %>%
+      summarise(unique_turtles = n_distinct(scientificName)) %>% 
+      ungroup()
+    
+    n_sharks_species <- occurrence_species %>%
+      filter(class %in% groups[groups$group == "sharks", "taxon"]) %>%
+      summarise(unique_sharks = n_distinct(scientificName)) %>% 
+      ungroup()
+    
+    n_iucn_species <- occurrence_species %>%
+      filter(scientificName %in% redlist_cat$species) %>%
+      summarise(unique_iucn = n_distinct(scientificName)) %>% 
+      ungroup()
+    
+    overall_data <- data.frame(
+      higherGeography = "",
+      unique_species = n_species$unique_species,
+      unique_fish = n_fish_species$unique_fish,
+      unique_mammals = n_mammals_species$unique_mammals,
+      unique_turtles = n_turtles_species$unique_turtles,
+      unique_sharks = n_sharks_species$unique_sharks,
+      unique_iucn = n_iucn_species$unique_iucn
+    )
+      
+    # cleanup
+    
+    full_data <- bind_rows(full_data, overall_data)
+    
     full_data[is.na(full_data)] <- 0
     
     saveRDS(full_data, "data/supporting_data/sites_stats.rds")
@@ -103,4 +154,10 @@ calculate_site_stats <- function(force = FALSE) {
 
   return(invisible(NULL))
 
+}
+
+n_species <- function(site) {
+  site_stats %>% 
+    filter(higherGeography == site) %>% 
+    as.list()
 }
