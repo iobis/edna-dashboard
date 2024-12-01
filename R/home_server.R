@@ -1,4 +1,7 @@
 # HOME server code
+
+source("R/site_details.R")
+
 # Main map ----
 output$mainMap <- renderLeaflet({
   sites_shape <- sites_shape[sites_shape$name %in% localities$parent_area_name,]
@@ -161,35 +164,33 @@ output$valueBoxes <- renderUI({
 
 ####
 
-
-
 boxes_data <- reactiveValues()
 observe({
-  boxes_data$data <- n_species(input$higherGeography, occurrence)
+  boxes_data$data <- n_species(input$higherGeography)
 }) %>% bindEvent(input$higherGeography)
 
 output$value_box_species <- renderText({
-  boxes_data$data$n_species
+  boxes_data$data$unique_species
 })
 
 output$value_box_fish <- renderText({
-  boxes_data$data$n_fish
+  boxes_data$data$unique_fish
 })
 
 output$value_box_mammals <- renderText({
-  boxes_data$data$n_mammals
+  boxes_data$data$unique_mammals
 })
 
 output$value_box_sharks <- renderText({
-  ceiling(boxes_data$data$n_sharks)
+  ceiling(boxes_data$data$unique_sharks)
 })
 
 output$value_box_turtles <- renderText({
-  boxes_data$data$n_turtles
+  boxes_data$data$unique_turtles
 })
 
 output$value_box_iucn <- renderText({
-  boxes_data$data$n_iucn
+  boxes_data$data$unique_iucn
 })
 
 # Front page gallery ----
