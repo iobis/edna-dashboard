@@ -27,9 +27,11 @@ req_packages <- c(
 bioconductor_packages <- c("ggtree", "ggtreeExtra", "phyloseq")
 
 # Needed packages on GitHub
-git_packages <- c("psadd")
+git_packages <- c("psadd", "biooracler", "obissdm")
 git_packages_source <- c(
-  "cpauvert/psadd"
+  "cpauvert/psadd",
+  "bio-oracle/biooracler",
+  "iobis/mpaeu_msdm"
 )
 
 # Create a function to check if is installed
