@@ -15,7 +15,7 @@ selectInput("iucnClimate", "IUCN Red List Category:", iucn_names)
 
 #### Number of species at thermal risk
 
-The graph shows the number of species at thermal risk for this site under current conditions and three future SSP (shared socio-economic pathways) climate scenarios for 2100. Thermal risk occurs when the site's temperature exceeds a species' thermal limit, defined as the 95th percentile of temperatures where the species has been recorded. Some species, especially in tropical areas, may already exceed this limit. While not indicating local extinction, thermal risk indicates stressful conditions to the organism that may affect its survival.
+The graph shows the number of species at thermal risk for this site under current conditions and three future SSP (shared socio-economic pathways) climate scenarios for 2100. Thermal risk occurs when the site's temperature exceeds a species' thermal limit, defined as the 95th percentile of temperatures where the species has been recorded. Some species, especially in tropical areas, may already exceed this limit. While not indicating local extinction, thermal risk indicates stressful conditions to the organism that may affect its survival. Values at the top of the bars indicate the average SST for the site during that period.
 
 ```{r}
 #| title: Number of species at climate risk
@@ -59,6 +59,8 @@ layout_column_wrap(
 ::: {.callout-note appearance="simple" title="Attention" icon=false}
 The following table highlights species that are potentially at thermal risk at this site, based on its current thermal limits. It is important to note that, since the region has not yet experienced the extreme sea temperatures predicted for the future, there is uncertainty about how tropical species—already living near their upper thermal limits—will respond to these unprecedented conditions.
 :::
+
+_Tip: you can sort the table by clicking on a column header. You can also use the boxes to filter the values._
 
 ```{r}
 #| title: Thermal risk

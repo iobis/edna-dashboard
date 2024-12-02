@@ -43,6 +43,8 @@ generate_image_list <- function(force = FALSE) {
 
 #' Create image database
 create_images_database <- function() {
+
+  fs::dir_create("images/gallery")
   
   all_sp <- read_occurrence_data()
   all_sp <- all_sp %>% distinct(scientificName, .keep_all = T) %>%
@@ -68,13 +70,17 @@ create_images_database <- function() {
         dw <- try(download.file(tf$image_url, timg))
         if (!inherits(dw, "try-error")) {
           if (grepl("jp", tools::file_ext(tf$image_url))) {
-            img <- jpeg::readJPEG(timg)
+            img <- try(jpeg::readJPEG(timg), silent = T)
           } else {
-            img <- png::readPNG(timg)
+            img <- try(png::readPNG(timg), silent = T)
           }
-          conv <- try(webp::write_webp(img, file.path("images/gallery", tf_out)), silent = T)
-          if (inherits(conv, "try-error")) {
+          if (inherits(img, "try-error")) {
             file.copy(timg, gsub("webp", tools::file_ext(tf$image_url), file.path("images/gallery", tf_out)))
+          } else {
+            conv <- try(webp::write_webp(img, file.path("images/gallery", tf_out)), silent = T)
+            if (inherits(conv, "try-error")) {
+              file.copy(timg, gsub("webp", tools::file_ext(tf$image_url), file.path("images/gallery", tf_out)))
+            }
           }
           file.remove(timg)
         }
