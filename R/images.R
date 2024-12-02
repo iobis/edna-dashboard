@@ -22,13 +22,19 @@ generate_image_list <- function(force = FALSE) {
     
     gbif_images <- map(species_names, function(species_name) {
       message(glue("Fetching GBIF image for species name {species_name}"))
-      url <- occ_search(scientificName = species_name, mediaType = "StillImage", limit = 1, curlopts = list(timeout_ms = 10000))$media[[1]][[1]][[1]]$identifier
-      url
+      search_res <- try(occ_search(scientificName = species_name, mediaType = "StillImage", limit = 1, curlopts = list(timeout_ms = 10000))$media[[1]][[1]][[1]])
+      if (!inherits(search_res, "try-error") && !is.null(search_res$identifier)) {
+        data.frame(species = species_name,
+          image_url = search_res$identifier,
+          creator = ifelse(is.null(search_res$creator), NA, search_res$creator),
+          publisher = ifelse(is.null(search_res$publisher), NA, search_res$publisher))
+      } else {
+         data.frame(species = species_name, image_url = NA, creator = NA, publisher = NA)
+      }
     }) %>% 
-      map(~ifelse(is.null(.x), NA, .x)) %>% 
-      unlist() 
+      bind_rows()
     
-    df <- data.frame(species = species_names, image_url = gbif_images)
+    df <- as.data.frame(gbif_images)
     write.table(df, "data/images.txt", row.names = FALSE, quote = FALSE, sep = "\t", na = "")
   } else {
     message("Image list already exists")
@@ -50,7 +56,7 @@ create_images_database <- function() {
   for (i in 1:nrow(images)) {
     cat("Processing image", i, "out of", nrow(images), "\n")
     tf <- images[i,]
-    if (tf$image_url == "") next
+    if (is.na(tf$image_url)|| tf$image_url == "") next
     if (tools::file_ext(tf$image_url) %in% c("jpeg", "jpg", "png")) {
       tf_out <- paste0(gsub(" ", "_", tolower(tf$species)), ".webp")
     } else {
@@ -109,7 +115,22 @@ create_images_database <- function() {
     ))
   
   df_combined <- merge(df_combined, all_sp[,c("species", "alt_url")], by = "species", all.x = TRUE)
+
+  df_combined <- df_combined[, c("species", "image_url", "alt_url", "image_url_old", "creator", "publisher")]
+
+  # Check species not available
+  not_available <- all_sp %>%
+    filter(!species %in% df_combined$species)
+
+  not_available <- not_available %>%
+    mutate(
+      image_url = alt_url,
+      image_url_old = "", creator = "", publisher = ""
+    ) %>%
+    select(species, image_url, alt_url, image_url_old, creator, publisher)
+
+  final_table <- bind_rows(df_combined, not_available)
   
-  write.table(df_combined[, c("species", "image_url", "alt_url")], "data/proc_images.txt", row.names = F)
+  write.table(final_table, "data/proc_images.txt", row.names = F)
   
 }

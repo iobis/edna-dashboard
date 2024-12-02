@@ -3,7 +3,7 @@ var imageInput = new Shiny.InputBinding();
 
 $.extend(imageInput, {
   find: function(scope) {
-    return $(scope).find(".image-butt-div");
+    return $(scope).find(".clickable-img");
   },
   getValue: function(el) {
     return $(el).data("val") || 0;
@@ -24,7 +24,7 @@ $.extend(imageInput, {
       });
   },
   unsubscribe: function(el) {
-    $(el).off(".image-butt-div");
+    $(el).off(".clickable-img");
   },
   getState: function(el) {
     return this.getValue(el);
@@ -36,8 +36,9 @@ Shiny.inputBindings.register(imageInput, 'my.imageinput');
 
 $(document).ready(function() {
   // Bind a click event to all div elements with the class 'image-gallery'
-  $(document).on('click', '.image-butt-div', function() {
-    var divId = $(this).attr('id'); // Get the ID of the clicked div
+  $(document).on('click', '.clickable-img', function() {
+    //var divId = $(this).attr('id'); // Get the ID of the clicked div
+    var divId = $(this).closest('.card').attr('id'); // get id of parent
     Shiny.setInputValue('clicked_image_id', divId, {priority: 'event'});
   });
 });
