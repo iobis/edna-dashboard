@@ -34,10 +34,22 @@ observe({
     }
 
     climate_status <- climate_filt %>%
-        summarise(across(5:8, n_max)) %>%
+        summarise(across(any_of(c("Current", "SSP1", "SSP2", "SSP3")), n_max)) %>%
         tidyr::pivot_longer(1:4, names_to = "Scenario", values_to = "Number of species")
 
-    climate_vals$status <- list(data = climate_status, total = length(unique(climate_filt$Species)))
+    climate_site <- climate_sites %>%
+        filter(higherGeography == input$higherGeography) %>%
+        select(any_of(c("baseline_depthsurf_mean", "ssp126_depthsurf_dec100_mean",
+                        "ssp245_depthsurf_dec100_mean", "ssp370_depthsurf_dec100_mean"))) %>%
+        collect()
+    
+    colnames(climate_site) <- c("Current", paste0("SSP", 1:3))
+
+    climate_site <- climate_site %>%
+        tidyr::pivot_longer(1:4, names_to = "Scenario", values_to = "Temperature")
+        
+
+    climate_vals$status <- list(data = climate_status, total = length(unique(climate_filt$Species)), climate = climate_site)
 
     # sites_temperatures <- climate_data %>%
     #     select(
@@ -113,15 +125,24 @@ output$climate_thermal_risk <- reactable::renderReactable({
 
 output$climate_number_species <- shiny::renderPlot({
     req(input$higherGeography != "")
+
+    climates <- climate_vals$status$climate
+    climates$y <- climate_vals$status$data$`Number of species`
+    climates$y <- climates$y + (climate_vals$status$total * .05)
     
     require(ggplot2)
     ggplot(climate_vals$status$data) +
         geom_bar(aes(x = Scenario, fill = Scenario, y = `Number of species`), stat = "identity") +
-        scale_y_continuous(limits = c(0, climate_vals$status$total)) +
+        scale_y_continuous(limits = c(0, climate_vals$status$total+5)) +
+        geom_label(data = climates, aes(x = Scenario, y = y,
+         label = paste0(round(Temperature, 1), "°C")), size = 6) +
         #scale_fill_manual(values = c("#675292", "#a13c93", "#f47f4e", "#f15e6b")) +
         scale_fill_manual(values = c("#FDA638", "#459395", "#EB7C69", "#866f85")) +
         #scale_fill_manual(values = c("#11b1aa", "#3f45c7", "#ee8114", "#db3c81")) +
-    theme_light() + theme(legend.position = "none")
+    theme_light() + theme(legend.position = "none",
+                          axis.text = element_text(size = 12),
+                          axis.title = element_text(size = 16), plot.caption = element_text(size = 12))
+
 }) %>%
     bindEvent(climate_vals$status)
 

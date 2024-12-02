@@ -1,9 +1,10 @@
 species_gallery_modal <- function(species_name, species_link_1, species_link_2,
+                                  species_link_3,
                                   sp_fb_common_names, sp_fb_content) {
 
     card_text <- bslib::card(
         htmltools::span(species_name, id = "species-cont-name"),
-        htmltools::span(htmltools::HTML(paste("<p>", species_link_1, " | ", species_link_2, "</p>")),
+        htmltools::span(htmltools::HTML(paste("<p>", species_link_1, " | ", species_link_2, " | ", species_link_3, "</p>")),
             id = "species-cont-links"),
         htmltools::span(paste("Common names:", sp_fb_common_names), id = "species-cont-common"),
         htmltools::span(sp_fb_content, id = "species-cont-content"),

@@ -74,6 +74,7 @@ general_description <- jsonlite::read_json("data/supporting_data/general_descrip
 sites_shape <- sf::read_sf("data/supporting_data/sites.geojson")
 
 climate_species <- open_dataset("data/species_sites_risk_full.parquet")
+climate_sites <- open_dataset("data/sites_sst_all.parquet")
 mdebug("server start done")
 ```
 
@@ -299,11 +300,13 @@ observe({
     fb_content <- species_context_info$core_info %>% filter(Species == species)
     fb_commons <- species_context_info$common_names %>% filter(Species == species)
     
-    species_link_1 <- glue::glue('<a href="{paste0("https://www.marinespecies.org/aphia.php?p=taxdetails&id=", sel_aphiaid)}", target="_blank">WoRMS: {sel_aphiaid}</a>')
-    species_link_2 <- glue::glue('<a href="{paste0("https://www.fishbase.se/summary/", gsub(" ", "-", species), ".html")}", target="_blank">FishBase: {fb_content$SpecCode[1]}</a>')
+    
+    species_link_1 <- glue::glue('<a href="{paste0("https://obis.org/taxon/", sel_aphiaid)}", target="_blank">OBIS: {sel_aphiaid}</a>')
+    species_link_2 <- glue::glue('<a href="{paste0("https://www.marinespecies.org/aphia.php?p=taxdetails&id=", sel_aphiaid)}", target="_blank">WoRMS: {sel_aphiaid}</a>')
+    species_link_3 <- glue::glue('<a href="{paste0("https://www.fishbase.se/summary/", gsub(" ", "-", species), ".html")}", target="_blank">FishBase: {fb_content$SpecCode[1]}</a>')
     
     sp_fb_common_names <- ifelse(nrow(fb_commons) > 0, paste(fb_commons$ComName, collapse = ", "), "not found")
-    sp_fb_content <- fb_content$Comments
+    sp_fb_content <- ifelse(is.na(fb_content$Comments), "Additional information not available.", fb_content$Comments)
 
     species_info <- get_species_information(species, occurrence_ds, input$higherGeography)
   } else {
@@ -312,7 +315,7 @@ observe({
   }
   shiny::removeModal()
   shiny::showModal(
-    species_gallery_modal(species_name, species_link_1, species_link_2, sp_fb_common_names, sp_fb_content)
+    species_gallery_modal(species_name, species_link_1, species_link_2, species_link_3, sp_fb_common_names, sp_fb_content)
   )
 
   ts <- max(sapply(species_info$DNA_sequence, nchar))
