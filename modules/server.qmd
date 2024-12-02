@@ -324,8 +324,11 @@ observe({
     columns = list(
      samples = colDef(name = "Samples"),
      localities = colDef(name = "Localities"), 
-     target_gene = colDef(name = "Target gene"),
-     reads = colDef(name = "Reads"),
+     target_gene = colDef(name = "Target gene", minWidth = 80),
+     reads = colDef(name = "Reads", minWidth = 80),
+     rdp_confidences = colDef(name = "RDP confidences", minWidth = 80),
+     vsearch_identity = colDef(name = "VSEARCH identity", minWidth = 80),
+     NCBI_ID = colDef(name = "NCBI ID", minWidth = 80),
      DNA_sequence = colDef(name = "DNA sequence",
        cell = function(value, index, name) {
         if (input$spi_dna_col & !input$spi_dna_back) {

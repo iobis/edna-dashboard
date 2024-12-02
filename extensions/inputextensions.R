@@ -26,7 +26,8 @@ imageInput <- function(inputId,
                        header,
                        image_src,
                        alt_src = NULL,
-                       max_image_height) {
+                       max_image_height,
+                       credits = "") {
 
   path <- normalizePath("./extensions")
 
@@ -50,10 +51,10 @@ imageInput <- function(inputId,
 
   cont <- card(height = "100%", full_screen = T,
                #card_header(htmltools::tags$i(image_table_filt$species[i])),
-               card_header(header, style = "font-style: italic;"),
+               card_header(header, style = "font-style: italic;", class = "clickable-img"),
                card_body(tags$img(src = image_src,
-                                  class = "gallery-img",
-                                  onerror = alt_img), class= "p-0"),
+                                  class = "gallery-img clickable-img",
+                                  onerror = alt_img, title = credits), class = "p-0"),
                max_height = max_image_height, id = inputId, class = "image-butt-div"
                )
 

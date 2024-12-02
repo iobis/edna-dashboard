@@ -28,15 +28,17 @@ generate_gallery <- function(species,
   image_table_filt <- image_table_filt[!is.na(image_table_filt$species),]
 
   # Possible correction, if wants to keep even species not available
-  # if (any(!species %in% image_table_filt)) {
+  # if (any(!species %in% image_table_filt$species)) {
   #   not_av <- species[!species %in% image_table_filt]
   #   not_av_df <- data.frame(
   #     species = not_av,
   #     image_url = "images/placeholders/general.webp",
-  #     alt_url = "images/placeholders/general.webp"
+  #     alt_url = "images/placeholders/general.webp",
+  #     image_url_old = "", creator = "", publisher = ""
   #   )
   #   image_table_filt <- rbind(image_table_filt, not_av_df)
   # }
+  # Not necessary anymore, fixed on lists level.
 
   if (!"alt_url" %in% colnames(image_table_filt)) {
     image_table_filt$alt_url <- "images/placeholders/general.webp"
@@ -50,13 +52,33 @@ generate_gallery <- function(species,
       link_id <- paste0("link_", gsub(" ", "_", image_table_filt$species[i]))
       
       header <- image_table_filt$species[i]
+
+      credits <- c(
+        paste0(
+          ifelse(image_table_filt$creator[i] == "", "", "Creator: "),
+          image_table_filt$creator[i]
+        ),
+        paste0(
+          ifelse(image_table_filt$publisher[i] == "", "", "Publisher: "),
+          image_table_filt$publisher[i]
+        ),
+        paste0(
+          ifelse(image_table_filt$image_url_old[i] == "", "", "Source: "),
+          image_table_filt$image_url_old[i]
+        )
+      )
+      credits <- credits[credits != ""]
+      credits <- paste(
+        credits, collapse = " | "
+      )
       
       cards[[i]] <- imageInput(
         inputId = link_id,
         header = header,
         image_src = image_table_filt$image_url[i],
         alt_src = image_table_filt$alt_url[i],
-        max_image_height = max_image_height
+        max_image_height = max_image_height,
+        credits = credits
       )
     }
     
