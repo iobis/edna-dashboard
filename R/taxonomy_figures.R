@@ -10,88 +10,33 @@ suppressPackageStartupMessages(library(ggtreeExtra))
 suppressPackageStartupMessages(library(phyloseq))
 suppressPackageStartupMessages(library(psadd))
 
-#site="The Sundarbans"
+cleanst <- function(string) {
+        gsub(
+            " ", "_",
+            stringi::stri_trans_general(
+                gsub(
+                    "[[:punct:]]", "",
+                    tolower(string)
+                ), "Latin-ASCII"
+            )
+        )
+    }
 
-make_image_taxonomy <- function(occurrence, site, taxonLevel, plot_type) {
+make_image_taxonomy <- function(site, taxonLevel, plot_type) {
 
-  occurrence_site <- occurrence %>%
-                          filter(higherGeography==site) %>%
-                          collect() %>%
-                          mutate(species = ifelse(taxonRank == 'species', scientificName, NA))
-  
-  #Filter out samples with very low read counts (failed samples)
-  reads_site <- occurrence_site %>% group_by(materialSampleID) %>% summarize(read_sum =sum(organismQuantity))
-  reads_site <- reads_site %>% filter(read_sum > 50000)
-  
-  occurrence_site <- occurrence_site %>% filter(materialSampleID %in% reads_site$materialSampleID)
-  
-  if (plot_type == "reads") {
-  
-    stats_phylum <- occurrence_site %>%
-      group_by(!!sym(taxonLevel), locationID, materialSampleID, pcr_primer_name_forward) %>%
-      summarize(reads = sum(organismQuantity)) %>%
-      ungroup()
-  
-  } else {
-  
-    #relative abundance (if we want to 'original' relative abundance calculate like this):
-    #original: we remove the contaminants, so the relative abundance is not 1
-    #occurrence_site = occurrence_site %>% 
-    #                        group_by(materialSampleID) %>% 
-    #                        mutate(totalSampleSizeValue = sum(unique(sampleSizeValue)))
-    
-    #occurrence_site = occurrence_site %>% mutate(relative_abundance = organismQuantity/totalSampleSizeValue)
-    
-    #Relative abundance, calculate based on the remaining reads after removal of contaminants:
-    occurrence_site <- occurrence_site %>% 
-      group_by(materialSampleID) %>% 
-      mutate(totalSampleSizeValue = sum(organismQuantity)) %>% 
-      ungroup()
-    
-    occurrence_site = occurrence_site %>% mutate(relative_abundance = organismQuantity/totalSampleSizeValue)
-  
-    stats_phylum <- occurrence_site %>%
-      group_by(!!sym(taxonLevel), locationID, materialSampleID, pcr_primer_name_forward) %>%
-      summarize(reads = sum(relative_abundance)) %>%
-      ungroup()
+  site <- cleanst(site)
+  sel_type <- ifelse(
+    plot_type == "reads", "reads", "abundance"
+  )
+  taxon_rank <- taxonLevel
 
-  }
+  site_data <- arrow::read_parquet(
+    file.path("data/sites_data", paste0(site, "_barplot.parquet"))
+  )
 
-  # select only the 10 most common (the rest are others (and unknown))
-  class_summary <- stats_phylum %>%
-    group_by(!!sym(taxonLevel)) %>%
-    summarize(total_reads = sum(reads)) %>%
-    ungroup()
-  
-  # Step 2: Identify the top 10 most common classes
-  top_10_classes <- class_summary %>%
-    arrange(desc(total_reads)) %>%
-    head(12) %>%
-    pull(!!sym(taxonLevel))
-  
-  # Step 3: Rename all other classes to "other"
-  df_modified <- stats_phylum  %>%
-    mutate(taxonLevel = ifelse(!!sym(taxonLevel) %in% top_10_classes, !!sym(taxonLevel), "other")) %>% 
-    group_by(taxonLevel, locationID, materialSampleID, pcr_primer_name_forward) %>%
-    summarize(reads = sum(reads)) %>%
-    ungroup()
-  
-  #For plots separated by markers add and input for show_primers (but to do: calculate new relative abundance also)
-  #if (show_primers) {
-  
-  #ggplot(data=df_modified, aes(y=reads, x=materialSampleID, fill=taxonLevel), color="gray") +
-  #    geom_bar(stat="identity",color="gray") + 
-  #    facet_grid(pcr_primer_name_forward~locality, scales="free_x", space = "free")+
-  #    theme_minimal() + 
-  #    guides(fill=guide_legend(title=taxonLevel))+
-  #    ggtitle("The ten most common taxa")+
-  #    scale_fill_viridis(discrete=T,na.value = "gray")
-  
-  #} else {
-  
-  df_modified <- df_modified %>%  group_by(taxonLevel, locationID, materialSampleID) %>%
-    summarize(reads = sum(reads)) %>%
-    ungroup()
+  df_modified <- site_data %>%
+    filter(rank == taxon_rank) %>%
+    filter(plot_type == sel_type)
   
   ggplot(data = df_modified, aes(y = reads, x = materialSampleID, fill = taxonLevel), color = "gray") +
       geom_bar(stat = "identity", color = "gray", linewidth = 0.2) + 
@@ -107,22 +52,11 @@ make_image_taxonomy <- function(occurrence, site, taxonLevel, plot_type) {
 # Possible to add taxonLevel choice, but now phylum, class, species information only.
 
 make_table_taxonomy <- function(occurrence, site) {
-  
-  taxonLevel = "species"
-  
-  occurrence_site <- occurrence %>%
-                          filter(higherGeography==site) %>%
-                          collect() %>%
-                          mutate(species = ifelse(taxonRank == 'species', scientificName, NA))
-  
-  table_data <- occurrence_site %>% 
-                  filter(!is.na(!!sym(taxonLevel))) %>% 
-                  group_by(phylum, class, !!sym(taxonLevel)) %>% 
-                  summarize(samples = paste(unique(materialSampleID), collapse = ","), 
-                          localities = paste(unique(locationID), collapse = ","), 
-                          target_gene = paste(unique(target_gene), collapse = ","),
-                          reads = sum(organismQuantity)) %>% 
-                  ungroup()
+
+  site <- cleanst(site)
+  table_data <- arrow::read_parquet(file.path(
+    "data/sites_data", paste0(site, ".parquet")
+  ))
 
   species_def <- colDef(
     minWidth = 200,

@@ -1,14 +1,10 @@
 # Taxonomy tab server component
-taxon_table <- reactive({ 
-  if (input$higherGeography == "") {
+output$rtable <- renderReactable({
+   if (input$higherGeography == "") {
     data.frame(matrix(ncol = 2, nrow = 0))
   } else {
     make_table_taxonomy(occurrence_ds, input$higherGeography)
   }
-})
-
-output$rtable <- renderReactable({
-   taxon_table()
 })
 
 # Output Krona plot
