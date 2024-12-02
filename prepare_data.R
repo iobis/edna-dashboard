@@ -6,6 +6,7 @@ source("R/update_krona_plots.R")
 source("R/images.R")
 source("R/get_temperatures_climate.R")
 source("R/get_fishbase_info.R")
+source("R/get_taxonomy.R")
 
 download_site_descriptions(force = FALSE)
 download_occurrence_data(force = TRUE)
@@ -16,5 +17,8 @@ update_krona_plots()
 download_gallery_images()
 get_temperatures_climate(force = FALSE)
 get_fishbase_info(force = FALSE)
+taxonomy_by_site()
+diversity_by_site()
+diversity_metrics_by_site()
 
 # TODO: get_temperature_species still needs to be run manually

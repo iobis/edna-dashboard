@@ -52,6 +52,7 @@ index.html
 # dwc dataset
 data/output*
 output*
+data/sites_data/
 
 images/*
 !images/placeholders/
