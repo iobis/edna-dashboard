@@ -2,34 +2,24 @@
 
 ```{r}
 #selectInput("higherGeographySpecies", "Site:", sites_names)
-shiny::conditionalPanel("input.higherGeography != ''",
-selectInput("group", "Group:", groups_names))
-shiny::conditionalPanel("input.higherGeography != ''",
-selectInput("iucn", "IUCN Red List Category:", iucn_names))
+selectInput("group", "Group:", groups_names)
+selectInput("iucn", "IUCN Red List Category:", iucn_names)
 
 ```
 
 :::
 
-``` {r}
-shiny::conditionalPanel("input.higherGeography != ''",
-htmltools::p(
-  "This page shows all the species that were detected from the site, ordered by abundance of sequences that were detected for each species. You can browse to discover the diversity of life that was detectable by DNA samples. By clicking on a species image, you will get more information on the biology of the species, which samples it was found in, and the actual DNA sequence that the detection was based on. You can filter this gallery to find your favorite group of species or by IUCN Red List Category."
-))
-```
-
+This page shows all the species that were detected from the site, ordered by abundance of sequences that were detected for each species. You can browse to discover the diversity of life that was detectable by DNA samples. By clicking on a species image, you will get more information on the biology of the species, which samples it was found in, and the actual DNA sequence that the detection was based on. You can filter this gallery to find your favorite group of species or by IUCN Red List Category.
 
 ::: {id='image-galleries'}
 
 ```{r}
 source("extensions/image-sidebar.R")
-shiny::conditionalPanel("input.higherGeography != ''",
 layout_column_wrap(
   width = 1,
   heights_equal = "row",
   htmlOutput("species_gallery"),
   htmlOutput("species_gallery_b")
-)
 )
 ```
 

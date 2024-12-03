@@ -150,7 +150,11 @@ htmltools::div(
 
 <span class='results-title'>Explore the results</span>
 
-::: {id='tabset-inside'}
+::: {data-display-if="input.higherGeography == ''" id="home-waiting"}
+<span style="font-size: 24px;">Select a site to start at the top of this page.</span>
+:::
+
+::: {id='tabset-inside' data-display-if="input.higherGeography != ''"}
 
 ::: {.panel-tabset}
 

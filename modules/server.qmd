@@ -91,10 +91,8 @@ source("R/server_updategeography.R", local = TRUE)
 # Update column sizes when not on first page
 observe({
   if (input$higherGeography != "") {
-    session$sendCustomMessage("show_overlay", "remove")
     session$sendCustomMessage("change_col_sizes", "change")
   } else {
-    session$sendCustomMessage("show_overlay", "show")
     session$sendCustomMessage("change_col_sizes", "main")
   }
 }) %>%
