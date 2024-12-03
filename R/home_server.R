@@ -215,6 +215,7 @@ output$imageGalleryFront <- renderUI({
   cards_images <- lapply(seq_len(nrow(images_table_sel)), function(x) {
     url <- images_table_sel$image_url[x]
     caption <- images_table_sel$caption[x]
+    credits <- images_table_sel$credits[x]
 
     if (length(unique(images_table_sel$caption)) > 1 && site != "") {
       card(
@@ -232,7 +233,7 @@ output$imageGalleryFront <- renderUI({
         height = "100%", full_screen = T,
         card_body(tags$img(
           src = url
-        ), class = "p-0")#,
+        ), htmltools::span(credits, style = "font-size: 7px;"), class = "p-0")#,
         #max_height = 300
       )
     }
