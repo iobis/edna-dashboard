@@ -11,7 +11,7 @@ reactable::reactableOutput("rtable")
 
 ### Taxonomic piechart 
 
-This image shows the taxonomic composition of the DNA sample as a piechart. You can see which portion of the DNA sequences were identified. By clicking on the image you can browse all different taxonomic groups and levels, to see how prevalent they were in the sample, including higher taxonomic levels. 
+This image shows the taxonomic composition of the DNA sample as a piechart. You can see which portion of the DNA sequences were identified. You can browse all different taxonomic groups by clicking twice on a label, to see how prevalent they were in the sample, including higher taxonomic levels. 
 
 ```{r}
 htmlOutput("krona_plot")
