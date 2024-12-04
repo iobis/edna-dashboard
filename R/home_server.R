@@ -105,7 +105,7 @@ output$valueBoxes <- renderUI({
       ),
       htmltools::div(
         value_box(
-          title = "Sharks", value = "value_box_sharks", icon = "images/icons/shark.svg",
+          title = "Sharks & Rays", value = "value_box_sharks", icon = "images/icons/shark.svg",
           icon_source = "other", width = "50%", direction = "v", icon_color = "#6f42c1"
         ),
         value_box(
@@ -149,7 +149,7 @@ output$valueBoxes <- renderUI({
           icon_source = "other", width = "25%", direction = "v", icon_color = "#6f42c1"
         ),
         value_box(
-          title = "Sharks", value = "value_box_sharks", icon = "images/icons/shark.svg",
+          title = "Sharks & Rays", value = "value_box_sharks", icon = "images/icons/shark.svg",
           icon_source = "other", width = "25%", direction = "v", icon_color = "#6f42c1"
         ),
         value_box(

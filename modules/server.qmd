@@ -156,7 +156,7 @@ output$samples_table <- renderReactable({
       name = colDef(name = "Identifier", width = 100),
       station = colDef(name = "Station"),
       volume = colDef(name = "Volume (mL)", width = 120),
-      concentration = colDef(name = "Concentration (ng/\u00b5l)"),
+      concentration = colDef(name = "DNA Concentration (ng/µl)"),
       date = colDef(
         name = "Date",
         width = 140,
