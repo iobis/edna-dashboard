@@ -1,6 +1,3 @@
-# TODO: move
-site_stats <- readRDS("data/supporting_data/sites_stats.rds")
-
 # Download additional information from WHC sites and save as txt
 download_site_descriptions <- function(outfile = "data/sites_description.txt", force = FALSE) {
 
@@ -178,10 +175,4 @@ calculate_sample_stats <- function(force = FALSE) {
   
   return(invisible(NULL))
   
-}
-
-n_species <- function(site) {
-  site_stats %>% 
-    filter(higherGeography == site) %>% 
-    as.list()
 }
