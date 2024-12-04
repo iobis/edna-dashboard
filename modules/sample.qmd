@@ -14,6 +14,7 @@ reactable::reactableOutput("samples_table")
 <div style="height: 400px;">
 ```{r}
 plotly::plotlyOutput("concentration_plot")
+plotly::plotlyOutput("species_plot")
 ```
 </div>
 :::
