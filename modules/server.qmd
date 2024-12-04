@@ -40,6 +40,14 @@ unique_sp_codes <- occurrence_ds %>%
   mutate(scientificNameID = sub(".*:", "", scientificNameID)) %>% 
   ungroup()
 
+unique_sp <- occurrence_ds %>%
+  select(scientificName, taxonRank) %>%
+  filter(taxonRank == "species") %>%
+  select(scientificName) %>%
+  distinct() %>%
+  collect() %>%
+  pull()
+
 # Leaflet map data
 # TODO: pre-do that
 message("Fetching sites metadata...")
@@ -219,4 +227,8 @@ output$species_plot <- plotly::renderPlotly({
 
 # CLIMATE page ------
 source("R/climate_server.R", local = TRUE)
+
+
+# SPECIES summaries page ----
+source("R/species_summary_server.R", local = TRUE)
 ```

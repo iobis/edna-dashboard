@@ -178,9 +178,23 @@ htmltools::div(
 
 <span class='results-title'>Explore the results</span>
 
+<!-- Showed when no higher geography is selected-->
 ::: {data-display-if="input.higherGeography == ''" id="home-waiting"}
-<span style="font-size: 24px;">Select a site to start at the top of this page.</span>
+<span style="font-size: 24px;">Select a site to start at the top of this page or search a species below.</span>
+
+::: {id="species-summaries"}
+``` {r}
+selectInput("speciesSummariesSelect",  "", c("Search a species" = "", "Acanthurus nigrofuscus", "Acanthurus platinatus"))
+```
 :::
+
+``` {r}
+conditionalPanel("input.higherGeography == '' && input.speciesSummariesSelect != ''", uiOutput("speciesSummaries"))
+```
+
+:::
+
+<!-- Tabset content-->
 
 ::: {id='tabset-inside' data-display-if="input.higherGeography != ''"}
 
