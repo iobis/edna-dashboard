@@ -93,6 +93,9 @@ source("R/home_server.R", local = TRUE)
 # Update inputs across pages and according to map
 source("R/server_updategeography.R", local = TRUE)
 
+# Download handlers
+source("R/download_handlers.R", local = TRUE)
+
 # Update column sizes when not on first page
 observe({
   if (input$higherGeography != "") {

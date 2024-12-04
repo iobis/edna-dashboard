@@ -20,6 +20,7 @@ content_update <- gsub("Climate", '<i class="bi bi-thermometer-high"></i> Climat
 
 content_update <- gsub("Statistics", '<i class="bi bi-graph-up"></i> Statistics', content_update)
 content_update <- gsub("Pictures", '<i class="bi bi-camera-fill"></i> Pictures', content_update)
+content_update <- gsub("Data", '<i class="bi bi-database-fill-down"></i> Data', content_update)
 #content_update <- gsub('href=""', 'href="javascript:void(0)"', content_update)
 
 content[navbar] <- content_update

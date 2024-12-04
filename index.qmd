@@ -136,6 +136,34 @@ htmltools::div(
 
 `r htmlOutput("imageGalleryFront")`
 
+## Data
+
+<!-- Download for general case-->
+::: {id="data-front" data-display-if="input.higherGeography == ''"}
+You can download all data from the eDNA expeditions through our <span class="data-links">[AWS S3 bucket](https://obis-edna-lists.s3.amazonaws.com/index.html){target='_blank'} </span>.
+
+You can also explore the technical documentation on our GitHub repository:<br> `r htmltools::span(bsicons::bs_icon("github"), htmltools::a("iobis/edna-expeditions", href="https://github.com/iobis/edna-expeditions", target="_blank"), class="data-links")`
+:::
+
+<!-- Download for sites case-->
+::: {id="data-front" data-display-if="input.higherGeography != ''"}
+
+``` {r}
+htmltools::div(
+        htmltools::span(
+            bsicons::bs_icon("list-columns-reverse"),
+            shiny::htmlOutput("dataDownload", inline = T),
+        class="data-links-black"), htmltools::br(), htmltools::br(),
+        htmltools::span(
+            bsicons::bs_icon("github"),
+            htmltools::a("Check the documentation", href="https://github.com/iobis/edna-expeditions",
+            target="_blank"),
+        class="data-links-black")
+    )
+```
+
+:::
+
 :::
 
 :::
