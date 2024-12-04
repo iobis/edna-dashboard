@@ -7,7 +7,7 @@ species_gallery_modal <- function(species_name, species_link_1, species_link_2,
         htmltools::span(htmltools::HTML(paste("<p>", species_link_1, " | ", species_link_2, " | ", species_link_3, "</p>")),
             id = "species-cont-links"),
         htmltools::span(paste("Common names:", sp_fb_common_names), id = "species-cont-common"),
-        htmltools::span(sp_fb_content, id = "species-cont-content"),
+        htmltools::span(htmltools::HTML(paste0("<p>", sp_fb_content, "</p>")), id = "species-cont-content"),
         full_screen = FALSE
     )
 

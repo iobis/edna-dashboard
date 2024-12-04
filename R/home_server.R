@@ -1,6 +1,6 @@
 # HOME server code
 
-source("R/site_details.R")
+site_stats <- readRDS("data/supporting_data/sites_stats.rds")
 
 # Main map ----
 output$mainMap <- renderLeaflet({
@@ -164,7 +164,14 @@ output$valueBoxes <- renderUI({
 
 ####
 
+n_species <- function(site) {
+  site_stats %>% 
+    filter(higherGeography == site) %>% 
+    as.list()
+}
+
 boxes_data <- reactiveValues()
+
 observe({
   boxes_data$data <- n_species(input$higherGeography)
 }) %>% bindEvent(input$higherGeography)

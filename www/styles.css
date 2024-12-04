@@ -262,6 +262,22 @@
   border-width: 0px !important;
 }
 
+.data-links a {
+  text-decoration: none;
+  color: #0277d4;
+}
+
+.data-links-black a {
+  text-decoration: none;
+  color: #000000;
+}
+
+.data-links-black a:hover {
+  text-decoration: none;
+  color: #595959;
+}
+
+
 
 /* Top selector home page */
 #top-selector-parent {

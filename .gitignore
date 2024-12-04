@@ -67,4 +67,7 @@ climate_temp/
 
 data/proc_images.txt
 data/supporting_data/sample_stats.rds
+data/supporting_data/sites_stats.rds
+data/sites_sst_all.parquet
+data/species_sites_risk_full.parquet
 

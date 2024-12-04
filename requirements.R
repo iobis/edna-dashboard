@@ -17,7 +17,7 @@ req_packages <- c(
   "waiter",
   "reactable",
   "DT",
-  "eulerr",
+  "eul`err",
   "data.tree",
   "viridisLite",
   "BiocManager",
@@ -27,8 +27,9 @@ req_packages <- c(
 bioconductor_packages <- c("ggtree", "ggtreeExtra", "phyloseq")
 
 # Needed packages on GitHub
-git_packages <- c("psadd", "biooracler", "obissdm")
+git_packages <- c("duckdb", "psadd", "biooracler", "obissdm")
 git_packages_source <- c(
+  "duckdb/duckdb-r@v1.1.0",
   "cpauvert/psadd",
   "bio-oracle/biooracler",
   "iobis/mpaeu_msdm"
