@@ -1,3 +1,4 @@
+# TODO: move
 site_stats <- readRDS("data/supporting_data/sites_stats.rds")
 
 # Download additional information from WHC sites and save as txt
@@ -44,12 +45,12 @@ download_site_descriptions <- function(outfile = "data/sites_description.txt", f
 
 # Calculate site stats and save as RDS
 calculate_site_stats <- function(force = FALSE) {
-
+  
   if (!file.exists("data/supporting_data/sites_stats.rds") || force) {
-
+    
     message("Creating `data/supporting_data/sites_stats.rds` for front page stats")
     source("R/occurrence.R")
-
+    
     occurrence <- read_occurrence_data()
     groups <- read.csv("data/supporting_data/groups.csv")
     redlist <- read.csv("data/supporting_data/redlist.csv")
@@ -59,7 +60,7 @@ calculate_site_stats <- function(force = FALSE) {
       filter(taxonRank == "species")
     
     # by site
-
+    
     n_species <- occurrence_species %>%
       group_by(higherGeography) %>% 
       summarise(unique_species = n_distinct(scientificName)) %>% 
@@ -103,7 +104,7 @@ calculate_site_stats <- function(force = FALSE) {
       left_join(n_iucn_species)
     
     # overall (TODO: refactor)
-
+    
     n_species <- occurrence_species %>%
       summarise(unique_species = n_distinct(scientificName)) %>% 
       ungroup()
@@ -142,7 +143,7 @@ calculate_site_stats <- function(force = FALSE) {
       unique_sharks = n_sharks_species$unique_sharks,
       unique_iucn = n_iucn_species$unique_iucn
     )
-      
+    
     # cleanup
     
     full_data <- bind_rows(full_data, overall_data)
@@ -151,9 +152,32 @@ calculate_site_stats <- function(force = FALSE) {
     
     saveRDS(full_data, "data/supporting_data/sites_stats.rds")
   }
-
+  
   return(invisible(NULL))
+  
+}
 
+# Calculate sample stats and save as RDS
+calculate_sample_stats <- function(force = FALSE) {
+  
+  if (!file.exists("data/supporting_data/ssample_stats.rds") || force) {
+    
+    message("Creating `data/supporting_data/sample_stats.rds`")
+    source("R/occurrence.R")
+    
+    occurrence <- read_occurrence_data()
+    occurrence_species <- occurrence %>% 
+      filter(taxonRank == "species")
+    
+    stats <- occurrence_species %>% 
+      group_by(materialSampleID) %>% 
+      summarize(species = n_distinct(scientificName))
+
+    saveRDS(stats, "data/supporting_data/sample_stats.rds")
+  }
+  
+  return(invisible(NULL))
+  
 }
 
 n_species <- function(site) {

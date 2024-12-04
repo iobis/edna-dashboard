@@ -193,11 +193,19 @@
   width: 100%;
 }
 
+#home-waiting {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 /* Stats column tabs */
 #stats-column .nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link {
   padding-right: 5px !important;
   padding-left: 5px !important;
-  color: #0277d4;
+  color: #49c8ff;
   background-color: white;
   border-width: 0px;
 }
@@ -205,9 +213,13 @@
 #stats-column .nav-tabs .nav-link {
   padding-right: 5px !important;
   padding-left: 5px !important;
-  color: #8e8e8e;
+  color: #0277d4;
   background-color: white;
   border-width: 0px;
+}
+
+#stats-column .nav-tabs .nav-link:hover {
+  color: #49c8ff;
 }
 
 #stats-column .nav-tabs .nav-item {

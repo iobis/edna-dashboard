@@ -20,6 +20,7 @@ source("R/taxonomy_figures.R")
 source("R/species_diversity.R")
 source("R/get_dna_statistics.R")
 source("extensions/front-gallery.R")
+source("R/site_details.R")
 #source("R/fix_taxonomy.R")
 
 # Small function to debug, when not in use set show=FALSE
@@ -53,6 +54,10 @@ sites_names <- sites_names[order(sites_names)]
 samples <- sites_samples %>% 
   select(site = parent_area_name, name, blank, date = event_begin, station, volume = size)
 samples$concentration <- sapply(sites_samples$dnas, function(x) x$concentration)
+sample_stats <- readRDS("data/supporting_data/sample_stats.rds")
+samples <- samples %>% 
+  left_join(sample_stats, by = c("name" = "materialSampleID")) %>% 
+  mutate(species = replace_na(species, 0))
 
 localities <- sites_samples %>% 
   select(area_name, area_locality, parent_area_name, station, lon = area_longitude, lat = area_latitude) %>%
@@ -91,10 +96,8 @@ source("R/server_updategeography.R", local = TRUE)
 # Update column sizes when not on first page
 observe({
   if (input$higherGeography != "") {
-    session$sendCustomMessage("show_overlay", "remove")
     session$sendCustomMessage("change_col_sizes", "change")
   } else {
-    session$sendCustomMessage("show_overlay", "show")
     session$sendCustomMessage("change_col_sizes", "main")
   }
 }) %>%
@@ -157,8 +160,9 @@ output$samples_table <- renderReactable({
     columns = list(
       name = colDef(name = "Identifier", width = 100),
       station = colDef(name = "Station"),
-      volume = colDef(name = "Volume (mL)", width = 120),
-      concentration = colDef(name = "Concentration (ng/\u00b5l)"),
+      species = colDef(name = "Species", width = 120),
+      volume = colDef(name = "Volume<br/>(mL)", width = 110, html = TRUE),
+      concentration = colDef(name = "DNA Concentration<br/>(ng/µl)", html = TRUE),
       date = colDef(
         name = "Date",
         width = 140,
@@ -191,6 +195,19 @@ output$concentration_plot <- plotly::renderPlotly({
       scale_color_brewer(palette = "Dark2", direction = 1) +
       scale_x_discrete(labels = c("FALSE" = "sample", "TRUE" = "blank")) +
       ylab("DNA concentration (ng/\u00b5l)") +
+      xlab(FALSE)
+  )
+})
+
+output$species_plot <- plotly::renderPlotly({
+  plotly::ggplotly(
+    ggplot() +
+      geom_point(data = samples %>% filter(site == input$higherGeography), aes(x = blank, y = species, color = blank), shape = 21, size = 3) +
+      theme_classic() +
+      theme(legend.position = "none") +
+      scale_color_brewer(palette = "Dark2", direction = 1) +
+      scale_x_discrete(labels = c("FALSE" = "sample", "TRUE" = "blank")) +
+      ylab("Number of species") +
       xlab(FALSE)
   )
 })

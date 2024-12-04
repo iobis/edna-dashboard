@@ -22,57 +22,6 @@ $(document).ready(function () {
     
   });
 
-  // not ready
-  $(document).on('shiny:connected', function() {
-    // Activate overlay
-    Shiny.addCustomMessageHandler('show_overlay', function(message) {
-      if (message == 'show') {
-        // Go back to first tab
-        function activateTab(tabId) {
-          var tabElement = document.getElementById(tabId);
-          
-          if (tabElement) {
-              var tab = new bootstrap.Tab(tabElement);
-              tab.show();
-          }
-        }
-
-        activateTab('tabset-2-1-tab');
-
-        // Create the overlay element
-        const overlay = document.createElement('div');
-        overlay.id = 'tabset-overlay';
-        
-        // Set styles for the overlay
-        overlay.style.position = 'absolute'; 
-        overlay.style.top = '0'; 
-        overlay.style.left = '0'; 
-        overlay.style.width = '100%'; 
-        overlay.style.height = '100%'; 
-        overlay.style.backgroundColor = 'white'; 
-        overlay.style.zIndex = '2'; 
-        overlay.style.display = 'flex'; 
-        //overlay.style.alignItems = 'center'; 
-        overlay.style.justifyContent = 'center'; 
-        overlay.style.color = 'black'; 
-        overlay.style.fontSize = '24px'; 
-        overlay.style.textAlign = 'center';
-
-        // Add content to the overlay
-        overlay.innerHTML = '<br><br>Select a site to start at the top of this page.';
-
-        // Append the overlay to the parent div
-        document.getElementById('tabset-inside').appendChild(overlay);
-      } else {
-        const existingOverlay = document.getElementById('tabset-overlay');
-        if (existingOverlay) {
-          // Remove the overlay if it exists
-          existingOverlay.parentNode.removeChild(existingOverlay);
-        }
-      }
-    });
-  });
-
    // Add handler for home
    document.getElementById("home-link").addEventListener("click", function (event) {
     event.preventDefault(); // Prevent default link behavior
