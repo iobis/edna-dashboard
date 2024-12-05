@@ -1,4 +1,5 @@
 #climate_data <- readRDS("data/climate.rds")
+library(RColorBrewer)
 
 climate_vals <- reactiveValues()
 
@@ -72,15 +73,27 @@ output$climate_thermal_risk <- reactable::renderReactable({
     dat <- climate_vals$main
     dat[, c("Current", "SSP1", "SSP2", "SSP3")] <- round(dat[, c("Current", "SSP1", "SSP2", "SSP3")], 2)
 
+    palette <- colorRampPalette(rev(brewer.pal(11, "RdBu")))
+    range_min <- -3
+    range_max <- 3
+    
     colfun <- function(value) {
-        if (value < 0) {
-            color <- "#c5ddf2"
-        } else if (value > 0) {
-            color <- "#e8c9b4"
-        } else {
-            color <- "#777"
-        }
-        list(background = color, fontWeight = "bold")
+      scaled_value <- (value - range_min) / (range_max - range_min)
+      if (scaled_value < 0) scaled_value <- 0
+      if (scaled_value > 1) scaled_value <- 1
+      backColor <- palette(100)[round(scaled_value * 99) + 1]
+      color <- "#000000"
+      # if (value < 0) {
+      #     backColor <- "#c5ddf2"
+      #     color <- "#000000"
+      # } else if (value > 0) {
+      #     backColor <- "#FF000D"
+      #     color <- "#ffffff"
+      # } else {
+      #     backColor <- "#777"
+      #     color <- "#000000"
+      # }
+      list(background = backColor, color = color, fontWeight = "bold")
     }
 
     dat$Depth <- ifelse(dat$Depth == "Shallow", "S",
