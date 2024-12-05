@@ -23,7 +23,7 @@ observe({
     }
     if (input$iucnClimate != "all species") {
         climate_filt <- climate_filt %>%
-            filter(category == input$iucnClimate)
+            filter(category == substr(input$iucnClimate, 1, 2))
     }
 
     climate_vals$main <- climate_filt %>%
