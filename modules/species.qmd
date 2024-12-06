@@ -2,8 +2,8 @@
 
 ```{r}
 #selectInput("higherGeographySpecies", "Site:", sites_names)
-selectInput("group", "Group:", groups_names)
-selectInput("iucn", "IUCN Red List Category:", iucn_names)
+selectInput("group", "Group:", choices = group_names)
+selectInput("iucn", "IUCN Red List Category:", choices = iucn_categories)
 
 ```
 

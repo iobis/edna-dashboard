@@ -38,13 +38,13 @@ generate_ordered_species_list_bySite <- function(site, occurrence, selected_grou
 
   #species_names <- species_names %>% left_join(image_list)
 
-if( selected_group != "all species"){
-  species_names <- species_names %>% filter(group == selected_group)
-}
+  if (selected_group != "all species") {
+    species_names <- species_names %>% filter(group == selected_group)
+  }
 
-if( selected_iucn != "all species"){
-  species_names <- species_names %>% filter(category == selected_iucn)
-}
+  if (selected_iucn != "all species") {
+    species_names <- species_names %>% filter(category == selected_iucn)
+  }
 
   return(species_names)
 }
