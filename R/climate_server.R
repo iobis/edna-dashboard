@@ -73,7 +73,7 @@ output$climate_thermal_risk <- reactable::renderReactable({
     dat <- climate_vals$main
     dat[, c("Current", "SSP1", "SSP2", "SSP3")] <- round(dat[, c("Current", "SSP1", "SSP2", "SSP3")], 2)
 
-    palette <- colorRampPalette(rev(brewer.pal(11, "RdBu")))
+    palette <- colorRampPalette(rev(brewer.pal(11, "RdBu")[2:10]))
     range_min <- -3
     range_max <- 3
     
