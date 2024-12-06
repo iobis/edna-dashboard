@@ -36,6 +36,7 @@ suppressPackageStartupMessages(library(DT))
 suppressPackageStartupMessages(library(reactable))
 suppressPackageStartupMessages(library(bslib))
 source("R/iucn.R")
+source("R/groups.R")
 
 # Load json
 sites <- jsonlite::read_json("https://raw.githubusercontent.com/iobis/edna-tracker-data/data/generated.json")
@@ -48,16 +49,13 @@ sites_names <- sites_names[order(sites_names)]
 
 localities <- sites_samples %>% bind_rows() %>% select(area_name, area_locality, parent_area_name, station, lon = area_longitude, lat = area_latitude)
 
-groups <- read.csv("data/supporting_data/groups.csv")
-groups_names <- c("all species", unique(groups$group))
-
-taxonLevels <- c("ASV","kingdom","phylum","order","class","family","genus", "species")
+taxonLevels <- c("ASV", "kingdom", "phylum", "order", "class", "family", "genus", "species")
 
 alpha_measure <- c("Observed", "Chao1", "Shannon", "Simpson")
 
 beta_measure <- c("bray", "jaccard")
 
-plot_type<-c("relative abundance", "reads")
+plot_type <- c("relative abundance", "reads")
 ```
 
 ``` {r}

@@ -18,6 +18,7 @@ observe({
         collect() %>% ungroup() %>%
         filter(!is.na(Current))
 
+    message(input$groupClimate)
     if (input$groupClimate != "all species") {
         climate_filt <- climate_filt %>%
             filter(group == input$groupClimate)

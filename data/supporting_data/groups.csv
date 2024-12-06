@@ -1,40 +1,40 @@
-taxon,rank,group
-Actinopteri,class,fish
-Cladistii,class,fish
-Coelacanthi,class,fish
-Elasmobranchii,class,sharks
-Holocephali,class,sharks
-Myxini,class,fish
-Petromyzonti,class,fish
-Teleostei,class,fish
-Testudines,order,turtles
-Mammalia,class,mammals
-Aves,class,birds
-Mollusca,phylum,molluscs
-Amphibia,class,amphibians
-Chlorophyta,phylum,algae
-Haptophyta,phylum,algae
-Rhodophyta,phylum,algae
-Ochrophyta,phylum,algae
-Bacillariophyta,phylum,algae
-Heterokontophyta,phylum,algae
-Echinodermata,phylum,echinoderms
-Porifera,phylum,sponges
-Cnidaria,phylum,cnidarians
-Ctenophora,phylum,cnidarians
-Cercozoa,phylum,unicellular
-Amoebozoa,phylum,unicellular
-Myzozoa,phylum,unicellular
-Ascomycota,phylum,fungi
-Oomycota,phylum,fungi
-Nemertea,phylum,worms
-Gnathostomulida,phylum,worms
-Annelida,phylum,worms
-Bryozoa,phylum,moss animals
-Phoronida,phylum,horseshoe worms
-Copepoda,class,copepods
-Malacostraca,class,crustaceans
-Thecostraca,class,crustaceans
-Branchiopoda,class,crustaceans
-Chaetognatha,phylum,arrow worms
-Ascidiacea,class,sea squirts
+taxon,rank,group,label
+Actinopteri,class,fish,Fish
+Cladistii,class,fish,Fish
+Coelacanthi,class,fish,Fish
+Elasmobranchii,class,sharks,Sharks and rays
+Holocephali,class,sharks,Sharks and rays
+Myxini,class,fish,Fish
+Petromyzonti,class,fish,Fish
+Teleostei,class,fish,Fish
+Testudines,order,turtles,Turtles
+Mammalia,class,mammals,Mammals
+Aves,class,birds,Birds
+Mollusca,phylum,molluscs,Molluscs
+Amphibia,class,amphibians,Amphibians
+Chlorophyta,phylum,algae,Algae
+Haptophyta,phylum,algae,Algae
+Rhodophyta,phylum,algae,Algae
+Ochrophyta,phylum,algae,Algae
+Bacillariophyta,phylum,algae,Algae
+Heterokontophyta,phylum,algae,Algae
+Echinodermata,phylum,echinoderms,Echinoderms
+Porifera,phylum,sponges,Sponges
+Cnidaria,phylum,cnidarians,Cnidarians
+Ctenophora,phylum,cnidarians,Cnidarians  
+Cercozoa,phylum,unicellular,Unicellular
+Amoebozoa,phylum,unicellular,Unicellular
+Myzozoa,phylum,unicellular,Unicellular
+Ascomycota,phylum,fungi,Fungi
+Oomycota,phylum,fungi,Fungi
+Nemertea,phylum,worms,Worms
+Gnathostomulida,phylum,worms,Worms
+Annelida,phylum,worms,Worms
+Bryozoa,phylum,moss animals,Moss animals
+Phoronida,phylum,horseshoe worms,Horseshoe worms
+Copepoda,class,copepods,Copepods
+Malacostraca,class,crustaceans,Crustaceans
+Thecostraca,class,crustaceans,Crustaceans
+Branchiopoda,class,crustaceans,Crustaceans
+Chaetognatha,phylum,arrow worms,Arrow worms
+Ascidiacea,class,sea squirts,Sea squirts

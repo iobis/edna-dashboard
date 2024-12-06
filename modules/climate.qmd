@@ -2,8 +2,8 @@
 ::: {.toolbar}
 ```{r}
 
-selectInput("groupClimate", "Group:", groups_names)
-selectInput("iucnClimate", "IUCN Red List Category:", iucn_names)
+selectInput("groupClimate", "Group:", choices = group_names)
+selectInput("iucnClimate", "IUCN Red List Category:", choices = iucn_categories)
 
 ```
 
