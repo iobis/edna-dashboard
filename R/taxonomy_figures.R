@@ -60,16 +60,14 @@ make_table_taxonomy <- function(occurrence, site) {
 
   species_def <- colDef(
     minWidth = 200,
-    style = list("font-size" = "0.9em", "font-style" = "italic")
+    style = list("font-size" = "0.9em", "font-style" = "italic"),
+    name = "Species"
   )
   
   reads_def <- colDef(
-    style = list("font-size" = "0.9em")
-  )
-  
-  text_def_narrow <- colDef(
-    maxWidth = 130,
-    style = list("font-size" = "0.9em")
+    style = list("font-size" = "0.9em"),
+    name = "Reads",
+    format = colFormat(separators = TRUE)
   )
   
   phylum_def_narrow <- colDef(
@@ -83,15 +81,19 @@ make_table_taxonomy <- function(occurrence, site) {
       )
       htmltools::HTML(value)
     },
-    html = TRUE
+    html = TRUE,
+    name = "Phylum"
   )
 
   rtable <- table_data %>%
     reactable(pagination = TRUE, wrap = FALSE, highlight = TRUE, outlined = TRUE, striped = TRUE, defaultPageSize = 10, filterable = TRUE, defaultSortOrder = "desc", columns = list(
       "phylum" = phylum_def_narrow,
-      "class" = text_def_narrow,
       "species" = species_def,
-      "reads" = reads_def
+      "reads" = reads_def,
+      "class" = colDef(name = "Class", maxWidth = 130),
+      "samples" = colDef(name = "Samples"),
+      "localities" = colDef(name = "Localities"),
+      "target_gene" = colDef(name = "Target gene")
     ),
     defaultSorted = "reads")
 
