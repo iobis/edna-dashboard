@@ -1,7 +1,7 @@
 # HOME server code
 
 site_stats <- readRDS("data/supporting_data/sites_stats.rds")
-disclaimer_text <- "Disclaimer: statistics are subject to change as new reference data becomes available or changed are made to quality control procedures."
+disclaimer_text <- "Disclaimer: Statistics are subject to revision as new reference data become available or as a result of ongoing quality control procedures."
 
 # Main map ----
 output$mainMap <- renderLeaflet({

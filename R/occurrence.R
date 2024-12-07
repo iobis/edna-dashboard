@@ -15,7 +15,6 @@ download_occurrence_data <- function(force = FALSE) {
     )
     unzip("output.zip", exdir = "data/")
     file.remove("output.zip")
-    verify_occurrence_parquet()
   } else {
     message("Occurrence data already downloaded")
   }
