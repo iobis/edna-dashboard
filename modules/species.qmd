@@ -9,7 +9,7 @@ selectInput("iucn", "IUCN Red List Category:", choices = iucn_categories)
 
 :::
 
-This page shows all the species that were detected from the site, ordered by abundance of sequences that were detected for each species. You can browse to discover the diversity of life that was detectable by DNA samples. By clicking on a species image, you will get more information on the biology of the species, which samples it was found in, and the actual DNA sequence that the detection was based on. You can filter this gallery to find your favorite group of species or by IUCN Red List Category.
+This page shows all the species that were detected from the site, ordered by abundance of sequences that were detected for each species. You can browse to discover the diversity of life that was detectable by DNA samples. By clicking on a species image, you will get more information on the biology of the species, which samples it was found in, and the actual DNA sequence that the detection was based on. You can filter this gallery to find your favorite group of species or by IUCN Red List Category. The species assignments are done automatically, with manual curation. Due to the nature of this workflow, there may still be some errors in species list. If you spot an error, please let us know at helpdesk@obis.org, referring to the eDNA dashboard, site and species in question. Thank you for your help!
 
 ::: {id='image-galleries'}
 
