@@ -11,6 +11,7 @@ source("R/get_taxonomy.R")
 
 download_site_descriptions(force = FALSE)
 download_occurrence_data(force = TRUE)
+verify_occurrence_parquet()
 calculate_site_stats(force = TRUE)
 calculate_sample_stats(force = TRUE)
 generate_image_list(force = TRUE)
@@ -23,4 +24,3 @@ get_fishbase_info(force = FALSE)
 taxonomy_by_site()
 diversity_by_site()
 diversity_metrics_by_site()
-
