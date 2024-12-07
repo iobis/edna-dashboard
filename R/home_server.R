@@ -1,6 +1,7 @@
 # HOME server code
 
 site_stats <- readRDS("data/supporting_data/sites_stats.rds")
+disclaimer_text <- "Disclaimer: statistics are subject to change as new reference data becomes available or changed are made to quality control procedures."
 
 # Main map ----
 output$mainMap <- renderLeaflet({
@@ -120,7 +121,9 @@ output$valueBoxes <- renderUI({
       value_box(
         title = "Threatened species", value = "value_box_iucn",
         icon = "circle-exclamation", icon_source = "fa", icon_color = "#2b88d0", width = "100%"
-      ), style = "width: 100%;"
+      ),
+      htmltools::p(disclaimer_text, class = "disclaimer"),
+      style = "width: 100%;"
     )
   } else {
     htmltools::div(
@@ -157,7 +160,9 @@ output$valueBoxes <- renderUI({
           icon_source = "other", width = "25%", direction = "v", icon_color = "#6f42c1"
         ),
         style = "display: flex; flex-direction: row; justify-content: space-between; width: 100%;"
-      ), style = "width: 100%;"
+      ),
+      htmltools::p(disclaimer_text, class = "disclaimer"),
+      style = "width: 100%;"
     )
   }
 })
