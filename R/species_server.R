@@ -215,7 +215,7 @@ observe({
     sp_fb_common_names <- ifelse(length(fb_commons) > 0,
                                  paste(paste(fb_commons, collapse = ", "), "(Source: WoRMS)"), "not found")
     sp_fb_content <- ifelse(nrow(fb_content) < 1 || is.na(fb_content$Comments), "Additional information not available.",
-                            paste(fb_content$Comments, "(Source:", fb_content$source, ")"))
+                            paste(fb_content$Comments, glue::glue("(Source: {fb_content$source})")))
 
     species_info <- get_species_information(species, occurrence_ds, input$higherGeography)
   } else {
