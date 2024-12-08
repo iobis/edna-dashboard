@@ -41,8 +41,8 @@
   height: 50px;
   /*font-size: 30px;*/
   text-decoration: none;
-  font-size: clamp(12px, 2vw, 30px) !important;
-  white-space: nowrap !important;
+  /*font-size: clamp(12px, 2vw, 30px) !important; */
+  /*white-space: nowrap !important; */
 }
 
 #content {
