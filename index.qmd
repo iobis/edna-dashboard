@@ -26,7 +26,10 @@ server: shiny
 ---
 
 <!-- Header block -->
-<div id="title-header"><img class="me-3" src="www/logos/ioc_white_small.png" /><a href="#" id="home-link">eDNA Expeditions Dashboard</a></div>
+<div id="title-header">
+<img class="me-3" src="www/logos/ioc_white_small.png" />
+<div class="d-inline-block"><a href="#" id="home-link">eDNA Expeditions Dashboard</a></div>
+</div>
 
 ``` {r include=FALSE}
 suppressPackageStartupMessages(library(shiny))
