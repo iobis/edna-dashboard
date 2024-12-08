@@ -200,11 +200,21 @@ observe({
     
     species_link_1 <- glue::glue('<a href="{paste0("https://obis.org/taxon/", sel_aphiaid)}", target="_blank">OBIS: {sel_aphiaid}</a>')
     species_link_2 <- glue::glue('<a href="{paste0("https://www.marinespecies.org/aphia.php?p=taxdetails&id=", sel_aphiaid)}", target="_blank">WoRMS: {sel_aphiaid}</a>')
-    species_link_3 <- glue::glue('<a href="{paste0("https://www.fishbase.se/summary/", gsub(" ", "-", species), ".html")}", target="_blank">FishBase: {fb_content$SpecCode[1]}</a>')
+    if (nrow(fb_content) > 0) {
+      if (fb_content$source == "SeaLifeBase") {
+      species_link_3 <- glue::glue('<a href="{paste0("https://www.sealifebase.org/summary/", gsub(" ", "-", species), ".html")}", target="_blank">SeaLifeBase: {fb_content$SpecCode[1]}</a>')
+      } else if (fb_content$source == "FishBase") {
+        species_link_3 <- glue::glue('<a href="{paste0("https://www.fishbase.org/summary/", gsub(" ", "-", species), ".html")}", target="_blank">FishBase: {fb_content$SpecCode[1]}</a>')
+      } else {
+        species_link_3 <- ""
+      }
+    } else {
+      species_link_3 <- ""
+    }
     
     sp_fb_common_names <- ifelse(length(fb_commons) > 0,
                                  paste(paste(fb_commons, collapse = ", "), "(Source: WoRMS)"), "not found")
-    sp_fb_content <- ifelse(is.na(fb_content$Comments), "Additional information not available.",
+    sp_fb_content <- ifelse(nrow(fb_content) < 1 || is.na(fb_content$Comments), "Additional information not available.",
                             paste(fb_content$Comments, "(Source:", fb_content$source, ")"))
 
     species_info <- get_species_information(species, occurrence_ds, input$higherGeography)
