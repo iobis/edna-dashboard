@@ -186,20 +186,26 @@ observe({
       filter(scientificName == species) %>%
       select(scientificNameID) %>%
       pull()
-
+    
+    accepted_aphiaid <- unique_sp_codes %>%
+      ungroup() %>%
+      filter(scientificName == species) %>%
+      select(valid_AphiaID) %>%
+      head(1) %>% 
+      pull()
+    
     sel_aphiaid <- sel_aphiaid[1] # To handle few cases with multiple, e.g. "Kyphosus vaigiensis"
     
     fb_content <- species_context_info$core_info %>% filter(Species == species)
     #fb_commons <- species_context_info$common_names %>% filter(Species == species)
-    fb_commons <- vernacular_names[taxonID %in% sel_aphiaid, vernacularName]
+    fb_commons <- vernacular_names[taxonID %in% accepted_aphiaid, vernacularName]
     fb_commons <- as.vector(fb_commons)
     if (length(fb_commons) > 10) { # avoid very long list
       fb_commons <- fb_commons[1:10]
     }
     
-    
-    species_link_1 <- glue::glue('<a href="{paste0("https://obis.org/taxon/", sel_aphiaid)}", target="_blank">OBIS: {sel_aphiaid}</a>')
-    species_link_2 <- glue::glue('<a href="{paste0("https://www.marinespecies.org/aphia.php?p=taxdetails&id=", sel_aphiaid)}", target="_blank">WoRMS: {sel_aphiaid}</a>')
+    species_link_1 <- glue::glue('<a href="{paste0("https://obis.org/taxon/", accepted_aphiaid)}", target="_blank">OBIS: {sel_aphiaid}</a>')
+    species_link_2 <- glue::glue('<a href="{paste0("https://www.marinespecies.org/aphia.php?p=taxdetails&id=", accepted_aphiaid)}", target="_blank">WoRMS: {sel_aphiaid}</a>')
     if (nrow(fb_content) > 0) {
       if (fb_content$source == "SeaLifeBase") {
       species_link_3 <- glue::glue('<a href="{paste0("https://www.sealifebase.org/summary/", gsub(" ", "-", species), ".html")}", target="_blank">SeaLifeBase: {fb_content$SpecCode[1]}</a>')
@@ -211,7 +217,7 @@ observe({
     } else {
       species_link_3 <- ""
     }
-    
+
     sp_fb_common_names <- ifelse(length(fb_commons) > 0,
                                  paste(paste(fb_commons, collapse = ", "), "(Source: WoRMS)"), "not found")
     sp_fb_content <- ifelse(nrow(fb_content) < 1 || is.na(fb_content$Comments), "Additional information not available.",
