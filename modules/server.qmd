@@ -33,8 +33,8 @@ message("Opening occurrence dataset...")
 occurrence_ds <- open_dataset("data/output/occurrence.parquet")
 
 unique_sp_codes <- occurrence_ds %>%
-  select(scientificName, scientificNameID) %>%
-  group_by(scientificName, scientificNameID) %>%
+  select(scientificName, scientificNameID, valid_AphiaID) %>%
+  group_by(scientificName, scientificNameID, valid_AphiaID) %>%
   distinct() %>%
   collect() %>%
   mutate(scientificNameID = sub(".*:", "", scientificNameID)) %>% 
@@ -73,6 +73,8 @@ map_localities <- sites_samples %>%
   ungroup()
 
 species_context_info <- readRDS("data/fishbase.rds")
+
+vernacular_names <- data.table::fread("data/supporting_data/vernacularname.txt")
 
 general_description <- jsonlite::read_json("data/supporting_data/general_description.json")
 
