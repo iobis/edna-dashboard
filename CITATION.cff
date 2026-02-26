@@ -1,0 +1,22 @@
+cff-version: 1.2.0
+message: If you use this work, please cite it as below.
+title: eDNA Dashboard
+type: software
+abstract: Dashboard for eDNA expeditions phase I
+url: https://github.com/iobis/edna-dashboard
+license: MIT
+authors:
+  - given-names: Pieter
+    family-names: Provoost
+    orcid: "https://orcid.org/0000-0002-4236-0384"
+  - family-names: silasprincipe
+    orcid: "https://orcid.org/0000-0002-8059-6304"
+  - alias: SSuominen1
+    orcid: "https://orcid.org/0000-0001-9401-8460"
+  - family-names: SSuominen1
+  - given-names: Quarto GHA Workflow
+    family-names: Runner
+  - name: Intergovernmental Oceanographic Commission of UNESCO
+    alias: IOC-UNESCO
+    website: "https://obis.org"
+date-released: 2024-12-08
